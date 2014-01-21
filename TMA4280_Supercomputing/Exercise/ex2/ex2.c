@@ -70,7 +70,11 @@ int main(int argc, char** argv)
   alpha = multiply(x, y, VSIZE);
 
 // Outputs           
-  
+  fprintf(stdout, "-----------------Outputs-----------------\n");
+  fprintf(stdout, "  x = [%f %f %f]\n", x[0], x[1], x[2]);
+  fprintf(stdout, "  y = [%f %f %f]\n", y[0], y[1], y[2]);
+  fprintf(stdout, "  alpha = %f\n", *alpha);
+  fprintf(stdout, "-------------------End-------------------\n");
 
 // freeing memory
   free(y);
