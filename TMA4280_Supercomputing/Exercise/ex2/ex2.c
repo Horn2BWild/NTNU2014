@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     return EXIT_FAILURE;
   }
 
-  *gammaVector = (double*)malloc(VSIZE*sizeof(double));
+  gammaVector = (double*)malloc(VSIZE*sizeof(double));
   gamma = atoi(argv[1]);
   for(i=0; i<VSIZE; i++)
   {
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 /*---------------------------------------------------------------------------*/
 /* Ab                                                                        */
 /*---------------------------------------------------------------------------*/
-  *Ab = (double*)malloc(VSIZE*sizeof(double));
+  Ab = (double*)malloc(VSIZE*sizeof(double));
 
   for(i=0; i<VSIZE; i++)
   {
@@ -56,25 +56,25 @@ int main(int argc, char** argv)
 /*---------------------------------------------------------------------------*/
 /* y = a + Ab                                                                */
 /*---------------------------------------------------------------------------*/
-  *y = (double*)malloc(VSIZE*sizeof(double));
+  y = (double*)malloc(VSIZE*sizeof(double));
   y = add(Ab, a, 3);
 
 /*---------------------------------------------------------------------------*/
 /* gb                                                                        */
 /*---------------------------------------------------------------------------*/
-  *gb = (double*)malloc(VSIZE*sizeof(double));
+  gb = (double*)malloc(VSIZE*sizeof(double));
   gb = multiply(gammaVector, b, VSIZE);
 
 /*---------------------------------------------------------------------------*/
 /* x = a + gb                                                                */
 /*---------------------------------------------------------------------------*/
-  *x = (double*)malloc(VSIZE*sizeof(double));
+  x = (double*)malloc(VSIZE*sizeof(double));
   x = add(gb, a, VSIZE);
 
 /*---------------------------------------------------------------------------*/
 /* alpha = xT*y                                                              */
 /*---------------------------------------------------------------------------*/
-  *alpha = (double*)malloc(sizeof(double));
+  alpha = (double*)malloc(sizeof(double));
   alpha = multiply(x, y, VSIZE);
 
 
