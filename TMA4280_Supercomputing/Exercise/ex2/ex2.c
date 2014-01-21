@@ -28,12 +28,14 @@ int main(int argc, char** argv)
  // double alpha=0.0;
   double* alpha = NULL; 
   
+// commandline argument
   if(argc<2)
   {
     fprintf(stdout, "Usage: ex2 <gamma>\n");
     return EXIT_FAILURE;
   }
 
+// creating gammaVector from commandline input
   gammaVector = (double*)malloc(VSIZE*sizeof(double));
   gamma = atoi(argv[1]);
   for(i=0; i<VSIZE; i++)
@@ -41,11 +43,8 @@ int main(int argc, char** argv)
     gammaVector[i]=gamma;
   }
   
-/*---------------------------------------------------------------------------*/
-/* Ab                                                                        */
-/*---------------------------------------------------------------------------*/
+// calculation of A*b
   Ab = (double*)malloc(VSIZE*sizeof(double));
-
   for(i=0; i<VSIZE; i++)
   {
     for(j=0; j<VSIZE; j++)
@@ -53,33 +52,27 @@ int main(int argc, char** argv)
       Ab[i]+=A[i][j]*b[j];
     }
   }
-/*---------------------------------------------------------------------------*/
-/* y = a + Ab                                                                */
-/*---------------------------------------------------------------------------*/
+
+//  y = a + Ab   
   y = (double*)malloc(VSIZE*sizeof(double));
   y = add(Ab, a, 3);
 
-/*---------------------------------------------------------------------------*/
-/* gb                                                                        */
-/*---------------------------------------------------------------------------*/
+// gamma*b     
   gb = (double*)malloc(VSIZE*sizeof(double));
   gb = multiply(gammaVector, b, VSIZE);
 
-/*---------------------------------------------------------------------------*/
-/* x = a + gb                                                                */
-/*---------------------------------------------------------------------------*/
+// x = a + gb             
   x = (double*)malloc(VSIZE*sizeof(double));
   x = add(gb, a, VSIZE);
 
-/*---------------------------------------------------------------------------*/
-/* alpha = xT*y                                                              */
-/*---------------------------------------------------------------------------*/
+// alpha = xT*y        
   alpha = (double*)malloc(sizeof(double));
   alpha = multiply(x, y, VSIZE);
 
+// Outputs           
+  
 
-  fprintf(stdout, "result: y = %f %f %f\n", y[0], y[1], y[2]);
-
+// freeing memory
   free(y);
   free(x);
   free(Ab);
