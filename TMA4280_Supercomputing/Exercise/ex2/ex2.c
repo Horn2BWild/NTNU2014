@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// defining the vector size
 #define VSIZE 3
 
-//Function Prototypes
+// Function Prototypes
 double* add(const double* vector1, const double* vector2, int size);
 double* multiply(const double* vector1, const double* vector2, int size);
 
-//const static declarations
+// const static declarations
 const double A[][3] = {{0.3, 0.4, 0.3},
                          {0.7, 0.1, 0.2},
                         {0.5, 0.5, 0.0}};
@@ -15,7 +16,7 @@ const double A[][3] = {{0.3, 0.4, 0.3},
 const double b[3] = {1.0, 1.0, 1.0};
 const double a[3] = {0.1, 0.2, 0.3};
 
-//main
+// main
 int main(int argc, char** argv)
 {
   double *y = NULL;  //sum vector y
@@ -95,6 +96,15 @@ int main(int argc, char** argv)
   return EXIT_SUCCESS;
 }
 
+/*----------------------------------------------------------------------------*/
+/* Function add                                                               */
+/* Parameters:                                                                */
+/*   const double* vector1......first vector to be added                      */
+/*   const double* vector2......second vector to be added                     */
+/*   int size...................vector size                                   */
+/* Return value:                                                              */
+/*   double*....................result of the addition                        */
+/*----------------------------------------------------------------------------*/
 double* add(const double* vector1, const double* vector2, int size)
 {
   double* result = (double*)malloc(size*sizeof(double));
@@ -108,6 +118,15 @@ double* add(const double* vector1, const double* vector2, int size)
   return result;
 }
 
+/*----------------------------------------------------------------------------*/
+/* Function multiply                                                          */
+/* Parameters:                                                                */
+/*   const double* vector1......first vector to be added                      */
+/*   const double* vector2......second vector to be added                     */
+/*   int size...................vector size                                   */
+/* Return value:                                                              */
+/*   double*....................result of the multiplication                  */
+/*----------------------------------------------------------------------------*/
 double* multiply(const double* vector1, const double* vector2, int size)
 {
   double* result = (double*)malloc(size*sizeof(double));
