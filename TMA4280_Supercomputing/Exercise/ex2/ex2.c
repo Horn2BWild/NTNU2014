@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define VSIZE 3
+
 //Function Prototypes
 double* add(const double* vector1, const double* vector2, int size);
 double* multiply(const double* vector1, const double* vector2, int size);
@@ -16,13 +18,13 @@ const double a[3] = {0.1, 0.2, 0.3};
 //main
 int main(int argc, char** argv)
 {
-  double y[3] = {0}; //sum vector y
-  double x[3] = {0}; //sum vector x
-  double Ab[3]={0}; //A multiplied by b
-  double gb[3]={0}; //b multiplied by gamma
+  double *y = malloc(VSIZE*sizeof(double)); //sum vector y
+  double *x = malloc(VSIZE*sizeof(double)); //sum vector x
+  double *Ab = malloc(VSIZE*sizeof(double)); //A multiplied by b
+  double *gb = malloc(VSIZE*sizeof(double)); //b multiplied by gamma
+  double *gammaVector = malloc(VSIZE*sizeof(double));
   int i=0, j=0;
   double gamma=0.0;
-  double gammaVector[3]={gamma};
   double alpha=0.0;
   
   if(argc<2)
@@ -32,15 +34,21 @@ int main(int argc, char** argv)
   }
 
   gamma = atoi(argv[1]);
+  for(i=0; i<VSIZE; i++)
+  {
+    gammaVector[i]=gamma;
+  }
   
 /*---------------------------------------------------------------------------*/
 /* Ab                                                                        */
 /*---------------------------------------------------------------------------*/
-  for(i=0; i<3; i++)
+  for(i=0; i<VSIZE; i++)
   {
-    Ab[i] = multiply(A[i], b, 3);
+    for(j=0; j<VSIZE; j++)
+    {
+      Ab[i]+=A[i][j]*x[j];
+    }
   }
-
 /*---------------------------------------------------------------------------*/
 /* y = a + Ab                                                                */
 /*---------------------------------------------------------------------------*/
@@ -49,17 +57,17 @@ int main(int argc, char** argv)
 /*---------------------------------------------------------------------------*/
 /* gb                                                                        */
 /*---------------------------------------------------------------------------*/
-  gb = multiply(gammaVector, b, 3);
+  gb = multiply(gammaVector, b, VSIZE);
 
 /*---------------------------------------------------------------------------*/
 /* x = a + gb                                                                */
 /*---------------------------------------------------------------------------*/
-  y = add(gb, a, 3);
+  y = add(gb, a, VSIZE);
 
 /*---------------------------------------------------------------------------*/
 /* alpha = xT*y                                                              */
 /*---------------------------------------------------------------------------*/
-  alpha = multiply(x, y, 3);
+  alpha = multiply(x, y, VSIZE);
 
 
   fprintf(stdout, "result: y = %f %f %f\n", y[0], y[1], y[2]);
