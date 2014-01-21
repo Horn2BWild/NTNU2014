@@ -11,11 +11,13 @@ const double a[3] = {0.1, 0.2, 0.3};
 int main(int argc, char** argv)
 {
   double y[3] = {0}; //sum vector y
+  double x[3] = {0]; //sum vector x
   double Ab[3]={0}; //A multiplied by b
   double gb[3]={0}; //b multiplied by gamma
   int i=0, j=0;
   double gamma=0.0;
   double gammaVector[3]={gamma};
+  double alpha=0.0;
   
   if(argc<2)
   {
