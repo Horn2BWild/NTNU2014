@@ -37,10 +37,13 @@ int main(int argc, char** argv)
 
 // creating gammaVector from commandline input
   gammaVector = (double*)malloc(VSIZE*sizeof(double));
-  gamma = atoi(argv[1]);
+  gamma = atof(argv[1]);
   for(i=0; i<VSIZE; i++)
   {
     gammaVector[i]=gamma;
+/*---DECOMMENT FOR DEBUGGING PURPOSES---
+    printf("gamma: %f", gamma);
+*/
   }
   
 // calculation of A*b
@@ -60,6 +63,11 @@ int main(int argc, char** argv)
 // gamma*b     
   gb = (double*)malloc(VSIZE*sizeof(double));
   gb = multiply(gammaVector, b, VSIZE);
+
+/*---DECOMMENT FOR DEBUGGING PURPOSES---
+  for(i=0; i<VSIZE; i++)
+    printf("gb[%d] = %f", i, gb[i]);
+*/
 
 // x = a + gb             
   x = (double*)malloc(VSIZE*sizeof(double));
