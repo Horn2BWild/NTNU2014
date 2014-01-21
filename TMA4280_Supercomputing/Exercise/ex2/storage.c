@@ -17,3 +17,5 @@ for(i=0; i<VECTORSIZE/3; i++)
   }
 }
 
+//use two-dimensional pointers which point at the elements for a,b,c
+
