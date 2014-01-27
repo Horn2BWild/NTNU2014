@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>
+#include <omp.h>
 
 // defining the vector size
 #define VSIZE 3
@@ -20,6 +21,7 @@ const double a[3] = {0.1, 0.2, 0.3};
 // main
 int main(int argc, char** argv)
 {
+//MPI init
   MPI_Status status;
   MPI_Init(&argc, &argv);
 
@@ -32,7 +34,7 @@ int main(int argc, char** argv)
   double gamma=0.0;
  // double alpha=0.0;
   double* alpha = NULL; 
-  int rank=0, size=0, tag=0;
+  int rank=0, size=0, tag=0; //MPI flags
 
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -57,6 +59,7 @@ int main(int argc, char** argv)
   }
   
 // calculation of A*b
+  //#pragma Omp parallel for reduce(+:Ab[i]) schedule(guided,1)
   Ab = (double*)malloc(VSIZE*sizeof(double));
   for(i=0; i<VSIZE; i++)
   {
@@ -66,10 +69,6 @@ int main(int argc, char** argv)
     }
   }
 
-//  y = a + Ab   
-  y = (double*)malloc(VSIZE*sizeof(double));
-  y = add(Ab, a, 3);
-
 // gamma*b     
   gb = (double*)malloc(VSIZE*sizeof(double));
   gb = multiply(gammaVector, b, VSIZE);
@@ -78,14 +77,27 @@ int main(int argc, char** argv)
   for(i=0; i<VSIZE; i++)
     printf("gb[%d] = %f", i, gb[i]);
 */
+#pragma omp parallel sections
+{
+//  y = a + Ab   
+#pragma omp parallel section
+{
+  y = (double*)malloc(VSIZE*sizeof(double));
+  y = add(Ab, a, 3);
+}
 
-// x = a + gb             
+// x = a + gb       
+#pragma omp parallel section
+{      
   x = (double*)malloc(VSIZE*sizeof(double));
   x = add(gb, a, VSIZE);
+}
+}
 
-// alpha = xT*y        
+// alpha = xT*y     
   alpha = (double*)malloc(sizeof(double));
   alpha = multiply(x, y, VSIZE);
+
 
 // Outputs           
   fprintf(stdout, "-----------------Outputs-----------------\n");
@@ -115,6 +127,7 @@ int main(int argc, char** argv)
 /* Return value:                                                              */
 /*   double*....................result of the addition                        */
 /*----------------------------------------------------------------------------*/
+//#pragma Omp parallel schedule(guided,1)
 double* add(const double* vector1, const double* vector2, int size)
 {
   double* result = (double*)malloc(size*sizeof(double));
@@ -137,6 +150,7 @@ double* add(const double* vector1, const double* vector2, int size)
 /* Return value:                                                              */
 /*   double*....................result of the multiplication                  */
 /*----------------------------------------------------------------------------*/
+//#pragma Omp parallel schedule(guided,1)
 double* multiply(const double* vector1, const double* vector2, int size)
 {
   double* result = (double*)malloc(size*sizeof(double));
