@@ -77,7 +77,7 @@ printf("gamma: %f", gamma);
         {
           Ab[i]+=A[i][j]*b[j];
         }
-        MPI_Reduce(A[i], Ab[i], VSIZE*VSIZE, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+        MPI_Reduce((void*)A[i], (void*)Ab, VSIZE*VSIZE, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     }
     }
   }
@@ -90,17 +90,24 @@ printf("gamma: %f", gamma);
 for(i=0; i<VSIZE; i++)
 printf("gb[%d] = %f", i, gb[i]);
 */
+
+/*---DECOMMENT FOR OPENMP---
 #pragma omp parallel sections
+*/
 {
 // y = a + Ab
+/*---DECOMMENT FOR OPENMP---
 #pragma omp parallel section
+*/
 {
   y = (double*)malloc(VSIZE*sizeof(double));
   y = add(Ab, a, 3);
 }
 
 // x = a + gb
+/*---DECOMMENT FOR OPENMP---
 #pragma omp parallel section
+*/
 {
   x = (double*)malloc(VSIZE*sizeof(double));
   x = add(gb, a, VSIZE);
