@@ -36,15 +36,19 @@ int main(int argc, char** argv)
  // double alpha=0.0;
   double* alpha = NULL;
   int rank=0, size=0, tag=0; //MPI flags
+  int numProcesses=0;
 
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
   tag = 100;
+
+  double start_time = MPI_Wtime();
+
 // commandline argument
-  if(argc<2)
+  if(argc<3)
   {
-    fprintf(stdout, "Usage: ex2 <gamma>\n");
+    fprintf(stdout, "Usage: ex2 <gamma> <numProc>\n");
     return EXIT_FAILURE;
   }
 
@@ -59,6 +63,8 @@ int main(int argc, char** argv)
 printf("gamma: %f", gamma);
 */
   }
+
+  numProcesses=atoi(argv[2]);
   
 // calculation of A*b
   //#pragma Omp parallel for reduce(+:Ab[i]) schedule(guided,1)
@@ -67,7 +73,27 @@ printf("gamma: %f", gamma);
   {
     if (rank == 0) 
     {
-      MPI_Bcast(A, VSIZE*VSIZE, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+       for (proc=1; proc<numProcesses; proc++) //for each process except the 0
+       {
+         portion = (NUM_ROWS_A/(numProcesses-1)); // calculate submatrix-size
+         low_bound = (proc-1)*portion;
+         if (((proc+1)==numProcesses) && ((VSIZE%(numProcesses-1))!=0)) //if division not possible equally
+         {
+           upper_bound=VSIZE; //last process gets remaining rows
+         }
+         else
+         {
+           upper_bound=low_bound+portion; //every process with same data
+         }
+
+//MPI non-blocking send function calls
+         MPI_Isend(&low_bound, 1, MPI_INT, i, MASTER_TO_SLAVE_TAG, MPI_COMM_WORLD, &request);
+         MPI_Isend(&upper_bound, 1, MPI_INT, i, MASTER_TO_SLAVE_TAG + 1, MPI_COMM_WORLD, &request);
+         MPI_Isend(&mat_a[low_bound][0], (upper_bound - low_bound) * NUM_COLUMNS_A, MPI_DOUBLE, i, MASTER_TO_SLAVE_TAG + 2, MPI_COMM_WORLD, &request);
+       }
+     }
+//broadcast [B] to all the slaves
+MPI_Bcast(&mat_b, NUM_ROWS_B*NUM_COLUMNS_B, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }
     else
     {
