@@ -67,18 +67,18 @@ printf("gamma: %f", gamma);
   {
     if (rank == 0) 
     {
-      for(i=1; i<VSIZE; i++)
-      {
-        MPI_Send(A[i], VSIZE, MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
-      }
+      MPI_Bcast(A, VSIZE*VSIZE, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }
     else
     {
-      for(j=0; j<VSIZE; j++)
+      for (i=rank+1; i<=n; i+=size) 
       {
-        *Ab+=A[j]*b[j];
-      }
-      MPI_Reduce(A[i], Ab[i], VSIZE*VSIZE, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+        for(j=0; j<VSIZE; j++)
+        {
+          Ab[i]+=A[i][j]*b[j];
+        }
+        MPI_Reduce(A[i], Ab[i], VSIZE*VSIZE, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    }
     }
   }
 
