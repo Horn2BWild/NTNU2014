@@ -87,24 +87,19 @@ printf("gamma: %f", gamma);
          }
 
 //MPI non-blocking send function calls
-         MPI_Isend(&low_bound, 1, MPI_INT, i, MASTER_TO_SLAVE_TAG, MPI_COMM_WORLD, &request);
-         MPI_Isend(&upper_bound, 1, MPI_INT, i, MASTER_TO_SLAVE_TAG + 1, MPI_COMM_WORLD, &request);
-         MPI_Isend(&mat_a[low_bound][0], (upper_bound - low_bound) * NUM_COLUMNS_A, MPI_DOUBLE, i, MASTER_TO_SLAVE_TAG + 2, MPI_COMM_WORLD, &request);
+         MPI_Isend(&low_bound, 1, MPI_INT, proc, tag, MPI_COMM_WORLD, &request);
+         MPI_Isend(&upper_bound, 1, MPI_INT, proc, tag+1, MPI_COMM_WORLD, &request);
+         MPI_Isend(&mat_a[low_bound][0], (upper_bound-low_bound)*VSIZE, MPI_DOUBLE, proc, tag+2, MPI_COMM_WORLD, &request);
+         }
        }
-     }
-//broadcast [B] to all the slaves
-MPI_Bcast(&mat_b, NUM_ROWS_B*NUM_COLUMNS_B, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    }
-    else
+//broadcast b to all the slaves
+       MPI_Bcast(b, VSIZE, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+      }
+    if (rank > 0)
     {
-      for (i=rank+1; i<=n; i+=size) 
-      {
-        for(j=0; j<VSIZE; j++)
-        {
-          Ab[i]+=A[i][j]*b[j];
-        }
-        MPI_Reduce((void*)A[i], (void*)Ab, VSIZE*VSIZE, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-    }
+	  MPI_Recv(&low_bound, 1, MPI_INT, 0, tag, MPI_COMM_WORLD, &status);
+	  MPI_Recv(&upper_bound, 1, MPI_INT, 0, tag+1, MPI_COMM_WORLD, &status);
+	  MPI_Recv(&mat_a[low_bound][0], (upper_bound-low_bound)*VSIZE, MPI_DOUBLE, 0, tag+2, MPI_COMM_WORLD, &status);
     }
   }
 
