@@ -65,29 +65,15 @@ printf("gamma: %f", gamma);
   Ab = (double*)malloc(VSIZE*sizeof(double));
   for(i=0; i<VSIZE; i++)
   {
-  if(rank==0)
-  {
-  //proc 0
-  MPI_Bcast(&A[i], VSIZE, MPI_INT, 0, MPI_COMM_WORLD);
-  }
-  else
-  {
-    for(j=0; j<VSIZE; j++)
-    {
-      Ab[i]+=A[i][j]*b[j];
-    }
-  }
+  if (rank == 0) {
+    for (i=1; i < size; ++i)
+      MPI_Send(A[i], VSIZE, MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
+  } else
+    MPI_Reduce(A[i], Ab[i], VSIZE*VSIZE, MPI_DOUBLE, MPI_SUM,
+	       0, MPI_COMM_WORLD);
 
 
-  if (n > 0) {
-    h = 1.0 / (double)n;
-    sum = 0.0;
-    for (i = myid+1; i <= n; i += nproc) {
-      x = h * ((double)i - 0.5);
-      sum = sum + (4.0 / (1.0 + x*x));
-    }
-    mypi = h * sum;
-    MPI_Reduce (&mypi, &pi, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+
   }
 
   }
