@@ -25,6 +25,7 @@ int main(int argc, char** argv)
   MPI_Status status;
   MPI_Init(&argc, &argv);
 
+  int proc=0;
   double *y = NULL; //sum vector y
   double *x = NULL; //sum vector x
   double *Ab = NULL; //A multiplied by b
@@ -100,6 +101,17 @@ printf("gamma: %f", gamma);
 	  MPI_Recv(&low_bound, 1, MPI_INT, 0, tag, MPI_COMM_WORLD, &status);
 	  MPI_Recv(&upper_bound, 1, MPI_INT, 0, tag+1, MPI_COMM_WORLD, &status);
 	  MPI_Recv(&mat_a[low_bound][0], (upper_bound-low_bound)*VSIZE, MPI_DOUBLE, 0, tag+2, MPI_COMM_WORLD, &status);
+
+	  for (i = low_bound; i < upper_bound; i++)
+      {
+	    for (j = 0; j < NUM_COLUMNS_B; j++)
+        {
+       	  for (k = 0; k < NUM_ROWS_B; k++) 
+          {
+	        mat_result[i][j] += (mat_a[i][k] * b[j]);
+	      }
+	    }
+	  }
     }
   }
 
