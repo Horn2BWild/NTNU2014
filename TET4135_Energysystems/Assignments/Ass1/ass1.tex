@@ -121,54 +121,25 @@
 			$$\.{Q}_{max,BL}=\.{Q}_{h}(6\,500h)=5\,000kW+(60\,000kW-5\,000kW)\cdot [1-\sqrt[3]{\frac{6\,500h}{6\,500h}}+(\frac{6\,500h}{6\,500h})^2\cdot (1-\sqrt{\frac{6\,500h}{6\,500h}})] $$
 			$$\.{Q}_{max,BL}=5\,000kW $$
 		\subsection*{maximum effect peak load $\.{Q}_{max,PL}$}
-			\paragraph{formulary}
-			\begin{equation}
-				\.{Q}_{max,PL}=\.{Q}_{h,max}-\.{Q}_{max,BL})
-			\end{equation}
-			\paragraph{calculation}
-			$$\.{Q}_{max,PL}=60\,000kW-17\,707.3kW = 42\,292.7kW$$
+			$$\.{Q}_{max,PL}=60\,000kW-5\,000kW = 55\,000kW$$
 		\subsection*{Energy use}
-			\paragraph{formulary}
-			\begin{equation}
-				Q=\int{\.{Q}d\tau}
-			\end{equation}
-			\begin{equation}
-				Q_{PL}=\int_{0}^{\tau_{PL}}{\.{Q}_{h}d\tau}-\.{Q}_{h}(\tau_{PL})\cdot \tau_{PL}
-			\end{equation}
-			\begin{equation}
-				\int_{0}^{\tau_{PL}}{\.{Q}_{h}d\tau}=\.{Q}_{h,min}\cdot\tau |_{0}^{\tau_{PL}}+
-												\Delta\.{Q}_{h}\cdot [\tau |_{0}^{\tau_{PL}}-
-												\frac{1}{\sqrt[3]{\tau_{0}}}\cdot\frac{\tau^{\frac{4}{3}}}{\frac{4}{3}}|_{0}^{\tau_{PL}}+
-												\frac{1}{\tau_{0}^2}\cdot\frac{\tau^3}{3}|_{0}^{\tau_{PL}}-
-												\frac{1}{\tau_{0}^{\frac{5}{2}}}\cdot\frac{\tau^{\frac{7}{2}}}{\frac{7}{2}} |_{0}^{\tau_{PL}}]
-			\end{equation}
-			\begin{equation}
-				Q_{PL}=\int_{0}^{\tau_{PL}}{\.{Q}_{h}d\tau}-\.Q_{h}(\tau_{PL})\cdot\tau_{PL}
-			\end{equation}
-			\begin{equation}
-				Q_{BL}=\.Q(\tau_{PL})\cdot \tau_{PL}+\.Q_{DHW}(\tau_{year}-\tau_{PL})+\int_{\tau_{PL}}^{\tau_{0}}{\.{Q}_{h}d\tau}
-			\end{equation}
-			\paragraph{calculation}
-			$$\int_{0}^{4\,000}{\.{Q}_{h}d\tau}=5\,000\cdot 4\,000+
-												(60\,000-5\,000)\cdot [4\,000-
-												\frac{1}{\sqrt[3]{\,6500}}\cdot\frac{4\,000^{\frac{4}{3}}}{\frac{4}{3}}+
-												\frac{1}{6\,500^2}\cdot\frac{4\,000^3}{3}-
-												\frac{1}{6\,500^{\frac{5}{2}}}\cdot\frac{4\,000^{\frac{7}{2}}}{\frac{7}{2}}]$$
-			$$\int_{0}^{4\,000}{\.{Q}_{h}d\tau}=108\,752\,075kWh$$
-			$$Q_{PL}=108\,752\,075kWh-17\,707.3kW\cdot 4\,000h = 37\,922\,875kWh$$
-			$$Q_{BL}=17\,707.3\cdot 4\,000 + 5\,000\cdot(8\,760-4\,000)+5\,000\cdot (6\,500-4\,000)+55\,000[(6\,500-4\,000)-$$
-												$$\frac{1}{\sqrt[3]{6\,500}}\cdot\frac{6\,500^{\frac{4}{3}}-4\,000^{\frac{4}{3}}}{\frac{4}{3}}+
-												\frac{1}{6\,500^2}\cdot\frac{6\,500^3-4\,000^3}{3}-
-												\frac{1}{6\,500^{\frac{5}{2}}}\cdot\frac{6\,500^{\frac{7}{2}}-4\,000^{\frac{7}{2}}}{\frac{7}{2}}]$$
-			$$Q_{BL}=132\,775\,935kWh$$
+			$$\int_{0}^{6\,500}{\.{Q}_{h}d\tau}=5\,000\cdot 6\,500+
+												55\,000\cdot [6\,500-
+												\frac{1}{\sqrt[3]{\,6500}}\cdot\frac{6\,500^{\frac{4}{3}}}{\frac{4}{3}}+
+												\frac{1}{6\,500^2}\cdot\frac{6\,500^3}{3}-
+												\frac{1}{6\,500^{\frac{5}{2}}}\cdot\frac{6\,500^{\frac{7}{2}}}{\frac{7}{2}}]$$
+			$$\int_{0}^{6\,500}{\.{Q}_{h}d\tau}=138\,898\,809kWh$$
+			$$Q_{PL}=138\,898\,809kWh-5\,000kW\cdot 6\,500h = 106\,398\,809kWh$$
+			$$Q_{BL}=5\,000\cdot 6\,500+(8\,760-6\,500)\cdot 5\,000+\int_{6500}^{6500}{...}$$
+			$$Q_{BL}=43\,000\,000kWh$$
 		\subsection*{total annual cost}
 			\paragraph{formulary}
 			\begin{equation}
-				C = c_{gas}\cdot Q_{PL}+c_{bio}\cdot Q_{BL}
+				C = c_{gas}\cdot Q_{PL}+c_{waste}\cdot Q_{BL}
 			\end{equation}
 			\paragraph{calculation}
-				$$C=37\,922\,875kWh\cdot 0.1 ^{EUR}/_{kWh} + 132\,775\,935kWh\cdot 0.05 ^{EUR}/_{kWh}$$
-				$$C=10\,431\,085EUR$$
+				$$C=138\,898\,809kWh\cdot 0.1 ^{EUR}/_{kWh} + 43\,800\,000kWh\cdot (-0.08 ^{EUR}/_{kWh})$$
+				$$C=10\,385\,881EUR$$
 
 
 
