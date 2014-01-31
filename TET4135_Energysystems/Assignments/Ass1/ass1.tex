@@ -23,25 +23,32 @@
 					\item 0.05 EUR/kWh operational cost ($=r_B$)
 					\item 300 EUR/kW investition cost ($=f_B$)
 				\end{itemize}
+			\paragraph{formulary}
 			\begin{equation}
 				\tau_{PL} = \frac{f_B - f_P}{r_P - r_B}
 			\end{equation}
+			\paragraph{calculation}
 			$$\tau_{PL} = \frac{300-100}{0.1-0.05} = 4000h$$
 		\subsection*{maximum effect base load $\.{Q}_{max,BL}$}
+			\paragraph{formulary}
 			\begin{equation}
 				\.{Q}_{max,BL}=\.{Q}_{h}(\tau_{PL})
 			\end{equation}
 			\begin{equation}
 				\.{Q}_{h}=\.{Q}_{h,min}+(\.{Q}_{h,max}-\.{Q}_{h,min})\cdot [1-\sqrt[3]{\frac{\tau}{\tau_{0}}}+(\frac{\tau}{\tau_{0}})^2\cdot (1-\sqrt{\frac{\tau}{\tau_{0}}})]
 			\end{equation}
+			\paragraph{calculation}
 			$$\.{Q}_{max,BL}=\.{Q}_{h}(4000h)=5000kW+(60000kW-5000kW)\cdot [1-\sqrt[3]{\frac{4000h}{6500h}}+(\frac{4000h}{6500h})^2\cdot (1-\sqrt{\frac{4000h}{6500h}})] $$
 			$$\.{Q}_{max,BL}=17707.3kW $$
 		\subsection*{maximum effect peak load $\.{Q}_{max,PL}$}
+			\paragraph{formulary}
 			\begin{equation}
 				\.{Q}_{max,PL}=\.{Q}_{h,max}-\.{Q}_{max,BL})
 			\end{equation}
+			\paragraph{calculation}
 			$$\.{Q}_{max,PL}=60000kW-17707.3kW = 42292.7kW$$
 		\subsection*{Energy use}
+			\paragraph{formulary}
 			\begin{equation}
 				Q=\int{\.{Q}d\tau}
 			\end{equation}
@@ -55,10 +62,15 @@
 												\frac{1}{\tau_{0}^2}\cdot\frac{\tau^3}{3}|_{0}^{\tau_{PL}}-
 												\frac{1}{\tau_{0}^{\frac{5}{2}}}\cdot\frac{\tau^{\frac{7}{2}}}{\frac{7}{2}} |_{0}^{\tau_{PL}}]
 			\end{equation}
-			$$\int_{0}^{4000h}{\.{Q}_{h}d\tau}=5000\cdot 4000+
+			\begin{equation}
+				Q_{PL}=\int_{0}^{\tau_{PL}}{\.{Q}_{h}d\tau}-\.Q_{h}(\tau_{PL})\cdot\tau_{PL}
+			\end{equation}
+			\paragraph{calculation}
+			$$\int_{0}^{4000}{\.{Q}_{h}d\tau}=5000\cdot 4000+
 												(60000-5000)\cdot [4000-
-												\frac{1}{\sqrt[3]{6500}\cdot\frac{4000^{\frac{4}{3}}}{\frac{4}{3}}+
+												\frac{1}{\sqrt[3]{6500}}\cdot\frac{4000^{\frac{4}{3}}}{\frac{4}{3}}+
 												\frac{1}{6500^2}\cdot\frac{4000^3}{3}-
 												\frac{1}{6500^{\frac{5}{2}}}\cdot\frac{4000^{\frac{7}{2}}}{\frac{7}{2}}]$$
+			$$\int_{0}^{4000}{\.{Q}_{h}d\tau}=108752075kWh$$
 		\subsection*{total annual cost}
 \end{document}
