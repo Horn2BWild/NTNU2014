@@ -36,4 +36,23 @@
 			\end{equation}
 			$$\.{Q}_{max,BL}=\.{Q}_{h}(4000h)=5000kW+(60000kW-5000kW)\cdot [1-\sqrt[3]{\frac{4000h}{6500h}}+(\frac{4000h}{6500h})^2\cdot (1-\sqrt{\frac{4000h}{6500h}})] $$
 			$$\.{Q}_{max,BL}=17707.3kW $$
+		\subsection*{maximum effect peak load $\.{Q}_{max,PL}$}
+			\begin{equation}
+				\.{Q}_{max,PL}=\.{Q}_{h,max}-\.{Q}_{max,BL})
+			\end{equation}
+			$$\.{Q}_{max,PL}=60000kW-17707.3kW = 42292.7kW$$
+		\subsection*{Energy use}
+			\begin{equation}
+				Q=\int{\.{Q}d\tau}
+			\end{equation}
+			\begin{equation}
+				Q_{PL}=\int_{0}^{\tau_{PL}}{\.{Q}_{h}d\tau}-\.{Q}_{h}(\tau_{PL})\cdot \tau_{PL}
+			\end{equation}
+			\begin{equation}
+				\int_{0}^{\tau_{PL}}{\.{Q}_{h}d\tau}=\.{Q}_{h,min}\cdot\tau |_{0}^{\tau_{PL}}+
+												\Delta\.{Q}_{h}\cdot [\tau |_{0}^{\tau_{PL}}-
+												\frac{1}{\sqrt[3]{\tau_{0}}}\cdot\frac{\tau^{\frac{4}{3}}}{\frac{4}{3}}|_{0}^{\tau_{PL}}+
+												\frac{1}{\tau_{0}^2}\cdot\frac{\tau^3}{3}|_{0}^{\tau_{PL}}-
+												\frac{1}{\tau_{0}^{\frac{5}{2}}}\cdot\frac{\tau^{\frac{7}{2}}}{\frac{7}{2}} |_{0}^{\tau_{PL}}]
+			\end{equation}
 \end{document}
