@@ -28,4 +28,12 @@
 			\end{equation}
 			$$\tau_{PL} = \frac{300-100}{0.1-0.05} = 4000h$$
 		\subsection*{maximum effect base load $\.{Q}_{max,BL}$}
+			\begin{equation}
+				\.{Q}_{max,BL}=\.{Q}_{h}(\tau_{PL})
+			\end{equation}
+			\begin{equation}
+				\.{Q}_{h}=\.{Q}_{h,min}+(\.{Q}_{h,max}-\.{Q}_{h,min})\cdot [1-\sqrt[3]{\frac{\tau}{\tau_{0}}}+(\frac{\tau}{\tau_{0}})^2\cdot (1-\sqrt{\frac{\tau}{\tau_{0}}})]
+			\end{equation}
+			$$\.{Q}_{max,BL}=\.{Q}_{h}(4000h)=5000kW+(60000kW-5000kW)\cdot [1-\sqrt[3]{\frac{4000h}{6500h}}+(\frac{4000h}{6500h})^2\cdot (1-\sqrt{\frac{4000h}{6500h}})] $$
+			$$\.{Q}_{max,BL}=17707.3kW $$
 \end{document}
