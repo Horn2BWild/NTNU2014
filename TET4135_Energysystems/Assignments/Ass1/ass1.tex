@@ -65,6 +65,9 @@
 			\begin{equation}
 				Q_{PL}=\int_{0}^{\tau_{PL}}{\.{Q}_{h}d\tau}-\.Q_{h}(\tau_{PL})\cdot\tau_{PL}
 			\end{equation}
+			\begin{equation}
+				Q_{BL}=\.Q(\tau_{PL})\cdot \tau_{PL}+\.Q_{DHW}(\tau_{year}-\tau_{PL})+\int_{\tau_{PL}}^{\tau_{0}}{\.{Q}_{h}d\tau}
+			\end{equation}
 			\paragraph{calculation}
 			$$\int_{0}^{4000}{\.{Q}_{h}d\tau}=5000\cdot 4000+
 												(60000-5000)\cdot [4000-
@@ -72,5 +75,6 @@
 												\frac{1}{6500^2}\cdot\frac{4000^3}{3}-
 												\frac{1}{6500^{\frac{5}{2}}}\cdot\frac{4000^{\frac{7}{2}}}{\frac{7}{2}}]$$
 			$$\int_{0}^{4000}{\.{Q}_{h}d\tau}=108752075kWh$$
+			$$Q_{PL}=108752075kWh-17707.3kW\cdot 4000h = 37922875kWh$$
 		\subsection*{total annual cost}
 \end{document}
