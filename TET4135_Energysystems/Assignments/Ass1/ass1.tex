@@ -10,14 +10,22 @@
 \begin{document}
 	\paragraph{Name, Studentnr: }Andreas Hoermer ()
 	\paragraph{Assignment 1}Optimal combinations of production plants - local energy planning (Date: 31.01.2014)
-	\paragraph{peak load: gas boiler}
-		\begin{itemize}
-			\item 0.1 EUR/kWh operational cost
-			\item 100 EUR/kW investition cost
-		\end{itemize}
-	\paragraph{base load: bio fuel boiler}
-		\begin{itemize}
-			\item 0.05 EUR/kWh operational cost
-			\item 300 EUR/kW investition cost
-		\end{itemize}
+
+	\section*{Assignment 1a}
+		\subsection*{peak load operation time $\tau_{PL}$}
+			\paragraph{peak load: gas boiler}
+				\begin{itemize}
+					\item 0.1 EUR/kWh operational cost ($=r_P$)
+					\item 100 EUR/kW investition cost ($=f_P$)
+				\end{itemize}
+			\paragraph{base load: bio fuel boiler}
+				\begin{itemize}
+					\item 0.05 EUR/kWh operational cost ($=r_B$)
+					\item 300 EUR/kW investition cost ($=f_B$)
+				\end{itemize}
+			\begin{equation}
+				\tau_{PL} = \frac{f_B - f_P}{r_P - r_B}
+			\end{equation}
+			$$\tau_{PL} = \frac{300-100}{0.1-0.05} = 4000h$$
+		\subsection*{maximum effect base load $\.{Q}_{max,BL}$}
 \end{document}
