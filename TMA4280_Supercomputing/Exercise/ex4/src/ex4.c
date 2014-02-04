@@ -57,20 +57,20 @@ int main(int argc, char** argv)
   */
 
   int vectorlength=pow(2,kupper); //maximum vector length
-
   init_app(argc, argv, &rank, &size);
-
   Vector v=createVector(vectorlength); //storage vector for sum elements
-
 
 //calculate vector elements
   for(i=0; i<=kupper; i++)
   {
-    Snpartial=0;
-    for(j=pow(2,i); j<pow(2,i+1); j++)
+    Snpartial=0.0;
+    for(j=pow(2,i); j<pow(2,i+1); j++) //starting from element 1
     {
-      v->data[j]=1/pow(j,2);
-      Snpartial+=v->data[j];
+      //calculating j, storing in j-1
+      //e.g. calculating 1st element, storing in data[0]
+      //otherwise buffer overflow at last element
+      v->data[j-1]=1/pow(j,2); 
+      Snpartial+=v->data[j-1];
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "---------sum calculation--------\n");
     fprintf(stdout, "-- v->data[%d]: %f\n", i, v->data[i]);
@@ -101,6 +101,7 @@ int main(int argc, char** argv)
 
   fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
 
+  freeVector(v);
   close_app();
   return EXIT_SUCCESS;
 }
