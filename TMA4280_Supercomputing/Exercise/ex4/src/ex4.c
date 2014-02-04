@@ -1,3 +1,11 @@
+/** 
+  * Author: Andreas J. Hoermer
+  * Email: andreas (at) hoermer.at 
+  * 
+  * Filename: ex4.c
+  * LastChange: 04.02.2014
+ **/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
