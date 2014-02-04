@@ -73,7 +73,7 @@ fprintf(stdout, "----------------------------------\n");
       v->data[j-1]=1.0/pow(j,2);
       Snpartial+=v->data[j-1];
 
- /* ---DECOMMENT FOR DEBUGGING PURPOSES---*/
+ /* ---DECOMMENT FOR DEBUGGING PURPOSES---
 fprintf(stdout, "---------sum calculation--------\n");
 fprintf(stdout, "-- v->data[%d]: %f\n", j, v->data[j-1]);
 fprintf(stdout, "-- Snpartial: %f\n", Snpartial);
@@ -83,20 +83,20 @@ if(i%10==0)
 {
 getchar();
 }
-/**/
+*/
     }
     Sn += Snpartial;
     if(i>=klower && i<=kupper)
     {
       diff=S-Sn;
 
-  /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
+  /*---DECOMMENT FOR DEBUGGING PURPOSES---
 fprintf(stdout, "-----------calculation----------\n");
 fprintf(stdout, "-- Sn: %f\n", Sn);
 fprintf(stdout, "-- S: %f\n", S);
 fprintf(stdout, "-- diff: %f\n", diff);
 fprintf(stdout, "--------------------------------\n");
-/**/
+*/
 
       fprintf(stdout, "k=%d\n elements:%d\n S-Sn:%lf\n--------------------\n", i, j, diff);
     }
