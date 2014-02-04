@@ -30,7 +30,7 @@ int main(int argc, char** argv)
   int rank=0;
   int size=0;
   int klower=0;
-  int kuppper=0;
+  int kupper=0;
 
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "------precalculated values------\n");
@@ -39,9 +39,9 @@ int main(int argc, char** argv)
     fprintf(stdout, "--------------------------------\n");
   */
 
-  if(argc<3)
+  if(argc<3 || argc>3)
   {
-    fprintf("\nusage: ex4 <lowerbound> <upperbound>\nexiting...\n\n");
+    fprintf(stdout, "\nusage: ex4 <lowerbound> <upperbound>\nexiting...\n\n");
     return EXIT_FAILURE;
   }
 
@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 
 
 //calculate vector elements
-  #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
+ // #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
   for(i=1; i<vectorlength; i++)
   {
     v->data[i]=1/pow(i,2);
@@ -78,11 +78,12 @@ int main(int argc, char** argv)
       getchar();
     }
   */
-
-    for(j=klower; j<=kupper; j++)
+    int ktemp=klower;
+    for(j=ktemp; j<=kupper; j++)
     {
       if(i==pow(2,j)-1)
       {
+        ktemp++;
         diff=S-Sn;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "-----------calculation----------\n");
@@ -98,7 +99,7 @@ int main(int argc, char** argv)
   }
   endTime=WallTime();
 
-  fprintf(stdout, "total run time: %f\n\n", endTime-startTime);
+  fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
 
   close_app();
   return EXIT_SUCCESS;
