@@ -61,9 +61,11 @@ int main(int argc, char** argv)
   Vector v=createVector(vectorlength); //storage vector for sum elements
 
 //calculate vector elements
+  #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
   for(i=1; i<=kupper; i++)
   {
     Snpartial=0.0;
+ //   #pragma omp parallel for schedule(guided,1) reduction(+:Snpartial)
     for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
     {
       //calculating j, storing in j-1
@@ -107,6 +109,8 @@ int main(int argc, char** argv)
   return EXIT_SUCCESS;
 }
 
+//! \brief calculating the number pi
+//! \return pi
 double mathPi()
 {
   return 4*atan(1);
