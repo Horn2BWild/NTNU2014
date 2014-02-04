@@ -34,6 +34,7 @@ int main(int argc, char** argv)
   int **sublength;
   int **displacement;
   double Snpartial=0.0;
+  int length=0;
   int tag=100;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "------precalculated values------\n");
@@ -81,8 +82,11 @@ int main(int argc, char** argv)
   splitVector(vectorlength, P, sublength, displacement);
   for(i=0; i<P; i++)
   {
-  //distributing vector elements
-  MPI_Send(
+  //distribution
+    //distributing length
+    MPI_send(sublength, 1, MPI_DOUBLE, i, tag, &WorldComm);
+    //distributing subvector
+    MPI_Send((v->data)+displacement), sublength, MPI_DOUBLE, i, tag, &WorldComm);
   }
   //collecting and sum up
 
@@ -90,6 +94,12 @@ int main(int argc, char** argv)
   }
   else
   {
+  //receiving
+    //receiving length
+    MPI_Recv(&length, 1, MPI_CHAR, 0 ,tag, &WorldComm,&status);
+    //receiving subvector
+    double* partialVector=(double*)malloc(length*sizeof(double));
+    MPI_Recv(partialVector, length, MPI_DOUBLE, 0 ,tag, &WorldComm,&status);
   //calculate partial sums
   
   }
