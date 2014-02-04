@@ -16,6 +16,17 @@
 //function prototypes
 double mathPi();
 
+double sum(double* vec, int length)
+{
+  int i=0;
+  double partsum=0.0;
+  for(i=0; i<length; i++)
+  {
+    partsum+=vec[i];
+  }
+  return partsum;
+}
+
 //! \usage: ex4 <lowerbound> <upperbound>
 //e.g. 3..14
 int main(int argc, char** argv)
@@ -30,6 +41,7 @@ int main(int argc, char** argv)
   int rank=0;
   int size=0;
   int klower=0;
+  int P=0;
   int kupper=0;
   double Snpartial=0.0;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
@@ -39,14 +51,15 @@ fprintf(stdout, "-- S: %f\n", S);
 fprintf(stdout, "--------------------------------\n");
 */
 
-  if(argc<3 || argc>3)
+  if(argc<4 || argc>4)
   {
-    fprintf(stdout, "\nusage: ex4 <lowerbound> <upperbound>\nexiting...\n\n");
+    fprintf(stdout, "\nusage: ex4 <lowerbound> <upperbound> <P>\nexiting...\n\n");
     return EXIT_FAILURE;
   }
 
   klower=atoi(argv[1]);
   kupper=atoi(argv[2]);
+  P=atoi(argv[3]);
   
   int ktemp=klower;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
@@ -61,17 +74,27 @@ fprintf(stdout, "----------------------------------\n");
   Vector v=createVector(vectorlength); //storage vector for sum elements
 //calculate vector elements
 #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
-  for(i=1; i<=kupper; i++)
+  for(i=1;i<=kupper; i++)
   {
-    Snpartial=0.0;
- // #pragma omp parallel for schedule(guided,1) reduction(+:Snpartial)
     for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
     {
       //calculating j, storing in j-1
       //e.g. calculating 1st element, storing in data[0]
       //otherwise buffer overflow at last element
       v->data[j-1]=1.0/pow(j,2);
-      Snpartial+=v->data[j-1];
+    }
+  }
+
+
+#pragma omp parallel for schedule(guided,1) reduction(+:Sn)
+  for(i=1; i<=kupper; i++)
+  {
+    Snpartial=0.0;
+ // #pragma omp parallel for schedule(guided,1) reduction(+:Snpartial)
+    Sn+=sum((v->data)+sizeof(double)*pow(2,i-1), pow(2,i-1);
+//    for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
+ //   {
+ //     Snpartial+=v->data[j-1];
 
  /* ---DECOMMENT FOR DEBUGGING PURPOSES---
 fprintf(stdout, "---------sum calculation--------\n");
@@ -84,10 +107,10 @@ if(i%10==0)
 getchar();
 }
 */
-    }
-    Sn += Snpartial;
-    if(i>=klower && i<=kupper)
-    {
+ //   }
+ //   Sn += Snpartial;
+  //  if(i>=klower && i<=kupper)
+  //  {
       diff=S-Sn;
 
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
@@ -99,7 +122,7 @@ fprintf(stdout, "--------------------------------\n");
 */
 
       fprintf(stdout, "k=%d\n elements:%d\n S-Sn:%lf\n--------------------\n", i, j, diff);
-    }
+ //   }
   }
 
 
