@@ -67,7 +67,7 @@ int main(int argc, char** argv)
   for(i=0; i<=kupper; i++)
   {
     Snpartial=0;
-    for(j=pow(2,i)+1; j<=pow(2,i+1); j++)
+    for(j=pow(2,i); j<pow(2,i+1); j++)
     {
       v->data[j]=1/pow(j,2);
       Snpartial+=v->data[j];
