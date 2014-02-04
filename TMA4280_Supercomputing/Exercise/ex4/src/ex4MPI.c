@@ -16,6 +16,25 @@
 //function prototypes
 double mathPi();
 
+double dosum(Vector v)
+{
+  int i;
+  double tempsum=0.0;
+  for (i=0;i<v->len;i++) {
+    tempsum+=v->data[i];
+  }
+
+#ifdef HAVE_MPI
+  for (i=0;i<v->comm_size;++i) {
+    MPI_Reduce(temp->data+v->displ[i], u->data, v->sizes[i],
+               MPI_DOUBLE, MPI_SUM, i, *v->comm);
+  }
+  freeVector(temp);
+#endif
+  return alpha;
+}
+
+
 //! \usage: ex4 <lowerbound> <upperbound>
 //e.g. 3..14
 int main(int argc, char** argv)
@@ -31,8 +50,8 @@ int main(int argc, char** argv)
   int size=0;
   int k=0;
   int P=0;
-  int **sublength;
-  int **displacement;
+  int *sublength;
+  int *displacement;
   double Snpartial=0.0;
   int length=0;
   int tag=100;
@@ -62,34 +81,31 @@ int main(int argc, char** argv)
   int vectorlength=pow(2,k); //maximum vector length
   init_app(argc, argv, &rank, &size);
 
-#ifdef HAVE_MPI
+
   Vector v=createVectorMPI(vectorlength, &WorldComm, 0);
-#else
-  Vector v=createVector(vectorlength); //storage vector for sum elements
-#endif
 
   if(rank==0)
   {
   //generating vector elements
   for(i=1; i<=vectorlength; i++)
   {
-      //calculating j, storing in j-1
-      //e.g. calculating 1st element, storing in data[0]
-      //otherwise buffer overflow at last element
       v->data[i-1]=1.0/pow(i,2); 
   }
+
+  sum = dosum(v);
+
+
   //partitioning vector elements
-  splitVector(vectorlength, P, sublength, displacement);
   for(i=0; i<P; i++)
   {
   //distribution
     //distributing length
     MPI_send(sublength, 1, MPI_DOUBLE, i, tag, &WorldComm);
     //distributing subvector
-    MPI_Send((v->data)+displacement), sublength, MPI_DOUBLE, i, tag, &WorldComm);
+    MPI_Send((v->data)), sublength, MPI_DOUBLE, i, tag, &WorldComm);
   }
   //collecting and sum up
-
+  MPI_Reduce (&mypi, &pi, 1, MPI_DOUBLE, MPI_SUM, 0, &WorldComm);
   //printout
   }
   else
@@ -101,7 +117,23 @@ int main(int argc, char** argv)
     double* partialVector=(double*)malloc(length*sizeof(double));
     MPI_Recv(partialVector, length, MPI_DOUBLE, 0 ,tag, &WorldComm,&status);
   //calculate partial sums
-  
+    Sn=0;
+    for(i=0; i<=length; i++)
+  {
+      Sn+=partialVector[i]
+
+  /*---DECOMMENT FOR DEBUGGING PURPOSES---
+    fprintf(stdout, "---------sum calculation--------\n");
+    fprintf(stdout, "-- v->data[%d]: %f\n", j, v->data[j-1]);
+    fprintf(stdout, "-- Sn: %f\n", Sn);
+    fprintf(stdout, "--------------------------------\n");
+    if(i%10==0)
+    {
+      getchar();
+    }
+  */
+  }
+//sending back partial sum
   }
 
   /*---DECOMMENT FOR DEBUGGING PURPOSES--- 
@@ -111,21 +143,7 @@ int main(int argc, char** argv)
 
 //calculate vector elements
  // #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
-  for(i=1; i<=vectorlength; i++)
-  {
-      Sn+=v->data[i-1];
 
-  /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
-    fprintf(stdout, "---------sum calculation--------\n");
-    fprintf(stdout, "-- v->data[%d]: %f\n", j, v->data[j-1]);
-    fprintf(stdout, "-- Sn: %f\n", Sn);
-    fprintf(stdout, "--------------------------------\n");
-    if(i%10==0)
-    {
-      getchar();
-    }
- /* */
-  }
   diff=S-Sn;
   fprintf(stdout, "k=%d\n  elements:%d\n  %lf\n--------------------\n", k, i-1, diff);
  
