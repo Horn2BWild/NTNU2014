@@ -3,10 +3,12 @@
 #include <math.h>
 #include "common.h"
 
+double mathPi();
+
 int main(int argc, char** argv)
 {
   int vectorlength=pow(2,14);
-  double S=pow(pi(),2)/6;
+  double S=pow(mathPi(),2)/6;
   double Sn=0.0;
   Vector v=createVector(vectorlength);
   int i=0;
@@ -21,10 +23,10 @@ int main(int argc, char** argv)
 
     for(j=3; j<=14; j++)
     {
-      if(i==pow(2,j))
+      if(i==pow(2,j)-1)
       {
         diff=S-Sn;
-        fprintf(stdout, "k=%d\n  elements:%d\n  %d\n--------------------", j, i, diff);
+        fprintf(stdout, "k=%d\n  elements:%d\n  %lf\n--------------------\n", j, i+1, diff);
       }
     }
   }
@@ -33,7 +35,7 @@ int main(int argc, char** argv)
   return EXIT_SUCCESS;
 }
 
-double pi()
+double mathPi()
 {
   return 4*atan(1);
 }
