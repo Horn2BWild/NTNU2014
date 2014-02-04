@@ -24,7 +24,7 @@ int main(int argc, char** argv)
       if(i==pow(2,j))
       {
         diff=S-Sn;
-        fprintf(stdout, "k=%d:\t%d", j, diff);
+        fprintf(stdout, "k=%d\n  elements:%d\n  %d\n--------------------", j, i, diff);
       }
     }
   }
