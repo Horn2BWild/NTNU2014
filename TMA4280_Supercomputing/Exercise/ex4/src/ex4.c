@@ -11,17 +11,21 @@
 #include <math.h>
 #include "common.h"
 
+#include <omp.h>
+
+//function prototypes
 double mathPi();
 
 int main(int argc, char** argv)
-{
-  int vectorlength=pow(2,14);
-  double S=pow(mathPi(),2)/6;
-  double Sn=0.0;
-  Vector v=createVector(vectorlength);
+{ double startTime=WallTime();
+  double endTime=0.0;
+  int vectorlength=pow(2,14); //maximum vector length
+  double S=pow(mathPi(),2)/6; //reference value S
+  double Sn=0.0; //approximated Sn
+  Vector v=createVector(vectorlength); //storage vector for sum elements
   int i=0;
   int j=0;
-  double diff=0.0;
+  double diff=0.0; //difference S-Sn
 
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
   fprintf(stdout, "------precalculated values------\n");
@@ -63,7 +67,9 @@ int main(int argc, char** argv)
       }
     }
   }
+  endTime=WallTime();
 
+  fprintf(stdout, "total run time: %f\n\n", endTime-startTime);
 
   return EXIT_SUCCESS;
 }
