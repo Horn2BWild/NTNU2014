@@ -31,7 +31,7 @@ int main(int argc, char** argv)
   int size=0;
   int klower=0;
   int kupper=0;
-
+  double Snpartial=0.0;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "------precalculated values------\n");
     fprintf(stdout, "-- PI: %f\n", mathPi());
@@ -47,7 +47,8 @@ int main(int argc, char** argv)
 
   klower=atoi(argv[1]);
   kupper=atoi(argv[2]);
-
+  
+  int ktemp=klower;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "------command line arguments------\n");
     fprintf(stdout, "-- lower bound: %d\n", klower);
@@ -63,28 +64,31 @@ int main(int argc, char** argv)
 
 
 //calculate vector elements
- // #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
-  for(i=1; i<vectorlength; i++)
+  for(i=0; i<=kupper; i++)
   {
-    v->data[i]=1/pow(i,2);
-    Sn += v->data[i];
+    Snpartial=0;
+    for(j=pow(2,i)+1; j<=pow(2,i+1); j++)
+    {
+      v->data[j]=1/pow(j,2);
+      Snpartial+=v->data[j];
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "---------sum calculation--------\n");
     fprintf(stdout, "-- v->data[%d]: %f\n", i, v->data[i]);
-    fprintf(stdout, "-- Sn: %f\n", Sn);
+    fprintf(stdout, "-- Snpartial: %f\n", Snpartial);
     fprintf(stdout, "--------------------------------\n");
     if(i%10==0)
     {
       getchar();
     }
   */
-    int ktemp=klower;
-    for(j=ktemp; j<=kupper; j++)
+    }
+    Sn += Snpartial;
+    if(i>=klower && i<=kupper)
     {
-      if(i==pow(2,j)-1)
-      {
-        ktemp++;
-        diff=S-Sn;
+      diff=S-Sn;
+      fprintf(stdout, "k=%d\n  elements:%d\n  %lf\n--------------------\n", i, j, diff);
+    }
+  }
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "-----------calculation----------\n");
     fprintf(stdout, "-- Sn: %f\n", Sn);
@@ -93,10 +97,6 @@ int main(int argc, char** argv)
     fprintf(stdout, "--------------------------------\n");
   */
 
-        fprintf(stdout, "k=%d\n  elements:%d\n  %lf\n--------------------\n", j, i+1, diff);
-      }
-    }
-  }
   endTime=WallTime();
 
   fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
