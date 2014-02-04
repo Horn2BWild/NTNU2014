@@ -30,7 +30,11 @@ int main(int argc, char** argv)
   int rank=0;
   int size=0;
   int k=0;
+  int P=0;
+  int **sublength;
+  int **displacement;
   double Snpartial=0.0;
+  int tag=100;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "------precalculated values------\n");
     fprintf(stdout, "-- PI: %f\n", mathPi());
@@ -38,13 +42,14 @@ int main(int argc, char** argv)
     fprintf(stdout, "--------------------------------\n");
   */
 
-  if(argc<2 || argc>2)
+  if(argc<3 || argc>3)
   {
-    fprintf(stdout, "\nusage: ex4 <k> \nexiting...\n\n");
+    fprintf(stdout, "\nusage: ex4 <k> <P>\nexiting...\n\n");
     return EXIT_FAILURE;
   }
 
   k=atoi(argv[1]);
+  P=atoi(argv[2]);
   
   int ktemp=k;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
@@ -57,7 +62,7 @@ int main(int argc, char** argv)
   init_app(argc, argv, &rank, &size);
 
 #ifdef HAVE_MPI
-
+  Vector v=createVectorMPI(vectorlength, &WorldComm, 0);
 #else
   Vector v=createVector(vectorlength); //storage vector for sum elements
 #endif
@@ -65,9 +70,20 @@ int main(int argc, char** argv)
   if(rank==0)
   {
   //generating vector elements
-
-  //partitioning and distributing vector elements
-
+  for(i=1; i<=vectorlength; i++)
+  {
+      //calculating j, storing in j-1
+      //e.g. calculating 1st element, storing in data[0]
+      //otherwise buffer overflow at last element
+      v->data[i-1]=1.0/pow(i,2); 
+  }
+  //partitioning vector elements
+  splitVector(vectorlength, P, sublength, displacement);
+  for(i=0; i<P; i++)
+  {
+  //distributing vector elements
+  MPI_Send(
+  }
   //collecting and sum up
 
   //printout
@@ -87,10 +103,6 @@ int main(int argc, char** argv)
  // #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
   for(i=1; i<=vectorlength; i++)
   {
-      //calculating j, storing in j-1
-      //e.g. calculating 1st element, storing in data[0]
-      //otherwise buffer overflow at last element
-      v->data[i-1]=1.0/pow(i,2); 
       Sn+=v->data[i-1];
 
   /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
