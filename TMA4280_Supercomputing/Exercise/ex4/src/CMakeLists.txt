@@ -10,3 +10,6 @@ include_directories(${COMMON_INCLUDE_PATHS})
 add_executable(ex4 ex4.c)
 target_link_libraries(ex4 ${COMMON_LIBRARIES})
 
+add_executable(ex4MPI ex4MPI.c)
+target_link_libraries(ex4MPI ${COMMON_LIBRARIES})
+
