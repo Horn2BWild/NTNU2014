@@ -63,7 +63,6 @@ int main(int argc, char** argv)
 //calculate vector elements
   for(i=1; i<=kupper; i++)
   {
-    getchar();
     Snpartial=0.0;
     for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
     {
@@ -73,16 +72,16 @@ int main(int argc, char** argv)
       v->data[j-1]=1/pow(j,2); 
       Snpartial+=v->data[j-1];
 
-  /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
+  /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "---------sum calculation--------\n");
     fprintf(stdout, "-- v->data[%d]: %f\n", j, v->data[j-1]);
     fprintf(stdout, "-- Snpartial: %f\n", Snpartial);
     fprintf(stdout, "--------------------------------\n");
-   // if(i%10==0)
-   // {
+    if(i%10==0)
+    {
       getchar();
-   // }
-/*  */
+    }
+  */
     }
     Sn += Snpartial;
     if(i>=klower && i<=kupper)
@@ -103,7 +102,7 @@ int main(int argc, char** argv)
 
   fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
 
- // freeVector(v);
+  freeVector(v);
   close_app();
   return EXIT_SUCCESS;
 }
