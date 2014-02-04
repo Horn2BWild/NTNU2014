@@ -58,8 +58,20 @@ int main(int argc, char** argv)
 
   int vectorlength=pow(2,kupper); //maximum vector length
   init_app(argc, argv, &rank, &size);
+#ifdef HAVE_MPI
+  Vector v=createVectorMPI(vectorlength, &WorldComm, 0);
+#else
   Vector v=createVector(vectorlength); //storage vector for sum elements
+#endif
 
+  if(rank==0)
+  {
+    
+  }
+  else
+  {
+
+  }
 //calculate vector elements
   #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
   for(i=1; i<=kupper; i++)
