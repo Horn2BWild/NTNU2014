@@ -24,7 +24,6 @@ int main(int argc, char** argv)
   double endTime=0.0;
   double S=pow(mathPi(),2)/6; //reference value S
   double Sn=0.0; //approximated Sn
-  Vector v=createVector(vectorlength); //storage vector for sum elements
   int i=0;
   int j=0;
   double diff=0.0; //difference S-Sn
@@ -32,6 +31,13 @@ int main(int argc, char** argv)
   int size=0;
   int klower=0;
   int kuppper=0;
+
+  /*---DECOMMENT FOR DEBUGGING PURPOSES---
+    fprintf(stdout, "------precalculated values------\n");
+    fprintf(stdout, "-- PI: %f\n", mathPi());
+    fprintf(stdout, "-- S: %f\n", S);
+    fprintf(stdout, "--------------------------------\n");
+  */
 
   if(argc<3)
   {
@@ -42,15 +48,19 @@ int main(int argc, char** argv)
   klower=atoi(argv[1]);
   kupper=atoi(argv[2]);
 
+  /*---DECOMMENT FOR DEBUGGING PURPOSES---
+    fprintf(stdout, "------command line arguments------\n");
+    fprintf(stdout, "-- lower bound: %d\n", klower);
+    fprintf(stdout, "-- upper bound: %d\n", kupper);
+    fprintf(stdout, "----------------------------------\n");
+  */
+
   int vectorlength=pow(2,kupper); //maximum vector length
 
   init_app(argc, argv, &rank, &size);
-  /*---DECOMMENT FOR DEBUGGING PURPOSES---
-  fprintf(stdout, "------precalculated values------\n");
-  fprintf(stdout, "-- PI: %f\n", mathPi());
-  fprintf(stdout, "-- S: %f\n", S);
-  fprintf(stdout, "--------------------------------\n");
-  */
+
+  Vector v=createVector(vectorlength); //storage vector for sum elements
+
 
 //calculate vector elements
   #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
@@ -75,11 +85,11 @@ int main(int argc, char** argv)
       {
         diff=S-Sn;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
-        fprintf(stdout, "-----------calculation----------\n");
-        fprintf(stdout, "-- Sn: %f\n", Sn);
-        fprintf(stdout, "-- S: %f\n", S);
-        fprintf(stdout, "-- diff: %f\n", diff);
-        fprintf(stdout, "--------------------------------\n");
+    fprintf(stdout, "-----------calculation----------\n");
+    fprintf(stdout, "-- Sn: %f\n", Sn);
+    fprintf(stdout, "-- S: %f\n", S);
+    fprintf(stdout, "-- diff: %f\n", diff);
+    fprintf(stdout, "--------------------------------\n");
   */
 
         fprintf(stdout, "k=%d\n  elements:%d\n  %lf\n--------------------\n", j, i+1, diff);
