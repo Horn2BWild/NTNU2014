@@ -97,10 +97,8 @@ fprintf(stdout, "----------------------------------\n");
         sendvec[j-1]=1.0/pow(j,2);
         fprintf(stdout, "sendvec[%d]: %f\n", j, sendvec[j-1]);
       }
-    }
-    for(i=1;i<=kupper;i++)
-    {
-      int tmpelements=pow(2,i);
+    
+      int tmpelements=pow(2,(i-1));
       splitVector(tmpelements, size, &sublength, &displ);
       fprintf(stdout, "k: %d tmpelements: %d, size: %d\n", i, tmpelements, size);
       for (j=0; j < size; j++)
@@ -117,7 +115,7 @@ fprintf(stdout, "----------------------------------\n");
 		    fprintf(stdout, "----process %d vsend[j]=%f\n", i, vsend[dbgloop]);
 		  }
 	  
-		  MPI_Send(vsend, sublength[i], MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
+		  MPI_Send(vsend, sublength[i], MPI_DOUBLE, j, tag, MPI_COMM_WORLD);
       } 
     }
     for(i=1;i<=kupper; i++)
