@@ -108,28 +108,24 @@ fprintf(stdout, "----------------------------------\n");
 		  fprintf(stdout, "k: %d size: %d\n", i, size);
 		for (j=0; j < size; j++)
 		{
-          if(j<pow(2,i))
-          {
+
 		    fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
-          }
 		}
 		for (j=0; j < size; j++)
 		{
 			  fprintf(stdout, "---send for proc %d\n", j);
-                        if(j<pow(2,i))
-          {
+
 			  double* vsend=&(sendvec[displ[j]]);
 			  for(dbgloop=0; dbgloop<sublength[j]; dbgloop++)
 			  {
 				fprintf(stdout, "----process %d\nvsend[j]=%f\n", j, vsend[dbgloop]);
 			  }
 		  	  MPI_Send(vsend, sublength[j], MPI_DOUBLE, j, tag, MPI_COMM_WORLD);
-}
+
 		} 
 	  }
 }
-          if(rank<pow(2,i))
-          {
+
 	  receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
 	  MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
 	  fprintf(stdout, "process %d: data received\n", rank);
@@ -137,10 +133,10 @@ fprintf(stdout, "----------------------------------\n");
 
 	  //MPI_Reduce(sum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD); 
 	  MPI_Allreduce(localsum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-}
+
 	  diff=S-(*globalsum);
 	  fprintf(stdout, "k=%d\n elements:%d\n S-Sn:%lf\n--------------------\n", i, j, diff);
-    
+    MPI_Barrier(MPI_COMM_WORLD);
     }
  
 
