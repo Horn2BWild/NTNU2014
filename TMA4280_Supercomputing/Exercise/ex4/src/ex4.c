@@ -16,6 +16,27 @@
 //function prototypes
 double mathPi();
 
+int cleanup(void** memory, int length, char* message, int exitcode)
+{
+    int i=0;
+    for(i=0; i<length; i++)
+    {
+      free(memory[i]);
+    }
+    close_app();
+    if(exitcode==EXIT_FAILURE)
+    {
+      fprintf(stderr, "%s\naborting...\n", message);
+      return EXIT_FAILURE;
+    }
+    else
+    {
+      fprintf(stdout, "%s\n", message);
+      return EXIT_SUCCESS;
+    }
+}
+
+
 double sum(double* vec, int length)
 {
     int i=0;
@@ -60,14 +81,20 @@ int main(int argc, char** argv)
     if(argc<3 || argc>3)
     {
         fprintf(stdout, "\nusage: ex4 <lowerbound> <upperbound>\nexiting...\n\n");
+        free(globalsum);
         return EXIT_FAILURE;
     }
 
     klower=atoi(argv[1]);
     kupper=atoi(argv[2]);
-// P=atoi(argv[3]);
+    int vectorlength=pow(2,kupper); //maximum vector length
+    init_app(argc, argv, &rank, &size);
 
-    int ktemp=klower;
+    double* sendvec=(double*)malloc(vectorlength*sizeof(double));
+    double* receivevec;
+    double* localsum=(double*)malloc(sizeof(double));
+
+// P=atoi(argv[3]);
     /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "------command line arguments------\n");
     fprintf(stdout, "-- lower bound: %d\n", klower);
@@ -75,20 +102,28 @@ int main(int argc, char** argv)
     fprintf(stdout, "----------------------------------\n");
     */
 
-    int vectorlength=pow(2,kupper); //maximum vector length
-    init_app(argc, argv, &rank, &size);
 
-    double* sendvec=(double*)malloc(vectorlength*sizeof(double));
-    double* receivevec;
-    double* localsum=(double*)malloc(sizeof(double));
+
+    if(sendvec==NULL)
+    {
+      fprintf(stdout, "could not allocate memory: sendvec\n aborting...");
+      return EXIT_FAILURE;
+    }
+    if(localsum==NULL)
+    {
+      fprintf(stdout, "could not allocate memory: localsum\n aborting...");
+      return EXIT_FAILURE;
+    }
     //Vector v=createVector(vectorlength); //storage vector for sum elements
 //calculate vector elements
 
     if(rank==0)
     {
+#pragma omp parallel for schedule(guided,1)
         for(i=1; i<=vectorlength; i++)
         {
             sendvec[i-1]=1.0/pow(i,2);
+      //      fprintf(stdout, "sendvec[%d]: %f", i, sendvec[i-1]);
         }
         /*---DECOMMENT FOR DEBUGGING PURPOSES---
           fprintf(stdout,"memory allocated and calculated values\n");
@@ -106,18 +141,19 @@ int main(int argc, char** argv)
             	  fprintf(stdout, "sendvec[%d]: %f\n", dbgloop, sendvec[dbgloop]);
             	}
             	  fprintf(stdout, "k: %d size: %d\n", i, size);
-
+*/
+/*---DECOMMENT FOR DEBUGGING PURPOSES---
             	for (j=0; j < size; j++)
             	{
 
             	    fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
             	}
-            */
+           */
             for (j=0; j < size; j++)
             {
-                /*---DECOMMENT FOR DEBUGGING PURPOSES---
+                /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
                 		  fprintf(stdout, "---send for proc %d\n", j);
-                */
+               /* */
                 double* vsend=&(sendvec[displ[j]]);
                 /*---DECOMMENT FOR DEBUGGING PURPOSES---
                 		  for(dbgloop=0; dbgloop<sublength[j]; dbgloop++)
@@ -126,22 +162,29 @@ int main(int argc, char** argv)
                 		  }
                 */
                 MPI_Send(vsend, sublength[j], MPI_DOUBLE, j, tag, MPI_COMM_WORLD);
+fprintf(stdout, "---data for proc %d sent\n", j);
 
             }
         }
 
 
         receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
+fprintf(stdout, "proc %d receivevec created\n", rank);
+if(receivevec==NULL)
+    {
+      fprintf(stderr, "could not allocate memory: receivevec\n aborting...");
+      return EXIT_FAILURE;
+    }
         MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
-        /*---DECOMMENT FOR DEBUGGING PURPOSES---
+        /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
           fprintf(stdout, "process %d: data received\n", rank);
-        */
+        /**/
         (*localsum)=sum(receivevec, sublength[rank]);
 
         //MPI_Reduce(sum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
         MPI_Allreduce(localsum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
-        if(rank==0)
+        if(rank==0 && i>=klower && i<=kupper)
         {
             diff=S-(*globalsum);
             fprintf(stdout,"----------Result----------\n");
@@ -157,14 +200,11 @@ int main(int argc, char** argv)
             fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
             fprintf(stdout,"--------------------------\n");
         }
-        MPI_Barrier(MPI_COMM_WORLD);
     }
 
-
-
-
-    free(sendvec);
     close_app();
+
+
     return EXIT_SUCCESS;
 }
 
