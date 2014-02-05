@@ -12,8 +12,8 @@ int main(int argc, char** argv)
   MPI_Status status;
   char message[20];
   int j=0;
-  double* vec=(double*)malloc(VECTORSIZE*sizeof(double));
-
+  double* sendvec=(double*)malloc(VECTORSIZE*sizeof(double));
+  double* receivevec=(double*)malloc(VECTORSIZE*sizeof(double));
   MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 
   for(i=0;i<VECTORSIZE;i++)
   {
-    printf("process %d: %s\n", rank, message);
+    printf("process %d: %f\n", rank, vec[i]);
   }
 
   MPI_Finalize();
