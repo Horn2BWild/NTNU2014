@@ -33,6 +33,7 @@ double sum(double* vec, int length)
 int main(int argc, char** argv)
 {
   double startTime=WallTime();
+  MPI_Status status;
   double endTime=0.0;
   double S=pow(mathPi(),2)/6; //reference value S
   double Sn=0.0; //approximated Sn
@@ -120,7 +121,7 @@ fprintf(stdout, "----------------------------------\n");
   diff=S-(*globalsum);
   fprintf(stdout, "k=%d\n elements:%d\n S-Sn:%lf\n--------------------\n", i, j, diff);
  //   }
-  }
+ 
 
 
   endTime=WallTime();
