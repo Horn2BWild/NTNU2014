@@ -142,12 +142,12 @@ int main(int argc, char** argv)
             	  fprintf(stdout, "k: %d size: %d\n", i, size);
             */
             /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
-                        	for (j=0; j < size; j++)
-                        	{
+            for (j=0; j < size; j++)
+            {
 
-                        	    fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
-                        	}
-                      /* */
+                fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
+            }
+            /* */
             for (j=0; j < size; j++) //send for each slave process
             {
                 /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
@@ -161,15 +161,15 @@ int main(int argc, char** argv)
                 			fprintf(stdout, "----process %d\nvsend[%d]=%f\n", j, dbgloop, vsend[dbgloop]);
                 		  }
                 */
-          //      fprintf(stdout, "---data for proc %d just NOT sent\n", j);
-          //      fprintf(stdout, "------proc %d sublength %d displ %d address %x\n", j, sublength[j], displ[i], vsend);
+                //      fprintf(stdout, "---data for proc %d just NOT sent\n", j);
+                //      fprintf(stdout, "------proc %d sublength %d displ %d address %x\n", j, sublength[j], displ[i], vsend);
                 MPI_Send(vsend, sublength[j], MPI_DOUBLE, j, tag, MPI_COMM_WORLD);
-          //      fprintf(stdout, "---data for proc %d sent\n", j);
+                //      fprintf(stdout, "---data for proc %d sent\n", j);
 
             }
         }
 
-
+        free(receivevec);
         receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
         fprintf(stdout, "proc %d receivevec created\n", rank);
         if(receivevec==NULL)
@@ -181,9 +181,10 @@ int main(int argc, char** argv)
         /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
         fprintf(stdout, "process %d: data received\n", rank);
         /**/
+        //calculating local sum
         (*localsum)=sum(receivevec, sublength[rank]);
 
-
+        //summing up all local sums
         MPI_Allreduce(localsum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
         if(rank==0 && i>=klower && i<=kupper)
@@ -204,6 +205,10 @@ int main(int argc, char** argv)
         }
     }
 
+    free(receivevec);
+    free(sendvec);
+    free(localsum);
+    free(globalsum);
     close_app();
 
 
