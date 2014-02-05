@@ -46,6 +46,7 @@ int main(int argc, char** argv)
   int P=0;
   int tag=100;
   int kupper=0;
+  int dbgloop=0;
   double Snpartial=0.0;
   double* globalsum=(double*)malloc(sizeof(double));
   int *displ, *sublength;
@@ -64,7 +65,7 @@ fprintf(stdout, "--------------------------------\n");
 
   klower=atoi(argv[1]);
   kupper=atoi(argv[2]);
-  P=atoi(argv[3]);
+ // P=atoi(argv[3]);
   
   int ktemp=klower;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
@@ -94,26 +95,33 @@ fprintf(stdout, "----------------------------------\n");
       //e.g. calculating 1st element, storing in data[0]
       //otherwise buffer overflow at last element
         sendvec[j-1]=1.0/pow(j,2);
+        fprintf(stdout, "sendvec[%d]: %f\n", j, sendvec[j-1]);
       }
     }
     for(i=1;i<=kupper;i++)
     {
       int tmpelements=pow(2,i);
       splitVector(tmpelements, size, &sublength, &displ);
+      fprintf(stdout, "k: %d tmpelements: %d, size: %d\n", i, tmpelements, size);
       for (j=0; j < size; j++)
       {
-      //fprintf(stdout, "---send for proc %d\n", i);
-      double* vsend=&(sendvec[displ[i]]);
-  /*---DECOMMENT FOR DEBUGGING PURPOSES---
-      for(j=0; j<sublength[i]; j++)
-      {
-        fprintf(stdout, "----process %d vsend[j]=%f\n", i, vsend[j]);
+        fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
       }
-  */
-      MPI_Send(vsend, sublength[i], MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
+      for (j=0; j < size; j++)
+      {
+		  fprintf(stdout, "---send for proc %d\n", i);
+		  double* vsend=&(sendvec[displ[i]]);
+	  /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
+		  for(dbgloop=0; dbgloop<sublength[i]; dbgloop++)
+		  {
+		    fprintf(stdout, "----process %d vsend[j]=%f\n", i, vsend[dbgloop]);
+		  }
+	  
+		  MPI_Send(vsend, sublength[i], MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
       } 
     }
-
+    for(i=1;i<=kupper; i++)
+    {
 	  receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
 	  MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
 	  fprintf(stdout, "process %d: data received\n", rank);
@@ -124,10 +132,10 @@ fprintf(stdout, "----------------------------------\n");
 
 	  diff=S-(*globalsum);
 	  fprintf(stdout, "k=%d\n elements:%d\n S-Sn:%lf\n--------------------\n", i, j, diff);
+    
     }
- //   }
  
-
+}
 
   endTime=WallTime();
 
