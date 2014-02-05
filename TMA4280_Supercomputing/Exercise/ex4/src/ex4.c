@@ -12,30 +12,31 @@
 #include "common.h"
 
 #include <omp.h>
+#include <mpi.h>
 
 //function prototypes
 double mathPi();
-
+/*NOT USED AT THE MOMENT
 int cleanup(void** memory, int length, char* message, int exitcode)
 {
     int i=0;
     for(i=0; i<length; i++)
     {
-      free(memory[i]);
+        free(memory[i]);
     }
     close_app();
     if(exitcode==EXIT_FAILURE)
     {
-      fprintf(stderr, "%s\naborting...\n", message);
-      return EXIT_FAILURE;
+        fprintf(stderr, "%s\naborting...\n", message);
+        return EXIT_FAILURE;
     }
     else
     {
-      fprintf(stdout, "%s\n", message);
-      return EXIT_SUCCESS;
+        fprintf(stdout, "%s\n", message);
+        return EXIT_SUCCESS;
     }
 }
-
+*/
 
 double sum(double* vec, int length)
 {
@@ -62,11 +63,10 @@ int main(int argc, char** argv)
     int j=0;
     double diff=0.0; //difference S-Sn
     int rank=0;
-    int size=0;
-    int klower=0;
-    int P=0;
+    int size=0; //no proc
+    int klower=0; //lower bound for 2^k
     int tag=100;
-    int kupper=0;
+    int kupper=0; //upper bound for 2^k calculation
     int dbgloop=0;
     double Snpartial=0.0;
     double* globalsum=(double*)malloc(sizeof(double));
@@ -84,11 +84,11 @@ int main(int argc, char** argv)
         free(globalsum);
         return EXIT_FAILURE;
     }
-
+    init_app(argc, argv, &rank, &size);
     klower=atoi(argv[1]);
     kupper=atoi(argv[2]);
-    int vectorlength=pow(2,kupper); //maximum vector length
-    init_app(argc, argv, &rank, &size);
+    int vectorlength=pow(2,kupper); //maximum vector length 2^k
+    fprintf(stdout, "vectorlength: %d\n", vectorlength);
 
     double* sendvec=(double*)malloc(vectorlength*sizeof(double));
     double* receivevec;
@@ -106,15 +106,14 @@ int main(int argc, char** argv)
 
     if(sendvec==NULL)
     {
-      fprintf(stdout, "could not allocate memory: sendvec\n aborting...");
-      return EXIT_FAILURE;
+        fprintf(stdout, "could not allocate memory: sendvec\n aborting...");
+        return EXIT_FAILURE;
     }
     if(localsum==NULL)
     {
-      fprintf(stdout, "could not allocate memory: localsum\n aborting...");
-      return EXIT_FAILURE;
+        fprintf(stdout, "could not allocate memory: localsum\n aborting...");
+        return EXIT_FAILURE;
     }
-    //Vector v=createVector(vectorlength); //storage vector for sum elements
 //calculate vector elements
 
     if(rank==0)
@@ -123,17 +122,17 @@ int main(int argc, char** argv)
         for(i=1; i<=vectorlength; i++)
         {
             sendvec[i-1]=1.0/pow(i,2);
-      //      fprintf(stdout, "sendvec[%d]: %f", i, sendvec[i-1]);
+            //      fprintf(stdout, "sendvec[%d]: %f", i, sendvec[i-1]);
         }
         /*---DECOMMENT FOR DEBUGGING PURPOSES---
           fprintf(stdout,"memory allocated and calculated values\n");
         */
     }
 
-    for(i=1; i<=kupper; i++)
+    for(i=klower; i<=kupper; i++)
     {
-        splitVector(pow(2,i), size, &sublength, &displ);
-        if(rank==0)
+        splitVector(pow(2,i), size, &sublength, &displ); //split vector for every k
+        if(rank==0) //master process
         {
             /*---DECOMMENT FOR DEBUGGING PURPOSES---
             	for(dbgloop=0;dbgloop<pow(2,i);dbgloop++)
@@ -141,47 +140,49 @@ int main(int argc, char** argv)
             	  fprintf(stdout, "sendvec[%d]: %f\n", dbgloop, sendvec[dbgloop]);
             	}
             	  fprintf(stdout, "k: %d size: %d\n", i, size);
-*/
-/*---DECOMMENT FOR DEBUGGING PURPOSES---
-            	for (j=0; j < size; j++)
-            	{
+            */
+            /*---DECOMMENT FOR DEBUGGING PURPOSES---
+                        	for (j=0; j < size; j++)
+                        	{
 
-            	    fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
-            	}
-           */
-            for (j=0; j < size; j++)
+                        	    fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
+                        	}
+                       */
+            for (j=0; j < size; j++) //send for each slave process
             {
                 /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
-                		  fprintf(stdout, "---send for proc %d\n", j);
-               /* */
+                fprintf(stdout, "---send for proc %d\n", j);
+                /* */
+
                 double* vsend=&(sendvec[displ[j]]);
                 /*---DECOMMENT FOR DEBUGGING PURPOSES---
                 		  for(dbgloop=0; dbgloop<sublength[j]; dbgloop++)
                 		  {
-                			fprintf(stdout, "----process %d\nvsend[j]=%f\n", j, vsend[dbgloop]);
+                			fprintf(stdout, "----process %d\nvsend[%d]=%f\n", j, dbgloop, vsend[dbgloop]);
                 		  }
                 */
+                fprintf(stdout, "---data for proc %d just NOT sent\n", j);
                 MPI_Send(vsend, sublength[j], MPI_DOUBLE, j, tag, MPI_COMM_WORLD);
-fprintf(stdout, "---data for proc %d sent\n", j);
+                fprintf(stdout, "---data for proc %d sent\n", j);
 
             }
         }
 
 
         receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
-fprintf(stdout, "proc %d receivevec created\n", rank);
-if(receivevec==NULL)
-    {
-      fprintf(stderr, "could not allocate memory: receivevec\n aborting...");
-      return EXIT_FAILURE;
-    }
+        fprintf(stdout, "proc %d receivevec created\n", rank);
+        if(receivevec==NULL)
+        {
+            fprintf(stderr, "could not allocate memory: receivevec\n aborting...");
+            return EXIT_FAILURE;
+        }
         MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
         /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
-          fprintf(stdout, "process %d: data received\n", rank);
+        fprintf(stdout, "process %d: data received\n", rank);
         /**/
         (*localsum)=sum(receivevec, sublength[rank]);
 
-        //MPI_Reduce(sum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+
         MPI_Allreduce(localsum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
         if(rank==0 && i>=klower && i<=kupper)

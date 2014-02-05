@@ -10,6 +10,6 @@ include_directories(${COMMON_INCLUDE_PATHS})
 add_executable(ex4 ex4.c)
 target_link_libraries(ex4 ${COMMON_LIBRARIES})
 
-add_executable(mpitest mpitest.c)
-target_link_libraries(mpitest ${COMMON_LIBRARIES})
+add_executable(test ex4withoutcomments.c)
+target_link_libraries(test ${COMMON_LIBRARIES})
 
