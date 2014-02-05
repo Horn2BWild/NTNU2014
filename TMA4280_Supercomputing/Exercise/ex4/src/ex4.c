@@ -20,6 +20,7 @@ double sum(double* vec, int length)
 {
   int i=0;
   double partsum=0.0;
+#pragma omp parallel for schedule(guided,1) reduction(+:partsum)
   for(i=0; i<length; i++)
   {
     partsum+=vec[i];
@@ -51,9 +52,9 @@ fprintf(stdout, "-- S: %f\n", S);
 fprintf(stdout, "--------------------------------\n");
 */
 
-  if(argc<4 || argc>4)
+  if(argc<3 || argc>3)
   {
-    fprintf(stdout, "\nusage: ex4 <lowerbound> <upperbound> <P>\nexiting...\n\n");
+    fprintf(stdout, "\nusage: ex4 <lowerbound> <upperbound>\nexiting...\n\n");
     return EXIT_FAILURE;
   }
 
@@ -91,7 +92,7 @@ fprintf(stdout, "----------------------------------\n");
   {
     Snpartial=0.0;
  // #pragma omp parallel for schedule(guided,1) reduction(+:Snpartial)
-    Sn+=sum((v->data)+sizeof(double)*pow(2,i-1), pow(2,i-1);
+    Sn+=sum((v->data)+sizeof(double)*pow(2,i-1), pow(2,i-1));
 //    for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
  //   {
  //     Snpartial+=v->data[j-1];
