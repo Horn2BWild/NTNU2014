@@ -13,8 +13,9 @@ int main(int argc, char** argv)
   MPI_Status status;
   char message[20];
   int j=0;
-  double sum=0;
+  double* sum=(double*)malloc(sizeof(double));
   int *displ, *sublength;
+  double* globalsum=(double*)malloc(sizeof(double));
   double* sendvec=(double*)malloc(VECTORSIZE*sizeof(double));
   //double* receivevec=(double*)malloc(VECTORSIZE*sizeof(double));
   //MPI_Init(&argc, &argv);
@@ -60,18 +61,18 @@ int main(int argc, char** argv)
  // {
 	receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
     MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
-    fprintf(stdout, "process %d: data received", rank);
+    fprintf(stdout, "process %d: data received\n", rank);
     for(j=0;j<sublength[rank];j++)
     {
-      fprintf(stdout, "process %d\n  element %d: %f\n  sum: %f\n\n", rank, j, receivevec[j], sum);
-      sum+=receivevec[j];
+      fprintf(stdout, "process %d\n  element %d: %f\n  sum: %f\n", rank, j, receivevec[j], (*sum));
+      (*sum)+=receivevec[j];
     }
   //}
+MPI_Reduce(sum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD); 
 
-  for(i=0;i<size;i++)
-  {
-    printf("process %d: %f\n\n", i, sum);
-  }
+
+    printf("sum %f\n", *globalsum);
+
 
   close_app();
   return 0;
