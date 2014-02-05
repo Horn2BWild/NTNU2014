@@ -88,7 +88,7 @@ fprintf(stdout, "----------------------------------\n");
   {
     for(i=1;i<=vectorlength; i++)
     {
-		    sendvec[j-1]=1.0/pow(j,2);
+		    sendvec[i-1]=1.0/pow(i,2);
     }
     fprintf(stdout,"memory allocated and calculated values\n");
   }
