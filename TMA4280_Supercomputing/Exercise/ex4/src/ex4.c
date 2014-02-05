@@ -86,25 +86,22 @@ fprintf(stdout, "----------------------------------\n");
 
   if(rank==0)
   {
-    for(i=1;i<=kupper; i++)
+    for(i=1;i<=vectorlength; i++)
     {
-		for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
-		{
 		    sendvec[j-1]=1.0/pow(j,2);
-		}
     }
     fprintf(stdout,"memory allocated and calculated values\n");
-  
+  }
 
     for(i=1;i<=kupper; i++)
     {
+      splitVector(pow(2,i), size, &sublength, &displ);
 	  if(rank==0)
 	  {
 		for(dbgloop=0;dbgloop<pow(2,i);dbgloop++)
 		{
 		  fprintf(stdout, "sendvec[%d]: %f\n", dbgloop, sendvec[dbgloop]);
 		}
-		  splitVector(pow(2,i), size, &sublength, &displ);
 		  fprintf(stdout, "k: %d size: %d\n", i, size);
 		for (j=0; j < size; j++)
 		{
@@ -124,7 +121,7 @@ fprintf(stdout, "----------------------------------\n");
 
 		} 
 	  }
-}
+    
 
 	  receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
 	  MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
