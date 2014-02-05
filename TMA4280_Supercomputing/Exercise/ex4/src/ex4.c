@@ -94,7 +94,7 @@ fprintf(stdout, "----------------------------------\n");
 		}
     }
     fprintf(stdout,"memory allocated and calculated values\n");
-  }
+  
 
     for(i=1;i<=kupper; i++)
     {
@@ -127,7 +127,7 @@ fprintf(stdout, "----------------------------------\n");
 }
 		} 
 	  }
-
+}
           if(rank<pow(2,i))
           {
 	  receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
