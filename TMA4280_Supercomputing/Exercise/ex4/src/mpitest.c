@@ -25,6 +25,7 @@ int main(int argc, char** argv)
   tag = 100;
 
   init_app(argc, argv, &rank, &size);
+  splitVector(VECTORSIZE, size, &sublength, &displ);
 
   if (rank == 0) 
   {
@@ -37,32 +38,36 @@ int main(int argc, char** argv)
     {
       fprintf(stdout, "process %d\n  sendvec[%d]=%f\n", rank, i, sendvec[i]);
     }
-  }
-  splitVector(VECTORSIZE, size, &sublength, &displ);
   /**/
  //   MPI_Scatter(sendvec, VECTORSIZE/size, MPI_DOUBLE, receivevec, VECTORSIZE/size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     for (i=1; i < size; ++i)
     {
+      fprintf(stdout, "---send for proc %d\n", i);
       double* vsend=&(sendvec[displ[i]]);
+      for(j=0; j<sublength[i]; j++)
+      {
+        fprintf(stdout, "----process %d vsend[j]=%f", i, vsend[j]);
+      }
       MPI_Send(vsend, sublength[i], MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
     }
-  
-  //else
-  //{
+  }
+  else
+  {
 
     MPI_Recv(receivevec, sublength[i], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
+    fprintf(stdout, "process %d: data received", rank);
     for(j=0;j<sublength[i];j++)
     {
       fprintf(stdout, "process %d\n  element %d: %f\n  sum: %f\n\n", rank, j, receivevec[j], sum);
       sum+=receivevec[j];
     }
- // }
+  }
 
   for(i=0;i<size;i++)
   {
     printf("process %d: %f\n\n", i, sum);
   }
 
-  MPI_Finalize();
+  close_app();
   return 0;
 }
