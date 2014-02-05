@@ -46,6 +46,7 @@ int main(int argc, char** argv)
   int tag=100;
   int kupper=0;
   double Snpartial=0.0;
+  double* globalsum=(double*)malloc(sizeof(double));
   int *displ, *sublength;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
 fprintf(stdout, "------precalculated values------\n");
@@ -76,23 +77,25 @@ fprintf(stdout, "----------------------------------\n");
   init_app(argc, argv, &rank, &size);
   splitVector(vectorlength, size, &sublength, &displ);
   double* sendvec=(double*)malloc(vectorlength*sizeof(double));
+  double* receivevec;
+  double* localsum=(double*)malloc(sizeof(double));
   //Vector v=createVector(vectorlength); //storage vector for sum elements
 //calculate vector elements
-if(rank==0)
-{
+  if(rank==0)
+  {
 
 #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
-  for(i=1;i<=kupper; i++)
-  {
-    for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
+    for(i=1;i<=kupper; i++)
     {
+      for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
+      {
       //calculating j, storing in j-1
       //e.g. calculating 1st element, storing in data[0]
       //otherwise buffer overflow at last element
-      sendvec[j-1]=1.0/pow(j,2);
+        sendvec[j-1]=1.0/pow(j,2);
+      }
     }
-  }
-   for (i=0; i < size; ++i)
+    for (i=0; i < size; ++i)
     {
       //fprintf(stdout, "---send for proc %d\n", i);
       double* vsend=&(sendvec[displ[i]]);
@@ -103,50 +106,19 @@ if(rank==0)
       }
   */
       MPI_Send(vsend, sublength[i], MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
-}
-}
+    } 
+  }
 
-#pragma omp parallel for schedule(guided,1) reduction(+:Sn)
-  for(i=1; i<=kupper; i++)
-  {
-    Snpartial=0.0;
- // #pragma omp parallel for schedule(guided,1) reduction(+:Snpartial)
+  receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
+  MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
+  fprintf(stdout, "process %d: data received\n", rank);
+  (*localsum)=sum(receivevec, sublength[rank]);
 
-//UNCOMMENT
-   // Sn+=sum((v->data)+sizeof(double)*pow(2,i-1), pow(2,i-1));
-//////////////////////////////
+  //MPI_Reduce(sum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD); 
+  MPI_Allreduce(localsum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
-
-//    for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
- //   {
- //     Snpartial+=v->data[j-1];
-
- /* ---DECOMMENT FOR DEBUGGING PURPOSES---
-fprintf(stdout, "---------sum calculation--------\n");
-fprintf(stdout, "-- v->data[%d]: %f\n", j, v->data[j-1]);
-fprintf(stdout, "-- Snpartial: %f\n", Snpartial);
-fprintf(stdout, "-- Sn: %f\n", Sn);
-fprintf(stdout, "--------------------------------\n");
-if(i%10==0)
-{
-getchar();
-}
-*/
- //   }
- //   Sn += Snpartial;
-  //  if(i>=klower && i<=kupper)
-  //  {
-      diff=S-Sn;
-
-  /*---DECOMMENT FOR DEBUGGING PURPOSES---
-fprintf(stdout, "-----------calculation----------\n");
-fprintf(stdout, "-- Sn: %f\n", Sn);
-fprintf(stdout, "-- S: %f\n", S);
-fprintf(stdout, "-- diff: %f\n", diff);
-fprintf(stdout, "--------------------------------\n");
-*/
-
-      fprintf(stdout, "k=%d\n elements:%d\n S-Sn:%lf\n--------------------\n", i, j, diff);
+  diff=S-(*globalsum);
+  fprintf(stdout, "k=%d\n elements:%d\n S-Sn:%lf\n--------------------\n", i, j, diff);
  //   }
   }
 

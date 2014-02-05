@@ -18,7 +18,7 @@ int main(int argc, char** argv)
   double* globalsum=(double*)malloc(sizeof(double));
   double* sendvec=(double*)malloc(VECTORSIZE*sizeof(double));
 
-  double* receivevec=(double*)malloc(sizeof(double)*((VECTORSIZE/size)+1));
+  double* receivevec;
   tag = 100;
 
   init_app(argc, argv, &rank, &size);
