@@ -43,6 +43,7 @@ int main(int argc, char** argv)
     for(i=0; i<size; i++)
     {
       fprintf(stdout, "size: %d, displacement %d\n", sublength[i], displ[i]);
+      fprintf(stdout, "address %x\n", &(sendvec[displ[i]]));
     }
     for (i=0; i < size; ++i)
     {
@@ -50,17 +51,17 @@ int main(int argc, char** argv)
       double* vsend=&(sendvec[displ[i]]);
       for(j=0; j<sublength[i]; j++)
       {
-        fprintf(stdout, "----process %d vsend[j]=%f", i, vsend[j]);
+        fprintf(stdout, "----process %d vsend[j]=%f\n", i, vsend[j]);
       }
       MPI_Send(vsend, sublength[i], MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
     }
   }
  // else
  // {
-
-    MPI_Recv(receivevec, sublength[i], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
+	receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
+    MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
     fprintf(stdout, "process %d: data received", rank);
-    for(j=0;j<sublength[i];j++)
+    for(j=0;j<sublength[rank];j++)
     {
       fprintf(stdout, "process %d\n  element %d: %f\n  sum: %f\n\n", rank, j, receivevec[j], sum);
       sum+=receivevec[j];
