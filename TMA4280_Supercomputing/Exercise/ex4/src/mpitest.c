@@ -28,7 +28,7 @@ int main(int argc, char** argv)
   {
     for(i=0;i<VECTORSIZE;i++)
     {
-      sendvec[i]=i;
+      sendvec[i]=1.0/pow((i+1),2);
     }
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
     for(i=0; i<VECTORSIZE;i++)

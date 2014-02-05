@@ -43,8 +43,10 @@ int main(int argc, char** argv)
   int size=0;
   int klower=0;
   int P=0;
+  int tag=100;
   int kupper=0;
   double Snpartial=0.0;
+  int *displ, *sublength;
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
 fprintf(stdout, "------precalculated values------\n");
 fprintf(stdout, "-- PI: %f\n", mathPi());
@@ -72,8 +74,13 @@ fprintf(stdout, "----------------------------------\n");
 
   int vectorlength=pow(2,kupper); //maximum vector length
   init_app(argc, argv, &rank, &size);
-  Vector v=createVector(vectorlength); //storage vector for sum elements
+  splitVector(vectorlength, size, &sublength, &displ);
+  double* sendvec=(double*)malloc(vectorlength*sizeof(double));
+  //Vector v=createVector(vectorlength); //storage vector for sum elements
 //calculate vector elements
+if(rank==0)
+{
+
 #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
   for(i=1;i<=kupper; i++)
   {
@@ -82,10 +89,22 @@ fprintf(stdout, "----------------------------------\n");
       //calculating j, storing in j-1
       //e.g. calculating 1st element, storing in data[0]
       //otherwise buffer overflow at last element
-      v->data[j-1]=1.0/pow(j,2);
+      sendvec[j-1]=1.0/pow(j,2);
     }
   }
-
+   for (i=0; i < size; ++i)
+    {
+      //fprintf(stdout, "---send for proc %d\n", i);
+      double* vsend=&(sendvec[displ[i]]);
+  /*---DECOMMENT FOR DEBUGGING PURPOSES---
+      for(j=0; j<sublength[i]; j++)
+      {
+        fprintf(stdout, "----process %d vsend[j]=%f\n", i, vsend[j]);
+      }
+  */
+      MPI_Send(vsend, sublength[i], MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
+}
+}
 
 #pragma omp parallel for schedule(guided,1) reduction(+:Sn)
   for(i=1; i<=kupper; i++)
@@ -136,7 +155,7 @@ fprintf(stdout, "--------------------------------\n");
 
   fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
 
-  freeVector(v);
+  free(sendvec);
   close_app();
   return EXIT_SUCCESS;
 }
