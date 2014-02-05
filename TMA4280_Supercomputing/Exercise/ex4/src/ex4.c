@@ -83,47 +83,48 @@ fprintf(stdout, "----------------------------------\n");
   double* localsum=(double*)malloc(sizeof(double));
   //Vector v=createVector(vectorlength); //storage vector for sum elements
 //calculate vector elements
-    for(i=1;i<=kupper; i++)
-    {
+
   if(rank==0)
   {
-
-//#pragma omp parallel for schedule(guided,1) reduction(+:Sn)
-/*****************************************************************/
-/*calculation of vector elements*/
-/*****************************************************************/
-      for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
-      {
-      //calculating j, storing in j-1
-      //e.g. calculating 1st element, storing in data[0]
-      //otherwise buffer overflow at last element
-        sendvec[j-1]=1.0/pow(j,2);
-        fprintf(stdout, "sendvec[%d]: %f\n", j-1, sendvec[j-1]);
-      }
-/*****************************************************************/
-/*send data*/
-/*****************************************************************/
-      int tmpelements=pow(2,i);
-      splitVector(tmpelements, size, &sublength, &displ);
-      fprintf(stdout, "k: %d tmpelements: %d, size: %d\n", i, tmpelements, size);
-      for (j=0; j < size; j++)
-      {
-        fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
-      }
-      for (j=0; j < size; j++)
-      {
-		  fprintf(stdout, "---send for proc %d\n", j);
-		  double* vsend=&(sendvec[displ[j]]);
-	  /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
-		  for(dbgloop=0; dbgloop<sublength[j]; dbgloop++)
-		  {
-		    fprintf(stdout, "----process %d\nvsend[j]=%f\n", j, vsend[dbgloop]);
-		  }
-	  
-		  MPI_Send(vsend, sublength[j], MPI_DOUBLE, j, tag, MPI_COMM_WORLD);
-      } 
+    for(i=1;i<=kupper; i++)
+    {
+		for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
+		{
+		    sendvec[j-1]=1.0/pow(j,2);
+		}
     }
-}
+    fprintf(stdout,"memory allocated and calculated values\n");
+  }
+
+    for(i=1;i<=kupper; i++)
+    {
+	  if(rank==0)
+	  {
+		for(dbgloop=0;dbgloop<pow(2,i);dbgloop++)
+		{
+		  fprintf(stdout, "sendvec[%d]: %f\n", dbgloop, sendvec[dbgloop]);
+		}
+		  splitVector(pow(2,i), size, &sublength, &displ);
+		  fprintf(stdout, "k: %d size: %d\n", i, size);
+		for (j=0; j < size; j++)
+		{
+          if(j<=pow(2,i))
+          {
+		    fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
+          }
+		}
+		for (j=0; j < size; j++)
+		{
+			  fprintf(stdout, "---send for proc %d\n", j);
+			  double* vsend=&(sendvec[displ[j]]);
+			  for(dbgloop=0; dbgloop<sublength[j]; dbgloop++)
+			  {
+				fprintf(stdout, "----process %d\nvsend[j]=%f\n", j, vsend[dbgloop]);
+			  }
+		  	  MPI_Send(vsend, sublength[j], MPI_DOUBLE, j, tag, MPI_COMM_WORLD);
+		} 
+	  }
+
 
 	  receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
 	  MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
@@ -136,7 +137,7 @@ fprintf(stdout, "----------------------------------\n");
 	  diff=S-(*globalsum);
 	  fprintf(stdout, "k=%d\n elements:%d\n S-Sn:%lf\n--------------------\n", i, j, diff);
     
-    
+    }
  
 
 
