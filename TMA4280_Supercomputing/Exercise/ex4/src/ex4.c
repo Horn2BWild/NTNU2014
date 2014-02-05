@@ -141,13 +141,13 @@ int main(int argc, char** argv)
             	}
             	  fprintf(stdout, "k: %d size: %d\n", i, size);
             */
-            /*---DECOMMENT FOR DEBUGGING PURPOSES---
+            /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
                         	for (j=0; j < size; j++)
                         	{
 
                         	    fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
                         	}
-                       */
+                      /* */
             for (j=0; j < size; j++) //send for each slave process
             {
                 /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
@@ -161,9 +161,10 @@ int main(int argc, char** argv)
                 			fprintf(stdout, "----process %d\nvsend[%d]=%f\n", j, dbgloop, vsend[dbgloop]);
                 		  }
                 */
-                fprintf(stdout, "---data for proc %d just NOT sent\n", j);
+          //      fprintf(stdout, "---data for proc %d just NOT sent\n", j);
+          //      fprintf(stdout, "------proc %d sublength %d displ %d address %x\n", j, sublength[j], displ[i], vsend);
                 MPI_Send(vsend, sublength[j], MPI_DOUBLE, j, tag, MPI_COMM_WORLD);
-                fprintf(stdout, "---data for proc %d sent\n", j);
+          //      fprintf(stdout, "---data for proc %d sent\n", j);
 
             }
         }
