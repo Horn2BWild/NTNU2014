@@ -76,7 +76,7 @@ fprintf(stdout, "----------------------------------\n");
 
   int vectorlength=pow(2,kupper); //maximum vector length
   init_app(argc, argv, &rank, &size);
-  splitVector(vectorlength, size, &sublength, &displ);
+
   double* sendvec=(double*)malloc(vectorlength*sizeof(double));
   double* receivevec;
   double* localsum=(double*)malloc(sizeof(double));
@@ -96,8 +96,12 @@ fprintf(stdout, "----------------------------------\n");
         sendvec[j-1]=1.0/pow(j,2);
       }
     }
-    for (i=0; i < size; ++i)
+    for(i=1;i<=kupper;i++)
     {
+      int tmpelements=pow(2,i);
+      splitVector(tmpelements, size, &sublength, &displ);
+      for (j=0; j < size; j++)
+      {
       //fprintf(stdout, "---send for proc %d\n", i);
       double* vsend=&(sendvec[displ[i]]);
   /*---DECOMMENT FOR DEBUGGING PURPOSES---
@@ -107,19 +111,20 @@ fprintf(stdout, "----------------------------------\n");
       }
   */
       MPI_Send(vsend, sublength[i], MPI_DOUBLE, i, tag, MPI_COMM_WORLD);
-    } 
-  }
+      } 
+    }
 
-  receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
-  MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
-  fprintf(stdout, "process %d: data received\n", rank);
-  (*localsum)=sum(receivevec, sublength[rank]);
+	  receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
+	  MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
+	  fprintf(stdout, "process %d: data received\n", rank);
+	  (*localsum)=sum(receivevec, sublength[rank]);
 
-  //MPI_Reduce(sum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD); 
-  MPI_Allreduce(localsum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+	  //MPI_Reduce(sum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD); 
+	  MPI_Allreduce(localsum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
-  diff=S-(*globalsum);
-  fprintf(stdout, "k=%d\n elements:%d\n S-Sn:%lf\n--------------------\n", i, j, diff);
+	  diff=S-(*globalsum);
+	  fprintf(stdout, "k=%d\n elements:%d\n S-Sn:%lf\n--------------------\n", i, j, diff);
+    }
  //   }
  
 
