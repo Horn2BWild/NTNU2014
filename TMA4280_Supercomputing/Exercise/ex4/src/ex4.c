@@ -90,7 +90,9 @@ fprintf(stdout, "----------------------------------\n");
     {
 		    sendvec[i-1]=1.0/pow(i,2);
     }
+  /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout,"memory allocated and calculated values\n");
+  */
   }
 
     for(i=1;i<=kupper; i++)
@@ -98,25 +100,31 @@ fprintf(stdout, "----------------------------------\n");
       splitVector(pow(2,i), size, &sublength, &displ);
 	  if(rank==0)
 	  {
+  /*---DECOMMENT FOR DEBUGGING PURPOSES---
 		for(dbgloop=0;dbgloop<pow(2,i);dbgloop++)
 		{
 		  fprintf(stdout, "sendvec[%d]: %f\n", dbgloop, sendvec[dbgloop]);
 		}
 		  fprintf(stdout, "k: %d size: %d\n", i, size);
+  
 		for (j=0; j < size; j++)
 		{
 
 		    fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
 		}
+  */
 		for (j=0; j < size; j++)
 		{
+  /*---DECOMMENT FOR DEBUGGING PURPOSES---
 			  fprintf(stdout, "---send for proc %d\n", j);
-
+  */
 			  double* vsend=&(sendvec[displ[j]]);
+  /*---DECOMMENT FOR DEBUGGING PURPOSES---
 			  for(dbgloop=0; dbgloop<sublength[j]; dbgloop++)
 			  {
 				fprintf(stdout, "----process %d\nvsend[j]=%f\n", j, vsend[dbgloop]);
 			  }
+  */
 		  	  MPI_Send(vsend, sublength[j], MPI_DOUBLE, j, tag, MPI_COMM_WORLD);
 
 		} 
@@ -125,22 +133,35 @@ fprintf(stdout, "----------------------------------\n");
 
 	  receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
 	  MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
+  /*---DECOMMENT FOR DEBUGGING PURPOSES---
 	  fprintf(stdout, "process %d: data received\n", rank);
+  */
 	  (*localsum)=sum(receivevec, sublength[rank]);
 
 	  //MPI_Reduce(sum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD); 
 	  MPI_Allreduce(localsum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
+if(rank==0)
+{
 	  diff=S-(*globalsum);
-	  fprintf(stdout, "k=%d\n elements:%d\n S-Sn:%lf\n--------------------\n", i, j, diff);
+	  fprintf(stdout,"----------Result----------\n");
+      fprintf(stdout,"--k=%d elements=%d\n", i, (int)pow(2,i));
+      fprintf(stdout,"--Sn=%f\n", *globalsum);
+      fprintf(stdout,"--S=%f\n", S);
+      fprintf(stdout,"----diff=%f\n", diff);
+
+
+  endTime=WallTime();
+
+
+  fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
+      fprintf(stdout,"--------------------------\n");
+}
     MPI_Barrier(MPI_COMM_WORLD);
     }
  
 
 
-  endTime=WallTime();
-
-  fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
 
   free(sendvec);
   close_app();
