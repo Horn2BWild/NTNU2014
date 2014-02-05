@@ -92,7 +92,12 @@ fprintf(stdout, "----------------------------------\n");
   {
     Snpartial=0.0;
  // #pragma omp parallel for schedule(guided,1) reduction(+:Snpartial)
-    Sn+=sum((v->data)+sizeof(double)*pow(2,i-1), pow(2,i-1));
+
+//UNCOMMENT
+   // Sn+=sum((v->data)+sizeof(double)*pow(2,i-1), pow(2,i-1));
+//////////////////////////////
+
+
 //    for(j=pow(2,i-1); j<pow(2,i); j++) //starting from element 1
  //   {
  //     Snpartial+=v->data[j-1];
