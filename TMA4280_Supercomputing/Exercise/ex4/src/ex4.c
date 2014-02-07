@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     fprintf(stdout, "vectorlength: %d\n", vectorlength);
 
     double* sendvec=(double*)malloc(vectorlength*sizeof(double));
-    double* receivevec=(double)*malloc(vectorlength*sizeof(double));
+    double* receivevec=(double*)malloc(vectorlength*sizeof(double));
     double* localsum=(double*)malloc(sizeof(double));
 
 // P=atoi(argv[3]);
@@ -131,7 +131,7 @@ int main(int argc, char** argv)
 
     for(i=klower; i<=kupper; i++)
     {
-        splitVector(pow(2,i), size, &sublength, &displ); //split vector for every k
+     //   splitVector(pow(2,i), size, &sublength, &displ); //split vector for every k
         if(rank==0) //master process
         {
             /*---DECOMMENT FOR DEBUGGING PURPOSES---
@@ -142,11 +142,11 @@ int main(int argc, char** argv)
             	  fprintf(stdout, "k: %d size: %d\n", i, size);
             */
             /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
-            for (j=0; j < size; j++)
-            {
+ //           for (j=0; j < size; j++)
+ //           {
 
-                fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
-            }
+ //               fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
+   //         }
             /* */
         //    for (j=0; j < size; j++) //send for each slave process
         //    {
@@ -168,7 +168,7 @@ int main(int argc, char** argv)
 
         //    }
         }
-        MPI_Scatter(sendvec, sizeof(sendvec), MPI_DOUBLE, receivevec, sizeof(receivevec), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Scatter(sendvec, sizeof(double)*vectorlength, MPI_DOUBLE, receivevec, sizeof(double)*vectorlength, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         //free(receivevec);
        // receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
@@ -183,7 +183,12 @@ int main(int argc, char** argv)
      //   fprintf(stdout, "process %d: data received\n", rank);
         /**/
         //calculating local sum
-        (*localsum)=sum(receivevec, sublength[rank]);
+        *localsum=0;
+        if(rank>0)
+        {
+            (*localsum)=sum(receivevec, sublength[rank]);
+        }
+
 
         MPI_Barrier(MPI_COMM_WORLD);
         //summing up all local sums
