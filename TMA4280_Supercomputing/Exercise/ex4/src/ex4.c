@@ -85,6 +85,7 @@ int main(int argc, char** argv)
 
     init_app(argc, argv, &rank, &size);
 
+    //getting lower and upper limit as numbers
     klower=atoi(argv[1]);
     kupper=atoi(argv[2]);
     vectorlength=pow(2,kupper); //maximum vector length 2^k
