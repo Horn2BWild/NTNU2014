@@ -3,7 +3,7 @@
 * Email: andreas (at) hoermer.at
 *
 * Filename: ex4.c
-* LastChange: 04.02.2014
+* LastChange: 07.02.2014
 **/
 
 #include <stdio.h>
@@ -16,27 +16,6 @@
 
 //function prototypes
 double mathPi();
-/*NOT USED AT THE MOMENT
-int cleanup(void** memory, int length, char* message, int exitcode)
-{
-    int i=0;
-    for(i=0; i<length; i++)
-    {
-        free(memory[i]);
-    }
-    close_app();
-    if(exitcode==EXIT_FAILURE)
-    {
-        fprintf(stderr, "%s\naborting...\n", message);
-        return EXIT_FAILURE;
-    }
-    else
-    {
-        fprintf(stdout, "%s\n", message);
-        return EXIT_SUCCESS;
-    }
-}
-*/
 
 double sum(double* vec, int length)
 {
@@ -54,23 +33,27 @@ double sum(double* vec, int length)
 //e.g. 3..14
 int main(int argc, char** argv)
 {
-    double startTime=WallTime();
+    double startTime=WallTime();                    //timestamp of program start
     MPI_Status status;
-    double endTime=0.0;
-    double S=pow(mathPi(),2)/6; //reference value S
-    double Sn=0.0; //approximated Sn
+    double endTime=0.0;                             //timestamp of program end
+    double S=pow(mathPi(),2)/6;                     //reference value S
+    double Sn=0.0;                                  //approximated Sn
     int i=0;
     int j=0;
-    double diff=0.0; //difference S-Sn
+    double diff=0.0;                                //difference S-Sn
     int rank=0;
-    int size=0; //no proc
-    int klower=0; //lower bound for 2^k
-    int tag=100;
-    int kupper=0; //upper bound for 2^k calculation
-    int dbgloop=0;
-    double Snpartial=0.0;
+    int size=0;                                     //number of proc
+    int klower=0;                                   //lower bound for 2^k
+    int tag=100;                                    //tag used for MPI comm
+    int kupper=0;                                   //upper bound for 2^k calc
     double* globalsum=(double*)malloc(sizeof(double));
-    int *displ, *sublength;
+    int *displ;                                     //displacements for proc
+    int *sublength;                                 //vectorlength for proc
+    int vectorlength=0;                             //maximum vector size
+    double* sendvec=NULL;                           //MPI send vector
+    double* receivevec=NULL;                        //MPI receive vector
+    double* localsum=NULL;                         //sum of all partial sums
+
     /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "------precalculated values------\n");
     fprintf(stdout, "-- PI: %f\n", mathPi());
@@ -78,21 +61,24 @@ int main(int argc, char** argv)
     fprintf(stdout, "--------------------------------\n");
     */
 
+    //check for correct number of input arguments
     if(argc<3 || argc>3)
     {
-        fprintf(stdout, "\nusage: ex4 <lowerbound> <upperbound>\nexiting...\n\n");
-        free(globalsum);
+        fprintf(stdout, "\nusage: ex4 <lowerbound> <upperbound>\nexiting...\n");
         return EXIT_FAILURE;
     }
+
     init_app(argc, argv, &rank, &size);
+
     klower=atoi(argv[1]);
     kupper=atoi(argv[2]);
-    int vectorlength=pow(2,kupper); //maximum vector length 2^k
-    fprintf(stdout, "vectorlength: %d\n", vectorlength);
+    vectorlength=pow(2,kupper); //maximum vector length 2^k
 
-    double* sendvec=(double*)malloc(vectorlength*sizeof(double));
-    double* receivevec=(double*)malloc(vectorlength*sizeof(double));
-    double* localsum=(double*)malloc(sizeof(double));
+    //fprintf(stdout, "vectorlength: %d\n", vectorlength);
+
+    sendvec=(double*)malloc(vectorlength*sizeof(double));
+    receivevec=(double*)malloc(vectorlength*sizeof(double));
+    localsum=(double*)malloc(sizeof(double));
 
 // P=atoi(argv[3]);
     /*---DECOMMENT FOR DEBUGGING PURPOSES---
@@ -121,7 +107,7 @@ int main(int argc, char** argv)
 #pragma omp parallel for schedule(guided,1)
         for(i=1; i<=vectorlength; i++)
         {
-            sendvec[i-1]=1.0/pow(i,1);
+            sendvec[i-1]=1.0/pow(i,2);
         }
     }
 
@@ -134,7 +120,7 @@ int main(int argc, char** argv)
         *localsum=0;
 
         (*localsum)=sum(receivevec, sublength[rank]);
-        fprintf(stdout, "localsum proc %d: %f\n", rank, *localsum);
+        //fprintf(stdout, "localsum proc %d: %f\n", rank, *localsum);
 
 
         MPI_Barrier(MPI_COMM_WORLD);
