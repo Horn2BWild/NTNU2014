@@ -37,6 +37,7 @@
 //function prototypes
 double mathPi();
 double sum(double* vec, int length);
+int errorHandlingMPI(int returnvalue, char* functionname);
 
 //! \usage: ex4 <lowerbound> <upperbound>
 //e.g. 3..14
@@ -91,15 +92,12 @@ int main(int argc, char** argv)
     receivevec=(double*)malloc(vectorlength*sizeof(double));
     localsum=(double*)malloc(sizeof(double));
 
-// P=atoi(argv[3]);
     /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "------command line arguments------\n");
     fprintf(stdout, "-- lower bound: %d\n", klower);
     fprintf(stdout, "-- upper bound: %d\n", kupper);
     fprintf(stdout, "----------------------------------\n");
     */
-
-
 
     if(sendvec==NULL)
     {
@@ -111,21 +109,24 @@ int main(int argc, char** argv)
         fprintf(stdout, "could not allocate memory: localsum\n aborting...");
         return EXIT_FAILURE;
     }
-//calculate vector elements
 
+    //calculating vector elements on root process
     if(rank==0)
     {
-#pragma omp parallel for schedule(guided,1)
+        //calculating multithreaded with openMP
+        #pragma omp parallel for schedule(guided,1)
         for(i=1; i<=vectorlength; i++)
         {
             sendvec[i-1]=1.0/pow(i,2);
         }
     }
 
+    //calculate sum for every 2^i
     for(i=klower; i<=kupper; i++)
     {
         //split vector for every k
         splitVector(pow(2,i), size, &sublength, &displ);
+
         //send partial vectors to every proc
         MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE, receivevec,
                     sizeof(double)*vectorlength, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -133,7 +134,6 @@ int main(int argc, char** argv)
         //calculate local sum on every proc
         *localsum=0;
         (*localsum)=sum(receivevec, sublength[rank]);
-        //fprintf(stdout, "localsum proc %d: %f\n", rank, *localsum);
 
         //wait for every proc to have the partial sum calculated
         MPI_Barrier(MPI_COMM_WORLD);
@@ -179,4 +179,19 @@ double sum(double* vec, int length)
         partsum+=vec[i];
     }
     return partsum;
+}
+
+int errorHandlingMPI(int returnvalue, char* functionname)
+{
+  switch(returnvalue)
+  {
+    case MPI_SUCCESS: break;
+    case MPI_ERR_COMM: break;
+    case MPI_ERR_COUNT: break;
+    case MPI_ERR_TYPE: break;
+    case MPI_ERR_BUFFER: break;
+    default: return EXIT_SUCCESS;
+  }
+
+  return EXIT_SUCCESS;
 }
