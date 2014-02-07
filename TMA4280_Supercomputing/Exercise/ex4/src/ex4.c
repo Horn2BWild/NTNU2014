@@ -137,7 +137,6 @@ int main(int argc, char** argv)
         //MPI error handling
         if (returnvalue != MPI_SUCCESS)
         {
-
             char error_string[BUFFERSIZE];
             int length_of_error_string, error_class;
 
@@ -158,7 +157,6 @@ int main(int argc, char** argv)
         //MPI error handling
         if (returnvalue != MPI_SUCCESS)
         {
-
             char error_string[BUFFERSIZE];
             int length_of_error_string, error_class;
 
@@ -176,7 +174,6 @@ int main(int argc, char** argv)
         //MPI error handling
         if (returnvalue != MPI_SUCCESS)
         {
-
             char error_string[BUFFERSIZE];
             int length_of_error_string, error_class;
 
@@ -197,7 +194,6 @@ int main(int argc, char** argv)
             fprintf(stdout,"--Sn=%f\n", *globalsum);
             fprintf(stdout,"--S=%f\n", S);
             fprintf(stdout,"----diff=%f\n", diff);
-
 
             endTime=WallTime();
             fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
