@@ -131,7 +131,7 @@ int main(int argc, char** argv)
 
     for(i=klower; i<=kupper; i++)
     {
-     //   splitVector(pow(2,i), size, &sublength, &displ); //split vector for every k
+        splitVector(pow(2,i), size, &sublength, &displ); //split vector for every k
         if(rank==0) //master process
         {
             /*---DECOMMENT FOR DEBUGGING PURPOSES---
@@ -168,7 +168,7 @@ int main(int argc, char** argv)
 
         //    }
         }
-        MPI_Scatter(sendvec, sizeof(double)*vectorlength, MPI_DOUBLE, receivevec, sizeof(double)*vectorlength, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE, receivevec, sizeof(double)*vectorlength, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         //free(receivevec);
        // receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
