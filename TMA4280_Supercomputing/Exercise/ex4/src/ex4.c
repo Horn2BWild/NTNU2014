@@ -34,6 +34,8 @@
 #include <omp.h>
 #include <mpi.h>
 
+#define BUFFERSIZE 128
+
 //function prototypes
 double mathPi();
 double sum(double* vec, int length);
@@ -53,6 +55,7 @@ int main(int argc, char** argv)
     int *displ;                                     //displacements for proc
     int *sublength;                                 //vectorlength for proc
     int vectorlength=0;                             //maximum vector size
+    int returnvalue=0;                              //return value MPI functions
 
     double startTime=WallTime();                    //timestamp of program start
     double endTime=0.0;                             //timestamp of program end
@@ -101,12 +104,12 @@ int main(int argc, char** argv)
 
     if(sendvec==NULL)
     {
-        fprintf(stdout, "could not allocate memory: sendvec\n aborting...");
+        fprintf(stdout, "could not allocate memory: sendvec\n aborting...\n");
         return EXIT_FAILURE;
     }
     if(localsum==NULL)
     {
-        fprintf(stdout, "could not allocate memory: localsum\n aborting...");
+        fprintf(stdout, "could not allocate memory: localsum\n aborting...\n");
         return EXIT_FAILURE;
     }
 
@@ -114,7 +117,7 @@ int main(int argc, char** argv)
     if(rank==0)
     {
         //calculating multithreaded with openMP
-        #pragma omp parallel for schedule(guided,1)
+#pragma omp parallel for schedule(guided,1)
         for(i=1; i<=vectorlength; i++)
         {
             sendvec[i-1]=1.0/pow(i,2);
@@ -128,19 +131,62 @@ int main(int argc, char** argv)
         splitVector(pow(2,i), size, &sublength, &displ);
 
         //send partial vectors to every proc
-        MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE, receivevec,
-                    sizeof(double)*vectorlength, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        returnvalue=MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE,
+                                 receivevec, sizeof(double)*vectorlength,
+                                 MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        //MPI error handling
+        if (returnvalue != MPI_SUCCESS)
+        {
+
+            char error_string[BUFFERSIZE];
+            int length_of_error_string, error_class;
+
+            MPI_Error_class(returnvalue, &error_class);
+            MPI_Error_string(error_class, error_string, &length_of_error_string);
+            fprintf(stderr, "%3d: %s\n", rank, error_string);
+            MPI_Error_string(returnvalue, error_string, &length_of_error_string);
+            fprintf(stderr, "%3d: %s\n", rank, error_string);
+            MPI_Abort(MPI_COMM_WORLD, returnvalue);
+        }
 
         //calculate local sum on every proc
         *localsum=0;
         (*localsum)=sum(receivevec, sublength[rank]);
 
         //wait for every proc to have the partial sum calculated
-        MPI_Barrier(MPI_COMM_WORLD);
+        returnvalue=MPI_Barrier(MPI_COMM_WORLD);
+        //MPI error handling
+        if (returnvalue != MPI_SUCCESS)
+        {
+
+            char error_string[BUFFERSIZE];
+            int length_of_error_string, error_class;
+
+            MPI_Error_class(returnvalue, &error_class);
+            MPI_Error_string(error_class, error_string, &length_of_error_string);
+            fprintf(stderr, "%3d: %s\n", rank, error_string);
+            MPI_Error_string(returnvalue, error_string, &length_of_error_string);
+            fprintf(stderr, "%3d: %s\n", rank, error_string);
+            MPI_Abort(MPI_COMM_WORLD, returnvalue);
+        }
 
         //summing up all local sums
-        MPI_Allreduce(localsum, globalsum, sizeof(double),
-                      MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        returnvalue=MPI_Allreduce(localsum, globalsum, sizeof(double),
+                                  MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        //MPI error handling
+        if (returnvalue != MPI_SUCCESS)
+        {
+
+            char error_string[BUFFERSIZE];
+            int length_of_error_string, error_class;
+
+            MPI_Error_class(returnvalue, &error_class);
+            MPI_Error_string(error_class, error_string, &length_of_error_string);
+            fprintf(stderr, "%3d: %s\n", rank, error_string);
+            MPI_Error_string(returnvalue, error_string, &length_of_error_string);
+            fprintf(stderr, "%3d: %s\n", rank, error_string);
+            MPI_Abort(MPI_COMM_WORLD, returnvalue);
+        }
 
         //output of calculated data
         if(rank==0 && i>=klower && i<=kupper)
@@ -173,25 +219,11 @@ double sum(double* vec, int length)
 {
     int i=0;
     double partsum=0.0;
-#pragma omp parallel for schedule(guided,1) reduction(+:partsum)
+
+    #pragma omp parallel for schedule(guided,1) reduction(+:partsum)
     for(i=0; i<length; i++)
     {
         partsum+=vec[i];
     }
     return partsum;
-}
-
-int errorHandlingMPI(int returnvalue, char* functionname)
-{
-  switch(returnvalue)
-  {
-    case MPI_SUCCESS: break;
-    case MPI_ERR_COMM: break;
-    case MPI_ERR_COUNT: break;
-    case MPI_ERR_TYPE: break;
-    case MPI_ERR_BUFFER: break;
-    default: return EXIT_SUCCESS;
-  }
-
-  return EXIT_SUCCESS;
 }
