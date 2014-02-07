@@ -1,10 +1,30 @@
-/**
-* Author: Andreas J. Hoermer
-* Email: andreas (at) hoermer.at
-*
-* Filename: ex4.c
-* LastChange: 07.02.2014
-**/
+/**************************************************************************** *
+* Author: Andreas J. Hoermer                                                  *
+* Email: andreas (at) hoermer.at                                              *
+*                                                                             *
+* Filename: ex4.c                                                             *
+* LastChange: 07.02.2014                                                      *
+*                                                                             *
+* --------------------------------------------------------------------------- *
+* PROGRAM DESCRIPTION                                                         *
+* --------------------------------------------------------------------------- *
+* This program is for summing up vectors with size 2^k containing values      *
+* 1/2^k. For calculating the sum there are four options possible              *
+*   --single processor, single thread                                         *
+*   --single processor, multithreaded (using openMP)                          *
+*   --multi processor, single thread (using MPI)                              *
+*   --multi processor, multithreaded (using a openMP/MPI combination          *
+*                                                                             *
+* This program is intended to show different methods of distributed computing *
+* --------------------------------------------------------------------------- *
+* USAGE                                                                       *
+* --------------------------------------------------------------------------- *
+* ./ex4 <lower k> <upper k>                                                   *
+*     -lower k ... lower bound of 2^k with console output                     *
+*     -upper k ... upper bound of console output                              *
+* mpirun -np <p> ./ex4 <lower k> <upper k>                                    *
+*     -p ... number of proc                                                   *
+* *************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,18 +36,7 @@
 
 //function prototypes
 double mathPi();
-
-double sum(double* vec, int length)
-{
-    int i=0;
-    double partsum=0.0;
-#pragma omp parallel for schedule(guided,1) reduction(+:partsum)
-    for(i=0; i<length; i++)
-    {
-        partsum+=vec[i];
-    }
-    return partsum;
-}
+double sum(double* vec, int length);
 
 //! \usage: ex4 <lowerbound> <upperbound>
 //e.g. 3..14
@@ -119,7 +128,7 @@ int main(int argc, char** argv)
         splitVector(pow(2,i), size, &sublength, &displ);
         //send partial vectors to every proc
         MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE, receivevec,
-                     sizeof(double)*vectorlength, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+                    sizeof(double)*vectorlength, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         //calculate local sum on every proc
         *localsum=0;
@@ -148,15 +157,8 @@ int main(int argc, char** argv)
             fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
         }
     }
-    /*
-        free(receivevec);
-        free(sendvec);
-        free(localsum);
-        free(globalsum);
-        */
+
     close_app();
-
-
     return EXIT_SUCCESS;
 }
 
@@ -165,4 +167,16 @@ int main(int argc, char** argv)
 double mathPi()
 {
     return 4*atan(1);
+}
+
+double sum(double* vec, int length)
+{
+    int i=0;
+    double partsum=0.0;
+#pragma omp parallel for schedule(guided,1) reduction(+:partsum)
+    for(i=0; i<length; i++)
+    {
+        partsum+=vec[i];
+    }
+    return partsum;
 }
