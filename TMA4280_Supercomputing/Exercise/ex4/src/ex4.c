@@ -33,26 +33,28 @@ double sum(double* vec, int length)
 //e.g. 3..14
 int main(int argc, char** argv)
 {
-    double startTime=WallTime();                    //timestamp of program start
-    MPI_Status status;
-    double endTime=0.0;                             //timestamp of program end
-    double S=pow(mathPi(),2)/6;                     //reference value S
-    double Sn=0.0;                                  //approximated Sn
     int i=0;
     int j=0;
-    double diff=0.0;                                //difference S-Sn
-    int rank=0;
+    int rank=0;                                     //current proc id
     int size=0;                                     //number of proc
     int klower=0;                                   //lower bound for 2^k
     int tag=100;                                    //tag used for MPI comm
     int kupper=0;                                   //upper bound for 2^k calc
-    double* globalsum=(double*)malloc(sizeof(double));
     int *displ;                                     //displacements for proc
     int *sublength;                                 //vectorlength for proc
     int vectorlength=0;                             //maximum vector size
+
+    double startTime=WallTime();                    //timestamp of program start
+    double endTime=0.0;                             //timestamp of program end
+    double S=pow(mathPi(),2)/6;                     //reference value S
+    double Sn=0.0;                                  //approximated Sn
+    double diff=0.0;                                //difference S-Sn
+    double* globalsum=(double*)malloc(sizeof(double));
     double* sendvec=NULL;                           //MPI send vector
     double* receivevec=NULL;                        //MPI receive vector
     double* localsum=NULL;                         //sum of all partial sums
+
+    MPI_Status status;
 
     /*---DECOMMENT FOR DEBUGGING PURPOSES---
     fprintf(stdout, "------precalculated values------\n");
@@ -113,20 +115,25 @@ int main(int argc, char** argv)
 
     for(i=klower; i<=kupper; i++)
     {
-        splitVector(pow(2,i), size, &sublength, &displ); //split vector for every k
+        //split vector for every k
+        splitVector(pow(2,i), size, &sublength, &displ);
+        //send partial vectors to every proc
+        MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE, receivevec,
+                     sizeof(double)*vectorlength, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-        MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE, receivevec, sizeof(double)*vectorlength, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
+        //calculate local sum on every proc
         *localsum=0;
-
         (*localsum)=sum(receivevec, sublength[rank]);
         //fprintf(stdout, "localsum proc %d: %f\n", rank, *localsum);
 
-
+        //wait for every proc to have the partial sum calculated
         MPI_Barrier(MPI_COMM_WORLD);
-        //summing up all local sums
-        MPI_Allreduce(localsum, globalsum, sizeof(double), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
+        //summing up all local sums
+        MPI_Allreduce(localsum, globalsum, sizeof(double),
+                      MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+
+        //output of calculated data
         if(rank==0 && i>=klower && i<=kupper)
         {
             diff=S-(*globalsum);
@@ -138,18 +145,15 @@ int main(int argc, char** argv)
 
 
             endTime=WallTime();
-
-
             fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
-            fprintf(stdout,"--------------------------\n");
         }
     }
-/*
-    free(receivevec);
-    free(sendvec);
-    free(localsum);
-    free(globalsum);
-    */
+    /*
+        free(receivevec);
+        free(sendvec);
+        free(localsum);
+        free(globalsum);
+        */
     close_app();
 
 
