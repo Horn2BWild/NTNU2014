@@ -122,71 +122,28 @@ int main(int argc, char** argv)
         for(i=1; i<=vectorlength; i++)
         {
             sendvec[i-1]=1.0/pow(i,2);
-            //      fprintf(stdout, "sendvec[%d]: %f", i, sendvec[i-1]);
         }
-        /*---DECOMMENT FOR DEBUGGING PURPOSES---
-          fprintf(stdout,"memory allocated and calculated values\n");
-        */
     }
 
     for(i=klower; i<=kupper; i++)
     {
         splitVector(pow(2,i), size, &sublength, &displ); //split vector for every k
-        if(rank==0) //master process
-        {
-            /*---DECOMMENT FOR DEBUGGING PURPOSES---
-            	for(dbgloop=0;dbgloop<pow(2,i);dbgloop++)
-            	{
-            	  fprintf(stdout, "sendvec[%d]: %f\n", dbgloop, sendvec[dbgloop]);
-            	}
-            	  fprintf(stdout, "k: %d size: %d\n", i, size);
-            */
-            /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
- //           for (j=0; j < size; j++)
- //           {
 
- //               fprintf(stdout, "sublength[%d]: %d, displacement[%d]: %d\n", j, sublength[j], j, displ[j]);
-   //         }
-            /* */
-        //    for (j=0; j < size; j++) //send for each slave process
-        //    {
-        //        /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
-        //        fprintf(stdout, "---send for proc %d\n", j);
-        //        /* */
-
-        //        double* vsend=&(sendvec[displ[j]]);
-                /*---DECOMMENT FOR DEBUGGING PURPOSES---
-                		  for(dbgloop=0; dbgloop<sublength[j]; dbgloop++)
-                		  {
-                			fprintf(stdout, "----process %d\nvsend[%d]=%f\n", j, dbgloop, vsend[dbgloop]);
-                		  }
-                */
-                //      fprintf(stdout, "---data for proc %d just NOT sent\n", j);
-                //      fprintf(stdout, "------proc %d sublength %d displ %d address %x\n", j, sublength[j], displ[i], vsend);
-        //        MPI_Send(vsend, sublength[j], MPI_DOUBLE, j, tag, MPI_COMM_WORLD);
-                //      fprintf(stdout, "---data for proc %d sent\n", j);
-
-        //    }
-        }
         MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE, receivevec, sizeof(double)*vectorlength, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-        //free(receivevec);
-       // receivevec=(double*)malloc(sizeof(double)*sublength[rank]);
-       // fprintf(stdout, "proc %d receivevec created\n", rank);
-      //  if(receivevec==NULL)
-      //  {
-       //     fprintf(stderr, "could not allocate memory: receivevec\n aborting...");
-      //      return EXIT_FAILURE;
-      //  }
-     // MPI_Recv(receivevec, sublength[rank], MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
-        /*---DECOMMENT FOR DEBUGGING PURPOSES---*/
-     //   fprintf(stdout, "process %d: data received\n", rank);
-        /**/
-        //calculating local sum
         *localsum=0;
         if(rank>0)
         {
-            (*localsum)=sum(receivevec, sublength[rank]);
+            for(j=0;j<sublength[rank];j++)
+            {
+                fprintf(stdout, "receivevec[%d]: %f\t", j, receivevec[j]);
+                if(j%5==0)
+                {
+                    fprintf(stdout,"\n");
+                }
+            }
+            fprintf(stdout, "\n");
+    //        (*localsum)=sum(receivevec, sublength[rank]);
         }
 
 
@@ -211,11 +168,12 @@ int main(int argc, char** argv)
             fprintf(stdout,"--------------------------\n");
         }
     }
-
+/*
     free(receivevec);
     free(sendvec);
     free(localsum);
     free(globalsum);
+    */
     close_app();
 
 
