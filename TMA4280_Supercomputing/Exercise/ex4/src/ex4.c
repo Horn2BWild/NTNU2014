@@ -121,7 +121,7 @@ int main(int argc, char** argv)
 #pragma omp parallel for schedule(guided,1)
         for(i=1; i<=vectorlength; i++)
         {
-            sendvec[i-1]=1.0/pow(i,2);
+            sendvec[i-1]=1.0/pow(i,1);
         }
     }
 
@@ -132,19 +132,9 @@ int main(int argc, char** argv)
         MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE, receivevec, sizeof(double)*vectorlength, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         *localsum=0;
-        if(rank>0)
-        {
-            for(j=0;j<sublength[rank];j++)
-            {
-                fprintf(stdout, "receivevec[%d]: %f\t", j, receivevec[j]);
-                if(j%5==0)
-                {
-                    fprintf(stdout,"\n");
-                }
-            }
-            fprintf(stdout, "\n");
-    //        (*localsum)=sum(receivevec, sublength[rank]);
-        }
+
+        (*localsum)=sum(receivevec, sublength[rank]);
+        fprintf(stdout, "localsum proc %d: %f\n", rank, *localsum);
 
 
         MPI_Barrier(MPI_COMM_WORLD);
