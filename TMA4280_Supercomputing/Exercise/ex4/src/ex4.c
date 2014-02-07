@@ -211,6 +211,10 @@ double mathPi()
     return 4*atan(1);
 }
 
+//! \brief calculating sum over vector elements
+//! \param vec input vector (double)
+//! \param length length of the input vector
+//! \return sum
 double sum(double* vec, int length)
 {
     int i=0;
