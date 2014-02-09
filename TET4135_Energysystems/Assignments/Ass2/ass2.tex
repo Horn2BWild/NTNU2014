@@ -27,5 +27,14 @@
 			\item power to heat ratio: $\sigma=0.5$
 			\item $f_{p,el}=2.8$
 			\item $Q_{del}=30GWh\cdot 20\%=6GWh$
+			\item total annual power production\\
+				$$E_{el}=\sigma \cdot 30\,000MWh = 15\,000MWh$$
+			\item net power loss due to DH system\\
+				$$\frac{delivered}{total}\cdot (power\ loss\ of\ plant)$$
+				$$\frac{6\,000}{30\,000}\cdot (15\,000*0.2) = 600MWh/year$$
+			\item primary energy factor\\
+				$$f_{p,dh}=\frac{\sum_i E_{f,i}\cdot f_{p,F,i}-E_{el,chp}\cdot f_{p,el}}{\sum_j Q_{del,j}}$$
+				$$f_{p,dh}=\frac{2.8\cdot (net\ power\ loss\ due\ to\ DH\ system)}{0.9\cdot (total\ heat\ consumption\ in\ DH\ system)}$$
+				$$f_{p,dh}=\frac{2.8\cdot 600}{0.9\cdot 5040} = 0.37$$
 		\end{itemize}
 \end{document}
