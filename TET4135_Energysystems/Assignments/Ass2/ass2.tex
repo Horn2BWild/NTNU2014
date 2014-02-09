@@ -65,8 +65,6 @@
 			\item $Q_{del}=5\,040MWh$
 		\end{itemize}
 
-		$$\beta=\frac{1.4MW\cdot 1\,000h}{5\,040MWh}=0.28$$
-
 		\subsubsection*{total amount of generated heating energy $Q$}
 			$$Q=Q_{chp}+Q_{gas}$$
 			$$Q=1\,411MWh+1\,400MWh=2\,811MWh$$
@@ -78,7 +76,7 @@
 			$$Q_{chp}=P_{max_{chp}}\cdot duration$$
 			$$Q_{chp}=0.706MW\cdot 2\,000h = 1\,411MWh$$
 		\subsubsection*{ratio of CHP produced heat and total produced heat}
-			$$\frac{Q_{chp}}{Q_{chp}+Q_{gas}}=50.2\%$$
+			$$\beta=\frac{1.4MW\cdot 1\,000h}{5\,040MWh}=0.28$$
 		\subsubsection*{amount of fuel energy delivered to the CHP $Q_B$}
 			$$Q_B=\frac{E_{el,chp}+Q_{chp}}{\eta_{tot}}$$
 			$$Q_B=\frac{1\,340.6MWh+1\,411MWh}{0.72}=3822MWh$$
@@ -103,17 +101,27 @@
 			\item $f_{p,gas}=f_{p,chp}=1.3$
 		\end{itemize}
 
+		all energy is produced by the CHP, so the ratio $\beta$ of CHP produced heat to total produced heat is $1$
+		$$P_{max,chp}=\frac{5\,040MWh}{3\,000h}=1.68MW$$
+
 		\subsubsection*{total amount of generated heating energy $Q_{chp}$}
-
+			$$Q_{chp}=P_{max,chp}\cdot duration$$
+			$$1.86MW\cdot 3\,000h=5\,040MWh$$
 		\subsubsection*{amount of heat delivered by the CHP $Q_{del}$}
-
+			$$Q_{chp}=5\,040MWh$$
 		\subsubsection*{total amount of fuel energy delivered $Q_B$}
-
+			$$Q_B=\frac{E_{el,chp}+Q_{chp}}{\eta_{tot}}$$
+			$$Q_B=\frac{4\,788MWh+5\,040MWh}{0.75}=13\,104MWh$$
 		\subsubsection*{total annual electricity production $E_{el}$}
-
+			$$E_{el}=Q_{chp}\cdot \sigma$$
+			$$E_{el}=5\,040MWh\cdot 0.95=4\,788MWh$$
 		\subsubsection*{electricity efficiency $\eta_{el}$}
-
+			$$\eta_{el}=\frac{E_{el}}{Q_B}$$
+			$$\eta_{el}=\frac{4\,788MWh}{13\,104MWh}=0.37$$
 		\subsubsection*{primary energy factor $f_p$}
+	$$f_{p,dh}=\frac{(1+\sigma)\cdot\beta}{\eta_{hn}\eta_{chp}}\cdot f_{p,chp}+\frac{1-\beta}{\eta_{hn}\eta_{T,gen}}\cdot f_{p,T,gen}-\frac{\sigma\beta}{\eta_{hn}}\cdot f_{p,el}$$
+			$$f_{p,dh}=\frac{(1+0.95)\cdot 0.28}{0.75\cdot 0.72}\cdot 1.3+\frac{1-0.28}{0.75\cdot 0.85}\cdot 1.3-\frac{0.95\cdot 0.28}{0.75}\cdot 3.31$$
+			$$f_{p,dh}=1.609\approx 1.61$$
 
 	\newpage
 	\subsection*{Assignment 2d}
