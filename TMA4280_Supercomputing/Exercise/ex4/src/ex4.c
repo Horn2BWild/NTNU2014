@@ -36,6 +36,7 @@
 
 #define BUFFERSIZE 128
 #define TIMING 0             //set to 1 for enabling timing outputs
+#define VERBOSE 0            //set to 1 for verbose output
 
 //function prototypes
 double mathPi();
@@ -201,11 +202,17 @@ int main(int argc, char** argv)
         if(rank==0 && i>=klower && i<=kupper)
         {
             diff=S-(*globalsum);
+
+#if VERBOSE
             fprintf(stdout,"----------Result----------\n");
             fprintf(stdout,"--k=%d elements=%d\n", i, (int)pow(2,i));
             fprintf(stdout,"--Sn=%f\n", *globalsum);
             fprintf(stdout,"--S=%f\n", S);
-            fprintf(stdout,"----diff=%f\n", diff);
+            fprintf(stdout,"----diff=%.10g\n", diff);
+#else
+            fprintf(stdout,"k=%d, diff=%.10g\n", i, diff);
+#endif
+
 
 #if TIMING
             fprintf(stdout, "sum up time k=%d: %f\n", i, WallTime()-currentTime);
