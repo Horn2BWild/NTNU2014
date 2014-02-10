@@ -35,6 +35,7 @@
 #include <mpi.h>
 
 #define BUFFERSIZE 128
+#define TIMING 1
 
 //function prototypes
 double mathPi();
@@ -59,6 +60,7 @@ int main(int argc, char** argv)
 
     double startTime=WallTime();                    //timestamp of program start
     double endTime=0.0;                             //timestamp of program end
+    double currentTime=startTime;                   //timestamp of current step
     double S=pow(mathPi(),2)/6;                     //reference value S
     double Sn=0.0;                                  //approximated Sn
     double diff=0.0;                                //difference S-Sn
@@ -114,6 +116,11 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
 
+#if TIMING
+    fprintf(stdout, "Initialization time: %f\n", WallTime()-startTime);
+    currentTime=WallTime();
+#endif
+
     //calculating vector elements on root process
     if(rank==0)
     {
@@ -124,6 +131,10 @@ int main(int argc, char** argv)
             sendvec[i-1]=1.0/pow(i,2);
         }
     }
+#if TIMING
+    fprintf(stdout, "vector calculation time: %f\n", WallTime()-currentTime);
+    currentTime=WallTime();
+#endif
 
     //calculate sum for every 2^i
     for(i=klower; i<=kupper; i++)
@@ -196,9 +207,14 @@ int main(int argc, char** argv)
             fprintf(stdout,"--S=%f\n", S);
             fprintf(stdout,"----diff=%f\n", diff);
 
-            endTime=WallTime();
-            fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
+#if TIMING
+            fprintf(stdout, "sum up time k=%d: %f\n", i, WallTime()-currentTime);
+            currentTime=WallTime();
+#endif
+
         }
+        endTime=WallTime();
+        fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
     }
 
     close_app();
@@ -221,7 +237,7 @@ double sum(double* vec, int length)
     int i=0;
     double partsum=0.0;
 
-    #pragma omp parallel for schedule(guided,1) reduction(+:partsum)
+#pragma omp parallel for schedule(guided,1) reduction(+:partsum)
     for(i=0; i<length; i++)
     {
         partsum+=vec[i];
