@@ -35,7 +35,7 @@
 #include <mpi.h>
 
 #define BUFFERSIZE 128
-#define TIMING 1
+#define TIMING 0             //set to 1 for enabling timing outputs
 
 //function prototypes
 double mathPi();
@@ -130,11 +130,11 @@ int main(int argc, char** argv)
         {
             sendvec[i-1]=1.0/pow(i,2);
         }
-    }
 #if TIMING
-    fprintf(stdout, "vector calculation time: %f\n", WallTime()-currentTime);
-    currentTime=WallTime();
+        fprintf(stdout, "vector calculation time: %f\n", WallTime()-currentTime);
+        currentTime=WallTime();
 #endif
+    }
 
     //calculate sum for every 2^i
     for(i=klower; i<=kupper; i++)
@@ -213,9 +213,10 @@ int main(int argc, char** argv)
 #endif
 
         }
-        endTime=WallTime();
-        fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
     }
+
+    endTime=WallTime();
+    fprintf(stdout, "total run time: %lf\n\n", endTime-startTime);
 
     close_app();
     return EXIT_SUCCESS;
