@@ -25,6 +25,7 @@ int main(int argc, char** argv)
   MPI_Status status;
   MPI_Init(&argc, &argv);
 
+<<<<<<< HEAD
   double *y = NULL;  //sum vector y
   double *x = NULL;  //sum vector x
   double *Ab = NULL; //A multiplied by b
@@ -35,10 +36,26 @@ int main(int argc, char** argv)
  // double alpha=0.0;
   double* alpha = NULL; 
   int rank=0, size=0, tag=0; //MPI flags
+=======
+  int proc=0;
+  double *y = NULL; //sum vector y
+  double *x = NULL; //sum vector x
+  double *Ab = NULL; //A multiplied by b
+  double *gb = NULL; //b multiplied by gamma
+  double *gammaVector = NULL;
+  int i=0, j=0;
+  int n=0; 
+  double gamma=0.0;
+ // double alpha=0.0;
+  double* alpha = NULL;
+  int rank=0, size=0, tag=0; //MPI flags
+  int numProcesses=0;
+>>>>>>> TET4135_Ass1
 
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+<<<<<<< HEAD
   tag = 100;  
 // commandline argument
   if(argc<2)
@@ -47,6 +64,20 @@ int main(int argc, char** argv)
     return EXIT_FAILURE;
   }
 
+=======
+  tag = 100;
+
+  double start_time = MPI_Wtime();
+
+// commandline argument
+  if(argc<3)
+  {
+    fprintf(stdout, "Usage: ex2 <gamma> <numProc>\n");
+    return EXIT_FAILURE;
+  }
+
+
+>>>>>>> TET4135_Ass1
 // creating gammaVector from commandline input
   gammaVector = (double*)malloc(VSIZE*sizeof(double));
   gamma = atof(argv[1]);
@@ -54,15 +85,24 @@ int main(int argc, char** argv)
   {
     gammaVector[i]=gamma;
 /*---DECOMMENT FOR DEBUGGING PURPOSES---
+<<<<<<< HEAD
     printf("gamma: %f", gamma);
 */
   }
+=======
+printf("gamma: %f", gamma);
+*/
+  }
+
+  numProcesses=atoi(argv[2]);
+>>>>>>> TET4135_Ass1
   
 // calculation of A*b
   //#pragma Omp parallel for reduce(+:Ab[i]) schedule(guided,1)
   Ab = (double*)malloc(VSIZE*sizeof(double));
   for(i=0; i<VSIZE; i++)
   {
+<<<<<<< HEAD
     for(j=0; j<VSIZE; j++)
     {
       Ab[i]+=A[i][j]*b[j];
@@ -70,10 +110,57 @@ int main(int argc, char** argv)
   }
 
 // gamma*b     
+=======
+    if (rank == 0) 
+    {
+       for (proc=1; proc<numProcesses; proc++) //for each process except the 0
+       {
+         portion = (NUM_ROWS_A/(numProcesses-1)); // calculate submatrix-size
+         low_bound = (proc-1)*portion;
+         if (((proc+1)==numProcesses) && ((VSIZE%(numProcesses-1))!=0)) //if division not possible equally
+         {
+           upper_bound=VSIZE; //last process gets remaining rows
+         }
+         else
+         {
+           upper_bound=low_bound+portion; //every process with same data
+         }
+
+//MPI non-blocking send function calls
+         MPI_Isend(&low_bound, 1, MPI_INT, proc, tag, MPI_COMM_WORLD, &request);
+         MPI_Isend(&upper_bound, 1, MPI_INT, proc, tag+1, MPI_COMM_WORLD, &request);
+         MPI_Isend(&mat_a[low_bound][0], (upper_bound-low_bound)*VSIZE, MPI_DOUBLE, proc, tag+2, MPI_COMM_WORLD, &request);
+         }
+       }
+//broadcast b to all the slaves
+       MPI_Bcast(b, VSIZE, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+      }
+    if (rank > 0)
+    {
+	  MPI_Recv(&low_bound, 1, MPI_INT, 0, tag, MPI_COMM_WORLD, &status);
+	  MPI_Recv(&upper_bound, 1, MPI_INT, 0, tag+1, MPI_COMM_WORLD, &status);
+	  MPI_Recv(&mat_a[low_bound][0], (upper_bound-low_bound)*VSIZE, MPI_DOUBLE, 0, tag+2, MPI_COMM_WORLD, &status);
+
+	  for (i = low_bound; i < upper_bound; i++)
+      {
+	    for (j = 0; j < NUM_COLUMNS_B; j++)
+        {
+       	  for (k = 0; k < NUM_ROWS_B; k++) 
+          {
+	        mat_result[i][j] += (mat_a[i][k] * b[j]);
+	      }
+	    }
+	  }
+    }
+  }
+
+// gamma*b
+>>>>>>> TET4135_Ass1
   gb = (double*)malloc(VSIZE*sizeof(double));
   gb = multiply(gammaVector, b, VSIZE);
 
 /*---DECOMMENT FOR DEBUGGING PURPOSES---
+<<<<<<< HEAD
   for(i=0; i<VSIZE; i++)
     printf("gb[%d] = %f", i, gb[i]);
 */
@@ -81,29 +168,63 @@ int main(int argc, char** argv)
 {
 //  y = a + Ab   
 #pragma omp parallel section
+=======
+for(i=0; i<VSIZE; i++)
+printf("gb[%d] = %f", i, gb[i]);
+*/
+
+/*---DECOMMENT FOR OPENMP---
+#pragma omp parallel sections
+*/
+{
+// y = a + Ab
+/*---DECOMMENT FOR OPENMP---
+#pragma omp parallel section
+*/
+>>>>>>> TET4135_Ass1
 {
   y = (double*)malloc(VSIZE*sizeof(double));
   y = add(Ab, a, 3);
 }
 
+<<<<<<< HEAD
 // x = a + gb       
 #pragma omp parallel section
 {      
+=======
+// x = a + gb
+/*---DECOMMENT FOR OPENMP---
+#pragma omp parallel section
+*/
+{
+>>>>>>> TET4135_Ass1
   x = (double*)malloc(VSIZE*sizeof(double));
   x = add(gb, a, VSIZE);
 }
 }
 
+<<<<<<< HEAD
 // alpha = xT*y     
+=======
+// alpha = xT*y
+>>>>>>> TET4135_Ass1
   alpha = (double*)malloc(sizeof(double));
   alpha = multiply(x, y, VSIZE);
 
 
+<<<<<<< HEAD
 // Outputs           
   fprintf(stdout, "-----------------Outputs-----------------\n");
   fprintf(stdout, "  x = [%f %f %f]\n", x[0], x[1], x[2]);
   fprintf(stdout, "  y = [%f %f %f]\n", y[0], y[1], y[2]);
   fprintf(stdout, "  alpha = %f\n", *alpha);
+=======
+// Outputs
+  fprintf(stdout, "-----------------Outputs-----------------\n");
+  fprintf(stdout, " x = [%f %f %f]\n", x[0], x[1], x[2]);
+  fprintf(stdout, " y = [%f %f %f]\n", y[0], y[1], y[2]);
+  fprintf(stdout, " alpha = %f\n", *alpha);
+>>>>>>> TET4135_Ass1
   fprintf(stdout, "-------------------End-------------------\n");
 
 // freeing memory
@@ -119,6 +240,7 @@ int main(int argc, char** argv)
 }
 
 /*----------------------------------------------------------------------------*/
+<<<<<<< HEAD
 /* Function add                                                               */
 /* Parameters:                                                                */
 /*   const double* vector1......first vector to be added                      */
@@ -126,6 +248,15 @@ int main(int argc, char** argv)
 /*   int size...................vector size                                   */
 /* Return value:                                                              */
 /*   double*....................result of the addition                        */
+=======
+/* Function add */
+/* Parameters: */
+/* const double* vector1......first vector to be added */
+/* const double* vector2......second vector to be added */
+/* int size...................vector size */
+/* Return value: */
+/* double*....................result of the addition */
+>>>>>>> TET4135_Ass1
 /*----------------------------------------------------------------------------*/
 //#pragma Omp parallel schedule(guided,1)
 double* add(const double* vector1, const double* vector2, int size)
@@ -142,6 +273,7 @@ double* add(const double* vector1, const double* vector2, int size)
 }
 
 /*----------------------------------------------------------------------------*/
+<<<<<<< HEAD
 /* Function multiply                                                          */
 /* Parameters:                                                                */
 /*   const double* vector1......first vector to be added                      */
@@ -149,6 +281,15 @@ double* add(const double* vector1, const double* vector2, int size)
 /*   int size...................vector size                                   */
 /* Return value:                                                              */
 /*   double*....................result of the multiplication                  */
+=======
+/* Function multiply */
+/* Parameters: */
+/* const double* vector1......first vector to be added */
+/* const double* vector2......second vector to be added */
+/* int size...................vector size */
+/* Return value: */
+/* double*....................result of the multiplication */
+>>>>>>> TET4135_Ass1
 /*----------------------------------------------------------------------------*/
 //#pragma Omp parallel schedule(guided,1)
 double* multiply(const double* vector1, const double* vector2, int size)
