@@ -35,7 +35,7 @@
 #include <mpi.h>
 
 #define BUFFERSIZE 128
-#define TIMING 0             //set to 1 for enabling timing outputs
+#define TIMING 1             //set to 1 for enabling timing outputs
 #define VERBOSE 0            //set to 1 for verbose output
 
 //function prototypes
