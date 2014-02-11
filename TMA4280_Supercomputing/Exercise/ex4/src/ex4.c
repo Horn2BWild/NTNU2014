@@ -140,7 +140,7 @@ int main(int argc, char** argv)
     //calculate sum for every 2^i
     for(i=klower; i<=kupper; i++)
     {
-      if(rank<pow(2,i)-1{
+
         printf("proc %d loop %d\n", rank, i);
         //split vector for every k
         splitVector(pow(2,i), size, &sublength, &displ);
@@ -179,7 +179,7 @@ int main(int argc, char** argv)
 
             //wait for every proc to have the partial sum calculated
 
-            //   returnvalue=MPI_Barrier(MPI_COMM_WORLD);
+              returnvalue=MPI_Barrier(MPI_COMM_WORLD);
             printf("proc %d after barrier\n", rank);
             //MPI error handling
             if (returnvalue != MPI_SUCCESS)
@@ -213,7 +213,7 @@ int main(int argc, char** argv)
             fprintf(stderr, "%3d: %s\n", rank, error_string);
             MPI_Abort(MPI_COMM_WORLD, returnvalue);
         }
-}
+
         //output of calculated data
         if(rank==0 && i>=klower && i<=kupper)
         {
