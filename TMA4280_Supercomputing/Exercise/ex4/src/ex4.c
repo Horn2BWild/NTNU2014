@@ -69,6 +69,7 @@ int main(int argc, char** argv)
     double* sendvec=NULL;                           //MPI send vector
     double* receivevec=NULL;                        //MPI receive vector
     double* localsum=NULL;                         //sum of all partial sums
+    MPI_Comm k_comm=MPI_COMM_WORLD;
 
     MPI_Status status;
 
@@ -140,13 +141,18 @@ int main(int argc, char** argv)
     //calculate sum for every 2^i
     for(i=klower; i<=kupper; i++)
     {
+
         //split vector for every k
         splitVector(pow(2,i), size, &sublength, &displ);
+
+              MPI_Comm_split(MPI_COMM_WORLD, pow(2,i), displ[i], &k_comm);
+
+
 
         //send partial vectors to every proc
         returnvalue=MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE,
                                  receivevec, sizeof(double)*vectorlength,
-                                 MPI_DOUBLE, 0, MPI_COMM_WORLD);
+                                 MPI_DOUBLE, 0, k_comm);
         //MPI error handling
         if (returnvalue != MPI_SUCCESS)
         {
@@ -158,7 +164,7 @@ int main(int argc, char** argv)
             fprintf(stderr, "%3d: %s\n", rank, error_string);
             MPI_Error_string(returnvalue, error_string, &length_of_error_string);
             fprintf(stderr, "%3d: %s\n", rank, error_string);
-            MPI_Abort(MPI_COMM_WORLD, returnvalue);
+            MPI_Abort(k_comm, returnvalue);
         }
 
         //calculate local sum on every proc
@@ -166,7 +172,7 @@ int main(int argc, char** argv)
         (*localsum)=sum(receivevec, sublength[rank]);
 
         //wait for every proc to have the partial sum calculated
-        returnvalue=MPI_Barrier(MPI_COMM_WORLD);
+        returnvalue=MPI_Barrier(k_comm);
         //MPI error handling
         if (returnvalue != MPI_SUCCESS)
         {
@@ -178,12 +184,12 @@ int main(int argc, char** argv)
             fprintf(stderr, "%3d: %s\n", rank, error_string);
             MPI_Error_string(returnvalue, error_string, &length_of_error_string);
             fprintf(stderr, "%3d: %s\n", rank, error_string);
-            MPI_Abort(MPI_COMM_WORLD, returnvalue);
+            MPI_Abort(k_comm, returnvalue);
         }
 
         //summing up all local sums
         returnvalue=MPI_Allreduce(localsum, globalsum, sizeof(double),
-                                  MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+                                  MPI_DOUBLE, MPI_SUM, k_comm);
         //MPI error handling
         if (returnvalue != MPI_SUCCESS)
         {
@@ -195,7 +201,7 @@ int main(int argc, char** argv)
             fprintf(stderr, "%3d: %s\n", rank, error_string);
             MPI_Error_string(returnvalue, error_string, &length_of_error_string);
             fprintf(stderr, "%3d: %s\n", rank, error_string);
-            MPI_Abort(MPI_COMM_WORLD, returnvalue);
+            MPI_Abort(k_comm, returnvalue);
         }
 
         //output of calculated data
@@ -220,6 +226,8 @@ int main(int argc, char** argv)
 #endif
 
         }
+
+
     }
 
     endTime=WallTime();
