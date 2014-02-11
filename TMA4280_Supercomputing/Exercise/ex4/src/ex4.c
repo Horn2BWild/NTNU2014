@@ -140,7 +140,7 @@ int main(int argc, char** argv)
     //calculate sum for every 2^i
     for(i=klower; i<=kupper; i++)
     {
-      if(rank<pow(2,i)){
+      if(rank<pow(2,i)-1{
         printf("proc %d loop %d\n", rank, i);
         //split vector for every k
         splitVector(pow(2,i), size, &sublength, &displ);
