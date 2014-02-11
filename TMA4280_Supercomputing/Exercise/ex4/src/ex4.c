@@ -137,23 +137,70 @@ int main(int argc, char** argv)
         currentTime=WallTime();
 #endif
     }
-
     //calculate sum for every 2^i
     for(i=klower; i<=kupper; i++)
     {
-
+      if(rank<pow(2,i)){
+        printf("proc %d loop %d\n", rank, i);
         //split vector for every k
         splitVector(pow(2,i), size, &sublength, &displ);
 
-              MPI_Comm_split(MPI_COMM_WORLD, pow(2,i), displ[i], &k_comm);
+        //        MPI_Comm_split(MPI_COMM_WORLD, i, rank, &k_comm);
+        printf("proc %d after split vec\n", rank);
+
+            printf("proc %d in if\n", rank);
+            //send partial vectors to every proc
+
+            returnvalue=MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE,
+                                     receivevec, sizeof(double)*vectorlength,
+                                     MPI_DOUBLE, 0, MPI_COMM_WORLD);
+            //MPI error handling
+
+            printf("proc %d after scatter\n", rank);
+
+            if (returnvalue != MPI_SUCCESS)
+            {
+                char error_string[BUFFERSIZE];
+                int length_of_error_string, error_class;
+
+                MPI_Error_class(returnvalue, &error_class);
+                MPI_Error_string(error_class, error_string, &length_of_error_string);
+                fprintf(stderr, "%3d: %s\n", rank, error_string);
+                MPI_Error_string(returnvalue, error_string, &length_of_error_string);
+                fprintf(stderr, "%3d: %s\n", rank, error_string);
+                MPI_Abort(MPI_COMM_WORLD, returnvalue);
+            }
 
 
+                //calculate local sum on every proc
+                *localsum=0;
+                (*localsum)=sum(receivevec, sublength[rank]);
+                printf("proc %d after calculation\n", rank);
 
-        //send partial vectors to every proc
-        returnvalue=MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE,
-                                 receivevec, sizeof(double)*vectorlength,
-                                 MPI_DOUBLE, 0, k_comm);
-        //MPI error handling
+            //wait for every proc to have the partial sum calculated
+
+            //   returnvalue=MPI_Barrier(MPI_COMM_WORLD);
+            printf("proc %d after barrier\n", rank);
+            //MPI error handling
+            if (returnvalue != MPI_SUCCESS)
+            {
+                char error_string[BUFFERSIZE];
+                int length_of_error_string, error_class;
+
+                MPI_Error_class(returnvalue, &error_class);
+                MPI_Error_string(error_class, error_string, &length_of_error_string);
+                fprintf(stderr, "%3d: %s\n", rank, error_string);
+                MPI_Error_string(returnvalue, error_string, &length_of_error_string);
+                fprintf(stderr, "%3d: %s\n", rank, error_string);
+                MPI_Abort(MPI_COMM_WORLD, returnvalue);
+            }
+
+            //summing up all local sums
+            returnvalue=MPI_Allreduce(localsum, globalsum, sizeof(double),
+                                      MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+            printf("proc %d after allreduce\n", rank);
+            //MPI error handling
+
         if (returnvalue != MPI_SUCCESS)
         {
             char error_string[BUFFERSIZE];
@@ -164,46 +211,9 @@ int main(int argc, char** argv)
             fprintf(stderr, "%3d: %s\n", rank, error_string);
             MPI_Error_string(returnvalue, error_string, &length_of_error_string);
             fprintf(stderr, "%3d: %s\n", rank, error_string);
-            MPI_Abort(k_comm, returnvalue);
+            MPI_Abort(MPI_COMM_WORLD, returnvalue);
         }
-
-        //calculate local sum on every proc
-        *localsum=0;
-        (*localsum)=sum(receivevec, sublength[rank]);
-
-        //wait for every proc to have the partial sum calculated
-        returnvalue=MPI_Barrier(k_comm);
-        //MPI error handling
-        if (returnvalue != MPI_SUCCESS)
-        {
-            char error_string[BUFFERSIZE];
-            int length_of_error_string, error_class;
-
-            MPI_Error_class(returnvalue, &error_class);
-            MPI_Error_string(error_class, error_string, &length_of_error_string);
-            fprintf(stderr, "%3d: %s\n", rank, error_string);
-            MPI_Error_string(returnvalue, error_string, &length_of_error_string);
-            fprintf(stderr, "%3d: %s\n", rank, error_string);
-            MPI_Abort(k_comm, returnvalue);
-        }
-
-        //summing up all local sums
-        returnvalue=MPI_Allreduce(localsum, globalsum, sizeof(double),
-                                  MPI_DOUBLE, MPI_SUM, k_comm);
-        //MPI error handling
-        if (returnvalue != MPI_SUCCESS)
-        {
-            char error_string[BUFFERSIZE];
-            int length_of_error_string, error_class;
-
-            MPI_Error_class(returnvalue, &error_class);
-            MPI_Error_string(error_class, error_string, &length_of_error_string);
-            fprintf(stderr, "%3d: %s\n", rank, error_string);
-            MPI_Error_string(returnvalue, error_string, &length_of_error_string);
-            fprintf(stderr, "%3d: %s\n", rank, error_string);
-            MPI_Abort(k_comm, returnvalue);
-        }
-
+}
         //output of calculated data
         if(rank==0 && i>=klower && i<=kupper)
         {
