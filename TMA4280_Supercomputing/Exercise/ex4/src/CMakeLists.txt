@@ -1,6 +1,8 @@
 project(ex4)
 cmake_minimum_required(VERSION 2.6)
 
+find_package(OpenMP)
+find_package(MPI)
 add_subdirectory(../common common)
 
 add_definitions(${COMMON_DEFINITIONS})
