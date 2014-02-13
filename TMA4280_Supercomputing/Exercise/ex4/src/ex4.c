@@ -35,7 +35,7 @@
 #include <mpi.h>
 
 #define BUFFERSIZE 128
-#define TIMING 1             //set to 1 for enabling timing outputs
+#define TIMING 0             //set to 1 for enabling timing outputs
 #define VERBOSE 0            //set to 1 for verbose output
 
 //function prototypes
@@ -141,14 +141,14 @@ int main(int argc, char** argv)
     for(i=klower; i<=kupper; i++)
     {
 
-        printf("proc %d loop %d\n", rank, i);
+    //    printf("proc %d loop %d\n", rank, i);
         //split vector for every k
         splitVector(pow(2,i), size, &sublength, &displ);
 
         //        MPI_Comm_split(MPI_COMM_WORLD, i, rank, &k_comm);
-        printf("proc %d after split vec\n", rank);
+     //   printf("proc %d after split vec\n", rank);
 
-            printf("proc %d in if\n", rank);
+      //      printf("proc %d in if\n", rank);
             //send partial vectors to every proc
 
             returnvalue=MPI_Scatterv(sendvec, sublength, displ, MPI_DOUBLE,
@@ -156,7 +156,7 @@ int main(int argc, char** argv)
                                      MPI_DOUBLE, 0, MPI_COMM_WORLD);
             //MPI error handling
 
-            printf("proc %d after scatter\n", rank);
+       //     printf("proc %d after scatter\n", rank);
 
             if (returnvalue != MPI_SUCCESS)
             {
@@ -175,12 +175,12 @@ int main(int argc, char** argv)
                 //calculate local sum on every proc
                 *localsum=0;
                 (*localsum)=sum(receivevec, sublength[rank]);
-                printf("proc %d after calculation\n", rank);
+        //        printf("proc %d after calculation\n", rank);
 
             //wait for every proc to have the partial sum calculated
 
               returnvalue=MPI_Barrier(MPI_COMM_WORLD);
-            printf("proc %d after barrier\n", rank);
+         //   printf("proc %d after barrier\n", rank);
             //MPI error handling
             if (returnvalue != MPI_SUCCESS)
             {
@@ -198,7 +198,7 @@ int main(int argc, char** argv)
             //summing up all local sums
             returnvalue=MPI_Allreduce(localsum, globalsum, sizeof(double),
                                       MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-            printf("proc %d after allreduce\n", rank);
+       //     printf("proc %d after allreduce\n", rank);
             //MPI error handling
 
         if (returnvalue != MPI_SUCCESS)

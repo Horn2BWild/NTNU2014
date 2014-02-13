@@ -21,8 +21,7 @@
 \paragraph{Assignment 4}Summing up with openMP/MPI (Date: 31.01.2014)
 
 	\section{Report}
-		The source code is provided in a github repository. It can be found at\\
-		\small{\texttt{https://github.com/Horn2BWild/NTNU2014/tree/supercomp\_ex4/TMA4280\_Supercomputing/Exercise/ex4}. The branch used is \textit{supercomp\_ex4}}. The code is commented in the source file and not listed in this document.\\
+		The source code is provided in a github repository. It can be found at my github repository.\footnote{\texttt{https://github.com/Horn2BWild/NTNU2014/tree/supercomp\_ex4/TMA4280\_Supercomputing/Exercise/ex4}} The branch used is \textit{supercomp\_ex4}. The code is commented in the source file and not listed in this document. This report can also be found in the github.\\
 		Generally it is a good idea to distribute matrix operations to grids, so it's also possible for this solution. For some reasons the solution I did is not as good for distribute computing. One reason is that the vector elements are all calculated on process 0. This is done because of the assignment requirements. For better load distribution (which is not equal in the delivered case) it would be better to calculate the vector elements which are needed for calculation at each process itself. So this case is not loadbalanced, process 0 is doing more work.\\
 The memory usage is also not solved very efficiently. Each process is allocating the memory for the whole vector, but using only few elements. The allocating is done with \texttt{malloc}, so the vector is put on the heap. The allocating is done at the start of the program and not dynamically for every increasing k. Due to the fact that the whole vector is created at each process, the memory usage is the same at each process. So an increasing number of processes is also increasing the memory usage in total. The memory usage per process is the same, independent from the number of processes. 
 The amount of floating point operations for creating the vector and calculating the sum is proportional to the number of vector elements. The run time is therefore $\mathcal{O}(2^k)$.\\
@@ -38,6 +37,6 @@ This function is used to wait for all partial sums of the different processes. W
 The program version I have delivered is creating a deadlock situation when there are more processes than vector elements. If one process is not getting vector elements, due to the fact that there is still no element, it creates a deadlock. This function creates subcommunicators, which is only involving the processes which get some work. This was still tried and is not working in the version delivered.
 \item \texttt{MPI\_Finalize}
 \end{itemize}
-
+The program should calculate the same values independent from the number of processes used. In the implemented solution this was tested with $P=1$, $P=2$ as well as $P=8$ for $k=10..14$. The results show that the calculated values are exactly the same for each case. The run times for this solution shows, that this implementation is not scaling very well. The communication overhead for such small vector sizes is quite high, so the total time is increasing with the number of processes, instead of decreasing.
 
 \end{document}
