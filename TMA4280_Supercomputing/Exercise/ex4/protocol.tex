@@ -26,6 +26,18 @@
 		Generally it is a good idea to distribute matrix operations to grids, so it's also possible for this solution. For some reasons the solution I did is not as good for distribute computing. One reason is that the vector elements are all calculated on process 0. This is done because of the assignment requirements. For better load distribution (which is not equal in the delivered case) it would be better to calculate the vector elements which are needed for calculation at each process itself. So this case is not loadbalanced, process 0 is doing more work.\\
 The memory usage is also not solved very efficiently. Each process is allocating the memory for the whole vector, but using only few elements. The allocating is done with \texttt{malloc}, so the vector is put on the heap. The allocating is done at the start of the program and not dynamically for every increasing k. Due to the fact that the whole vector is created at each process, the memory usage is the same at each process. So an increasing number of processes is also increasing the memory usage in total. The memory usage per process is the same, independent from the number of processes. 
 The amount of floating point operations for creating the vector and calculating the sum is proportional to the number of vector elements. The run time is therefore $\mathcal{O}(2^k)$.\\
+For my solution I used following MPI calls:
+\begin{itemize}
+\item \texttt{MPI\_Init}
+\item \texttt{MPI\_Scatterv}\\
+I used this function to create subvectors for each process. The vector is splitted to equal parts which are sent to the different processes. Each process is then able to compute with the data of it's own subvector.
+\item \texttt{MPI\_Barrier}\\
+This function is used to wait for all partial sums of the different processes. When all processes have calculated their partial sum, the Allreduce function is called to sum up the partial sums to a global sum.
+\item \texttt{MPI\_Allreduce}
+\item \texttt{MPI\_Split\_Comm}\\
+The program version I have delivered is creating a deadlock situation when there are more processes than vector elements. If one process is not getting vector elements, due to the fact that there is still no element, it creates a deadlock. This function creates subcommunicators, which is only involving the processes which get some work. This was still tried and is not working in the version delivered.
+\item \texttt{MPI\_Finalize}
+\end{itemize}
 
 
 \end{document}
