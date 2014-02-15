@@ -125,6 +125,8 @@ stage number & stage 						&				00:00-06:00		&	06:00-12:00		&		12:00-18:00		&		1
 \begin{tabular}[h]{|c||c|c|c|c|}
 \hline 
 stage number  						&				00:00-06:00		&	06:00-12:00		&		12:00-18:00		&		18:00-24:00\\
+\cline{2-5}
+									&					t1			&		t2			&			t3			&			t4		\\
 \hline
 \hline
 1 				&				x				&	x				&		x				&		\,NOK\\
@@ -141,6 +143,29 @@ stage number  						&				00:00-06:00		&	06:00-12:00		&		12:00-18:00		&		18:00-24
 \hline
 \end{tabular}
 \caption{total costs}\label{tab:totcost}
+\end{center}
+\end{table}
+
+	\begin{table}[hbt!]
+\begin{center}
+\begin{tabular}[h]{|c|c|c||c|c|c||c|}
+\hline
+current & time & previous   & \multicolumn{4}{|c|}{costs}\\
+\cline{4-7}
+state  		&      	&  state    &   previous    	&    startup   		& operation 		&  sum \\
+\hline
+\hline
+ 3			&	t1	&	1		&		0\,NOK		&	7k\,NOK			&	360k\,NOK		& 367k\,NOK\\
+\hline
+ 4			&	t1	&	1		&		0\,NOK		&	0\,NOK			&	57.25k\,NOK		& 57.25k\,NOK\\
+\hline
+ 5			&	t1	&	1		&		0\,NOK		&	17k\,NOK		&	60k\,NOK		& 77k\,NOK\\
+\hline
+ 6			&	t1	&	1		&		0\,NOK		&	10k\,NOK		&	58k\,NOK		& 68k\,NOK\\
+\hline
+
+\end{tabular}
+\caption{calculations}\label{tab:calc}
 \end{center}
 \end{table}
 \end{document}
