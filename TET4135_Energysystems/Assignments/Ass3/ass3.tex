@@ -1,6 +1,6 @@
 \documentclass{article}
 \usepackage{a4wide}
-\usepackage{german}
+\usepackage{norsk}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{dsfont}
@@ -38,9 +38,10 @@
 	%Grafik
 	\section{Production alternatives}
 	\subsection{operation possibilities}
+In table \ref{tab:oppos} the possibilities for plant combination at different production intervals is listed.
 	\begin{table}
 \begin{center}
-\begin{tabular}{|c||}
+\begin{tabular}{|c|c|}
 \hline 
 Interval (MW) & power station\\ \hline
 20..40 & $K_1$\\
@@ -49,10 +50,29 @@ Interval (MW) & power station\\ \hline
 100..200 & $K_2$, $K_1+K_2$\\
 200..300 & $K_1+K_2$\\
 \hline
-
 \end{tabular}
-\caption{Operation possibilities for different production}
+\caption{Operation possibilities for different production}\label{tab:oppos}
 \end{center}
-\label{tab:oppos}
 \end{table}
+
+\subsection{cost function}
+	\begin{equation}
+		K_1=500+45\cdot P_1 + 0.075 P_1^2
+		\label{f:K1}
+	\end{equation}
+	\begin{equation}
+		K_2=750+52\cdot P_2 + 0.025 P_2^2
+		\label{f:K2}
+	\end{equation}
+The equations \ref{f:K1} and \ref{f:K2} can be derived and the equal marginal costs calculated.
+	\begin{equation}
+		\frac{dK_1}{dP_1}=45+0.15\cdot P_1
+		\label{f:dK1}
+	\end{equation}
+	\begin{equation}
+		\frac{dK_2}{dP_2}=52+0.05\cdot P_2
+		\label{f:dK2}
+	\end{equation}
+	The total costs are minimal where \ref{f:dK1} and \ref{f:dK2} are the same. For production of less than 40MW the operation of plant 1 only is possible. So the cost function is not listed seperately.
+	\subsubsection{interval 40MW-60MW}
 \end{document}
