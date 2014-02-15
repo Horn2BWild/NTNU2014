@@ -1,6 +1,6 @@
 \documentclass{article}
 \usepackage{a4wide}
-\usepackage{german}
+\usepackage{norsk}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{dsfont}
@@ -10,6 +10,7 @@
 \usepackage{listings}
 \usepackage{nomencl}
 \usepackage[pdftex]{graphicx}
+\usepackage{multirow}
 
 \usepackage{float}
 \restylefloat{table}
@@ -90,5 +91,34 @@ stage number & stage 						&				00:00-06:00		&	06:00-12:00		&		12:00-18:00		&		1
 \caption{operating costs}\label{tab:opcost}
 \end{center}
 \end{table}
+
+
+	\begin{table}[hbt!]
+\begin{center}
+\begin{tabular}[h]{|c|c||c|c|c|c|c|c|c|c|}
+\hline 
+\multicolumn{2}{|c|}{\multirow{2}{*}{state}}&\multicolumn{6}{|c|}{to}\\
+		\cline{3-8}
+    \multicolumn{2}{|c|}{}&1 & 2 & 3 & 4 & 5 & 6 \\
+\hline
+\hline
+\multirow{6}{*}{from}
+	& 1 & 0\,NOK 		& 17000\,NOK 	& 7000\,NOK 	& 0\,NOK 		& 17000\,NOK 		& 10000\,NOK\\
+	\cline{3-8}
+	& 2 & 17000\,NOK 	& 0\,NOK 		& 7000\,NOK 	& 17000\,NOK 	& 0\,NOK 			& 10000\,NOK\\
+	\cline{3-8}
+	& 3 & 10000\,NOK 	& 10000\,NOK 	& 0\,NOK 		& 10000\,NOK 	& 10000\,NOK 		& 20000\,NOK\\
+	\cline{3-8}
+	& 4 & 0\,NOK 		& 17000\,NOK 	& 7000\,NOK 	& 0\,NOK 		& 17000\,NOK 		& 10000\,NOK\\
+	\cline{3-8}
+	& 5 & 17000\,NOK 	& 0\,NOK 		& 7000\,NOK 	& 17000\,NOK 	& 0\,NOK 			& 10000\,NOK\\
+	\cline{3-8}
+	& 6 & 7000\,NOK 	& 7000\,NOK 	& 14000\,NOK 	& 7000\,NOK 	& 7000\,NOK 		& 0\,NOK\\
+\hline
+\end{tabular}
+\caption{startup cost}\label{tab:startcost}
+\end{center}
+\end{table}
+
 
 \end{document}
