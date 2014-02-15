@@ -73,6 +73,34 @@ The equations \ref{f:K1} and \ref{f:K2} can be derived and the equal marginal co
 		\frac{dK_2}{dP_2}=52+0.05\cdot P_2
 		\label{f:dK2}
 	\end{equation}
-	The total costs are minimal where \ref{f:dK1} and \ref{f:dK2} are the same. For production of less than 40MW the operation of plant 1 only is possible. So the cost function is not listed seperately.
+	The total costs are minimal where equations \ref{f:dK1} and \ref{f:dK2} are the same. For production of less than 40MW the operation of plant 1 only is possible. So the cost function is not listed seperately.
 	\subsubsection{interval 40MW-60MW}
+		The Lagrange function can be written as
+		\begin{equation}
+			L=-(K_1+K_2)+\lambda(P_1+P_2-P_{max})
+	 		\label{f:lagrange}
+		\end{equation}
+In this formulary \ref{f:lagrange} the cost functions for the two generation units can be filled in and the Lagrange function be derived afterwards.
+		$$L=-(500+45\cdot P_1+0.075\cdot P_1^2+750+52\cdot P_2+0.025\cdot P_2^2+\lambda(P_1+P_2-60)$$
+		$$L=-(1250+45\cdot P_1 + 52\cdot P_2 + 0.075\cdot P_1^2+0.025\cdot P_2^2)+\lambda(P_1+P_2-60)$$
+		$$\frac{dL}{dP_1}=-(45+0.15P_1)+\lambda=0$$
+		$$\frac{dL}{dP_2}=-(52+0.05P_2)+\lambda=0$$
+With this derivates the optimal production amount for $P_1$ and $P_2$ can be calculated.
+		$$45+0.15P_1=52+0.05P_2$$
+		$$P_1=\frac{1}{3}(P_2+140)$$
+	Now the constraint $P_1+P_2=60$ can be filled in.
+		$$\frac{1}{3}(P_2+140)+P_2=60$$
+		$$P_2=10$$
+		This value is the optimum, but it is not ok due to missmatching the constraint. So the production level has to be set to the smallest possible value $P_2$ can procuce for 2-station operation. The production therefore is
+		\begin{itemize}
+			\item $P_2=P_{2_{min}}=40MW$
+			\item $P_1=60MW-40MW=20MW$
+		\end{itemize}
+		Both values are meeting with the constraints, so this is the optimal solution for two station operation. The costs are calculated as follows:
+		\begin{itemize}
+			\item $K_1$ only: $K_1(60)=500+45\cdot 60+0.075\cdot 60^2=3470EUR$
+			\item $K_2$ only: $K_2(60)=750+52\cdot 60+0.025\cdot 60^2=3960EUR$
+			\item $K_1+K_2$: $K=1250+45\cdot 20+0.075\cdot 20^2 + 52\cdot 40+0.025\cdot 40^2=4300EUR$
+		\end{itemize}
+
 \end{document}
