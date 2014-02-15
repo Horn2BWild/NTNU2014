@@ -61,4 +61,34 @@
 				\item 210MW:\\
 					not possible, because $210\,MW\geq P_{transm,max}$
 			\end{itemize}
+	\section{minimizing total operating costs}
+$6\,h\cdot 125\,MW\cdot 480\,NOK/MWh=360000\,NOK$
+	\begin{table}[hbt!]
+\begin{center}
+\begin{tabular}[h]{|c|l||c|c|c|c|}
+\hline 
+stage number & stage 						&				00:00-06:00		&	06:00-12:00		&		12:00-18:00		&		18:00-24:00\\
+\hline
+\hline
+1 & generator 1					&				x				&	x				&		x				&		7625\,NOK\\
+\hline
+2 & generator 2					&				x				&	x				&		x				&		8750\,NOK\\
+\hline
+3 & transmission line			&				360000\,NOK 	& 	604800\,NOK 	& 		360000\,NOK 	& 		28800\,NOK\\
+\hline
+4 & generator 1 + 				&				57250\,NOK		&	x				&		57250\,NOK		&		7625\,NOK\\
+  & transmission line			&								&					&						&				\\
+\hline
+5 & generator 2 +				&				60000\,NOK		&	100800\,NOK		&		60000\,NOK		&		8750\,NOK\\
+  & transmission line			&								&					&						&				\\
+\hline
+6 & generator 1 +				&				58000\,NOK		&	98050\,NOK		&		58000\,NOK		&		13125\,NOK\\
+  & generator 2 +				&								&					&						&				\\
+  & transmission line			&								&					&						&				\\
+\hline
+\end{tabular}
+\caption{operating costs}\label{tab:opcost}
+\end{center}
+\end{table}
+
 \end{document}
