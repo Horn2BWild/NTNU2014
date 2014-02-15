@@ -134,4 +134,53 @@ This interval is calculated using tables and increasing the production amount wi
 			\item $K_2$ only: $K_2(100)=750+52\cdot 100+0.025\cdot 100^2=6200EUR$
 			\item $K_1+K_2$: $K=1250+45\cdot 60+0.075\cdot 60^2 + 52\cdot 40+0.025\cdot 40^2=6340EUR$
 		\end{itemize}
+	\subsubsection{interval 100MW-200MW}
+For the interval from 100MW to 200MW the calculation is also done in a table. The steps are listed in table \ref{tab:100200MW}. Because of the fact, that the calculation principle is always the same, some calculation steps in the middle are not listed.
+	\begin{table}[hbt!]
+		\begin{center}
+			\begin{tabular}[h]{|r||c|c|c||p{5cm}|}
+				\hline 
+				($P_1$,$P_2$) [MW] & $\frac{dK_1}{dP_1}$ & $\frac{dK_2}{dP_2}$ & difference & comment\\
+				\hline
+				\hline
+				(60,40) &	54		&	54		&	$\Delta P=+10$		&	end point of last calculation, starting point for this one. The costs are equal, so both stations get the same amount of production increase.\\
+				\hline
+				(70,50) & 	55.5	&	54.5	&	$\Delta P_2=+10$	&	due to cheaper production of $P_2$ increase production of this generation unit\\
+				\hline
+				(70,60) & 	55.5	&	55		&	$\Delta P_2=+10$	&	$P_2$ still cheaper\\
+				\hline
+				...		&	...		&	...		&	...					&		...		\\
+				\hline
+				(80,100)&	57		&	57		&	$\Delta P_1=+3$		&	the amount of power production (200MW) is nearly reached, so decrease the step size\\
+						&			&			&	$\Delta P_2=+10$	&	\\
+				\hline
+				(83,110)&	57.45	&	57.5	&	$\Delta P_1=+1$		&	$P_1$ is not much cheaper, so increase $P_2$ little bit more\\
+						&			&			&	$\Delta P_2=+6$		&	\\
+				\hline
+				(84,116)&	57.6	&	57.8	&	$\Delta P_1=+1$		&	the production amount is reached, but the costs are not equal, so customizing\\
+						&			&			&	$\Delta P_2=-1$		&	\\
+				\hline
+				(85,115)&	57.75 	&	57.75	&						& equal costs\\
+				\hline
+			\end{tabular}
+			\caption{Calculation of production amount in interval 100MW-200MW}\label{tab:100200MW}
+		\end{center}
+	\end{table}
+	As in the table can be seen, the optimal combination for 200MW of produced power is $P_1=85MW$ and $P_2=115MW$. The costs for the two possible generation options are
+		\begin{itemize}
+			\item $K_2$ only: $K_2(200)=750+52\cdot 200+0.025\cdot 200^2=12750EUR$
+			\item $K_1+K_2$: $K=1250+45\cdot 85+0.075\cdot 85^2 + 52\cdot 115+0.025\cdot 115^2=11927.5EUR$
+		\end{itemize}
+	\subsubsection{interval 200MW-300MW}
+In this calculation step the wanted power is in a range, that it is only possible to generate with both generation plants. For 300MW of power both stations have to be utilized full. Thus the costs are
+	\begin{itemize}
+		$K_1+K_2$: $K=1250+45\cdot 100+0.075\cdot 100^2 + 52\cdot 200+0.025\cdot 200^2=17900EUR$
+	\end{itemize}
+	\subsection{best combination, operation for generation unit 1}
+		To get the best generation option the costs are important. Best alternative is that where the costs are lowest.
+		\begin{itemize}
+
+		\end{itemize}
+		
+	\section{calculation with emissions}
 \end{document}
