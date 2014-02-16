@@ -22,6 +22,7 @@
 
 \begin{document}
 	\section{operating costs}
+		This section covers all calculations for the operating costs depending on which generator is running.
 		\subsection{only generator 1 running}
 			\begin{itemize}
 				\item 10MW:\\
@@ -30,7 +31,7 @@
 					$K=3750\,NOK+50\,MW\cdot 350\,NOK/MWh+75\,MW\cdot 480\,NOK/MWh=57250\,NOK/h$
 				\item 210MW:\\
 					$P_{transm}=210\,MW-P_{1,max}=160\,MW\geq 130\,MW$\\
-					not possible due to transmission line overload
+					This is not possible due to transmission line overload.
 			\end{itemize}
 
 		\subsection{only generator 2 running}
@@ -63,6 +64,7 @@
 					not possible, because $210\,MW\geq P_{transm,max}$
 			\end{itemize}
 	\section{minimizing total operating costs}
+In this section the way of minimizing operating costs done by dynamic programming is listed. In table \ref{tab:opcost} the operational costs for different power generation combinations is listed. The calculation is done like the following example for stage 3 from 00:00-06:00 shows.
 $6\,h\cdot 125\,MW\cdot 480\,NOK/MWh=360000\,NOK$
 	\begin{table}[hbt!]
 \begin{center}
@@ -92,7 +94,7 @@ stage number & stage 						&				00:00-06:00		&	06:00-12:00		&		12:00-18:00		&		1
 \end{center}
 \end{table}
 
-
+In table \ref{tab:startcost} the startup costs for each generator combination is listed.
 	\begin{table}[hbt!]
 \begin{center}
 \begin{tabular}[h]{|c|c||c|c|c|c|c|c|c|c|}
@@ -119,7 +121,7 @@ stage number & stage 						&				00:00-06:00		&	06:00-12:00		&		12:00-18:00		&		1
 \caption{startup cost}\label{tab:startcost}
 \end{center}
 \end{table}
-
+The table \ref{tab:totcost} show the total costs for each calculation step.
 	\begin{table}[hbt!]
 \begin{center}
 \begin{tabular}[h]{|c||c|c|c|c|}
@@ -129,23 +131,23 @@ stage number  						&				00:00-06:00		&	06:00-12:00		&		12:00-18:00		&		18:00-24
 									&					t1			&		t2			&			t3			&			t4		\\
 \hline
 \hline
-1 				&				x				&	x				&		x				&		\,NOK\\
+1 				&				x				&	x				&		x				&		237.175k\,NOK\\
 \hline
-2  				&				x				&	x				&		x				&		\,NOK\\
+2  				&				x				&	x				&		x				&		239.05k\,NOK\\
 \hline	
-3  				&				\,NOK 	& 	\,NOK 	& 		\,NOK 	& 		\,NOK\\
+3  				&				367k\,NOK 	& 	669.05k\,NOK 	& 		539.3k\,NOK 	& 		265.1k\,NOK\\
 \hline
-4 	 			&				\,NOK		&	x				&		\,NOK		&		\,NOK\\
+4 	 			&				57.25\,NOK		&	x				&		229.55k\,NOK		&		237.575k\,NOK\\
 \hline
-5 	 			&				\,NOK		&	\,NOK		&		\,NOK		&		\,NOK\\
+5 	 			&				77\,NOK		&	175.05k\,NOK		&		232.3k\,NOK		&		239.05k\,NOK\\
 \hline
-6 	 			&				\,NOK		&	\,NOK		&		\,NOK		&		\,NOK\\
+6 	 			&				68\,NOK		&	165.3k\,NOK		&		223.3k\,NOK		&		236.425k\,NOK\\
 \hline
 \end{tabular}
 \caption{total costs}\label{tab:totcost}
 \end{center}
 \end{table}
-
+The calculation steps are don in table \ref{tab:calct13} and \ref{tab:calct4}.
 	\begin{table}[hbt!]
 \begin{center}
 \begin{tabular}[h]{|c|c|c||c|c|c||c|}
@@ -257,5 +259,5 @@ state  		&      	&  state    &   previous    	&    startup   		& operation 		&  
 \caption{calculations t4}\label{tab:calct4}
 \end{center}
 \end{table}
-1-4-6-6-6
+With this calculations the production process 1-4-6-6-6 would be the cheapest one.
 \end{document}
