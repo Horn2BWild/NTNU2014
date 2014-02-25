@@ -49,8 +49,10 @@ Measurements were done in the lecture room EL2 in Elbygget of NTNU. The dimensio
 
 \section{Measurements}
 \subsection{Equipment}
+The measurements were done with a notebook and WinLMS-Software. A measurement microphone was put on a microphone stand. As sound source a loudspeaker (which is assumed as omnidirectional) was used.
 \subsection{Reverbation time}
 \subsubsection{Method}
+For measuring the reverbation time of the room the microphone was placed at three different positions. One was chosen in the back of the room, one in the middle and one in a corner in the front. The exact positions in the lecture room can be found in table \ref{tab:revmeasure}. The measurements were done with a swept sine with starting frequency 50Hz to an end frequency of 20kHz. This is done in every measurement point, then the results are averaged.
 \begin{table}
 \begin{center}
 \begin{tabular}{|c c|}
@@ -70,6 +72,34 @@ Measurements were done in the lecture room EL2 in Elbygget of NTNU. The dimensio
 \end{center}
 \end{table}
 \subsubsection{Results}
+The reverbation time was analyzed with WinLMS and an average has been calculated with
+$$T_{60,avg}=\frac{T_{60,front}+T_{60,middle}+T_{60,back}}{3}$$
+The values for the reverbation times and the averages are listed in table \ref{tab:Tmeasurements}. Here one special result can be obtained. The reverbation time for the octave band $125Hz$ is much longer than for the other octave bands. One further measurement result is worth mentioning. At the front corner the reverbation time at $250Hz$ is very low. This can be caused due to negative interference at the microphone position. The measurement results from WinLMS are listed in figures \ref{fig:reverbationfront}, \ref{fig:reverbationmiddle} and \ref{fig:reverbationback}. The plots show that at low frequencies the reverbation times differ very much. This is because of the large wavelength. The amplitudes at the microphones differ very much, so the reverbation times differ much too. Generally it can be obtained that the reverbation times are decreasing slightly with increasing frequency.
+\begin{table}
+\begin{center}
+\begin{tabular}{|c||c|c|c||c|}
+\hline
+octave band & back & middle & front & average	\\
+$Hz$		&	$s$	&	$s$		&	$s$		&	$s$		\\
+\hline
+\hline
+125			& 1.34	&	0.98	&	1.58	&	1.3		\\
+\hline
+250			& 0.86	&	0.72	&	0.07	&	0.55	\\
+\hline
+500			& 0.75	& 	0.78	&	0.49	&	0.67	\\
+\hline
+1k			& 0.73	&	0.72	&	0.72	&	0.72	\\
+\hline
+2k			& 0.75	&	0.78	&	0.78	&	0.77	\\
+\hline
+4k			& 0.64	&	0.63	&	0.65	& 	0.64	\\
+\hline
+\end{tabular}
+\caption{$T_{60}$ measurements and average}
+\label{tab:Tmeasurements}
+\end{center}
+\end{table}
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[width=15cm,keepaspectratio=true]{reverbationfront}
@@ -130,33 +160,7 @@ $$S=344m^2$$
 \section{References}
 	
 \subsection{b}
-\begin{table}
-\begin{center}
-\begin{tabular}{|c||c|c|c||c|}
-\hline
-octave band & front & middle & back & average	\\
-$Hz$		&	$s$	&	$s$		&	$s$		&	$s$		\\
-\hline
-\hline
-125			& 1.34	&	0.98	&	1.58	&	1.3		\\
-\hline
-250			& 0.86	&	0.72	&	0.07	&	0.55	\\
-\hline
-500			& 0.75	& 	0.78	&	0.49	&	0.67	\\
-\hline
-1k			& 0.73	&	0.72	&	0.72	&	0.72	\\
-\hline
-2k			& 0.75	&	0.78	&	0.78	&	0.77	\\
-\hline
-4k			& 0.64	&	0.63	&	0.65	& 	0.64	\\
-\hline
 
-
-\end{tabular}
-\caption{$T_{60}$ measurements and average}
-\label{tab:Tmeasurements}
-\end{center}
-\end{table}
 \subsubsection{calculations}
 
 \subsection{d}
