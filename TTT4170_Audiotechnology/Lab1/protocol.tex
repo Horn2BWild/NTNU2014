@@ -125,7 +125,7 @@ $Hz$		&	$s$	&	$s$		&	$s$		&	$s$		\\
 \subsubsection{Method}
 For measuring the sound pressure level as function of distance the sound presure level of pink noise was measured in different distances from the sound source. The SPL of the 500Hz-band was calculated by using WinLMS. The measurements were started at shortest distance to the sound source, and further measurements were done in increasing distance. Between measurements points are about 0.25m to 1m of distance. 
 \subsubsection{Results}
-The measured results are put into Matlab and plotted as function over distance and listed in figure \ref{fig:spl}. Here it can be obtained that the sound pressure level is decreasing until the critical distance (hall radius) is reached. After this the decrease is much slower due to strong interferences with reverbati
+The measured results are put into Matlab and plotted as function over distance and listed in figure \ref{fig:spl}. Here it can be obtained that the sound pressure level is decreasing until the critical distance (hall radius) is reached. After this the decrease is much slower due to strong interferences with reverbation.
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[width=10cm,keepaspectratio=true]{SPL}
@@ -136,6 +136,33 @@ The measured results are put into Matlab and plotted as function over distance a
 
 \newpage
 \section{Calculations}
+\subsection{absorbtion coefficients}
+$$\bar{\alpha_{125}}=\frac{0.161\cdot 367m^3}{1.3s\cdot 344m^2}=0.132$$
+$$\bar{\alpha_{250}}=\frac{0.161\cdot 367m^3}{0.55s\cdot 344m^2}=0.312$$
+$$\bar{\alpha_{500}}=\frac{0.161\cdot 367m^3}{0.67s\cdot 344m^2}=0.256$$
+$$\bar{\alpha_{1k}}=\frac{0.161\cdot 367m^3}{0.72s\cdot 344m^2}=0.239$$
+$$\bar{\alpha_{2k}}=\frac{0.161\cdot 367m^3}{0.77s\cdot 344m^2}=0.223$$
+$$\bar{\alpha_{4k}}=\frac{0.161\cdot 367m^3}{0.64s\cdot 344m^2}=0.268$$
+
+\subsection{absorbtion with chair surfaces}
+$$\alpha_{1,125}=\frac{344m^2\cdot 0.132-0.7\cdot 66.75m^2}{277.25m^2}=-0.004$$
+The absorbtion factor is negative which means that the chair absorption factor is overestimated. Due to the fact that absorbtion decreases with lower frequencies the absorption factor is lower at low frequencies.  An factor of $\alpha=0.4$ for a frequency of $f=125Hz$ was assumed and the resulting absorbtion factor increases to
+ $$\alpha_{1,125}=\frac{344m^2\cdot 0.132-0.4\cdot 66.75m^2}{277.25m^2}=-0.067$$
+All other calculations are done with an assumed absorbtion factor of $\alpha_{chair}=0.7$.
+ $$\alpha_{1,250}=\frac{344m^2\cdot 0.312-0.7\cdot 66.75m^2}{277.25m^2}=0.219$$
+ $$\alpha_{1,500}=\frac{344m^2\cdot 0.256-0.7\cdot 66.75m^2}{277.25m^2}=0.149$$
+ $$\alpha_{1,1k}=\frac{344m^2\cdot 0.239-0.7\cdot 66.75m^2}{277.25m^2}=0.128$$
+ $$\alpha_{1,2k}=\frac{344m^2\cdot 0.223-0.7\cdot 66.75m^2}{277.25m^2}=0.108$$
+ $$\alpha_{1,4k}=\frac{344m^2\cdot 0.268-0.7\cdot 66.75m^2}{277.25m^2}=0.164$$
+
+\subsection{absorption material}
+$$\bar{\alpha}=\frac{0.161\cdot 367m^3}{344m^2\cdot 0.5s}=0.344$$
+The materials given for this task are available for absorbtion factors $\alpha=0.3 ... 0.9$. The calculated vvalue of $\bar{\alpha}$ is in this range, so a absorber material with an average of $0.344$ can be used.
+
+\subsection{hall radius}
+The average reverbation time calculated as result of the three measurements was $T_{60,500}=0.67s$. The hall distance can be calculated with 
+$$r_H=0.057\cdot\sqrt{\frac{V}{T_{60}}}=0.057\cdot\sqrt{\frac{367m^3}{0.67s}}=1.334m$$
+Compared to the measured result it can be obtained that the calculated value is a little bit smaller than the measured one, which is about 1.5m. This is because for the calculation an omnidirectional sound soure was assumed. Due to the fact that the used loudspeaker is not omnidirectional but directed, the measured value is a little bit farer away from the sound source. 
 
 \newpage
 \section{Conclusion}
@@ -160,33 +187,7 @@ $$S=10m\cdot\sqrt{6.6^2m^2+1^2m^2}+3.4m\cdot 10m+10m\cdot 10m+10m\cdot 4m+10m\cd
 $$S=344m^2$$
 \newpage
 \section{References}
-	
 
 
-\subsection{d}
-\subsubsection{calculations}
-$$\bar{\alpha_{125}}=\frac{0.161\cdot 367m^3}{1.3s\cdot 344m^2}=0.132$$
-$$\bar{\alpha_{250}}=\frac{0.161\cdot 367m^3}{0.55s\cdot 344m^2}=0.312$$
-$$\bar{\alpha_{500}}=\frac{0.161\cdot 367m^3}{0.67s\cdot 344m^2}=0.256$$
-$$\bar{\alpha_{1k}}=\frac{0.161\cdot 367m^3}{0.72s\cdot 344m^2}=0.239$$
-$$\bar{\alpha_{2k}}=\frac{0.161\cdot 367m^3}{0.77s\cdot 344m^2}=0.223$$
-$$\bar{\alpha_{4k}}=\frac{0.161\cdot 367m^3}{0.64s\cdot 344m^2}=0.268$$
-\subsection{e}
-$$\alpha_{1,125}=\frac{344m^2\cdot 0.132-0.7\cdot 66.75m^2}{277.25m^2}=-0.004$$
-The absorbtion factor is negative which means that the chair absorption factor is overestimated. Due to the fact that absorbtion decreases with lower frequencies the absorption factor is lower at low frequencies.  An factor of $\alpha=0.4$ for a frequency of $f=125Hz$ was assumed and the resulting absorbtion factor increases to
- $$\alpha_{1,125}=\frac{344m^2\cdot 0.132-0.4\cdot 66.75m^2}{277.25m^2}=-0.067$$
-All other calculations are done with an assumed absorbtion factor of $\alpha_{chair}=0.7$.
- $$\alpha_{1,250}=\frac{344m^2\cdot 0.312-0.7\cdot 66.75m^2}{277.25m^2}=0.219$$
- $$\alpha_{1,500}=\frac{344m^2\cdot 0.256-0.7\cdot 66.75m^2}{277.25m^2}=0.149$$
- $$\alpha_{1,1k}=\frac{344m^2\cdot 0.239-0.7\cdot 66.75m^2}{277.25m^2}=0.128$$
- $$\alpha_{1,2k}=\frac{344m^2\cdot 0.223-0.7\cdot 66.75m^2}{277.25m^2}=0.108$$
- $$\alpha_{1,4k}=\frac{344m^2\cdot 0.268-0.7\cdot 66.75m^2}{277.25m^2}=0.164$$
-\subsection{f}
-$$\bar{\alpha}=\frac{0.161\cdot 367m^3}{344m^2\cdot 0.5s}=0.344$$
-The materials given for this task are available for absorbtion factors $\alpha=0.3 ... 0.9$. The calculated vvalue of $\bar{\alpha}$ is in this range, so a absorber material with an average of $0.344$ can be used.
-\subsection{g}
-The average reverbation time calculated as result of the three measurements was $T_{60,500}=0.67s$. The hall distance can be calculated with 
-$$r_H=0.057\cdot\sqrt{\frac{V}{T_{60}}}=0.057\cdot\sqrt{\frac{367m^3}{0.67s}}=1.334m$$
-Compared to the measured result it can be obtained that the calculated value is a little bit smaller than the measured one, which is about 1.5m. This is because for the calculation an omnidirectional sound soure was assumed. Due to the fact that the used loudspeaker is not omnidirectional but directed, the measured value is a little bit farer away from the sound source. 
 
 \end{document}
