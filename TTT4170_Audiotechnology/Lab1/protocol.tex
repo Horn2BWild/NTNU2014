@@ -41,12 +41,19 @@ NORWEGIAN UNIVERSITY OF SCIENCE AND TECHNOLOGY
 
 \newpage
 \section*{Summary}
+This report regards to the first laboratory exercise of Audio Technology at NTNU. It covers measurements and calculations with subject to room acoustics.\\
+The reverbation time of a lecture room\footnote{EL2, Elbygget 1st floor, Gløshaugen Campus} was measured. The reverbation time was measured at three positions, one in the front, in the middle and in the back of the room. Duration of reverb is about 0.7s from 500Hz to 4kHz and decreasing after this. At low frequency ranges there are some interesting results and huge variations in reverbation time. This is because of large wavelength $\lambda$.\\
+Sound pressure level (SPL) was measured in a straight line from the sound source to the back of the room. The result shows that until the hall radius is reached the SPL degrades quickly and remains at lower slope after the hall radius. This is because of significant influence of reverbation effects.\\
 
 \newpage
 \section{Introduction}
 This laboratory exercises treated different measurement and calculation methods of room acoustics. Therefore the dimensions of a room are measured and reverbation times at different octave bands and sound pressure levels as function of distance to the sound source are calculated. Sabine's formula is used for calculations. Further the hall radius in the room and absorption coefficients at different frequency bands are calculated.\\
 Measurements were done in the lecture room EL2 in Elbygget of NTNU. The dimensions of the room were measured with a BOSCH laser meter and rounded to the next meter. The room is 10m width and 10m long, the ceiling is 4m in the front and 3m in the back. The floor is 3.4m horizontal and has a slope starting at 3.4m to the end at 10m. The floor is linoleum, at the slope there are chairs. On the backside there are some absorbers, the left side is gypsum, at the right side of the lecture hall are mostly glass areas (windows). In the front there is a wooden blackboard at the wall, the ceiling is gypsum. EL2 has a volume of $V=367m^3$ and a surface area of $S=344m^2$. The calculation can be found in chapter \ref{sec:roomparam}.
 
+\section{Theory}
+\subsection{Absorber materials}
+
+\subsection{Formulary}
 \section{Measurements}
 \subsection{Equipment}
 The measurements were done with a notebook and WinLMS-Software. A measurement microphone was put on a microphone stand. As sound source a loudspeaker (which is assumed as omnidirectional) was used.
@@ -137,6 +144,7 @@ The measured results are put into Matlab and plotted as function over distance a
 \newpage
 \section{Calculations}
 \subsection{absorbtion coefficients}
+The absorbtion coefficients for each band are calculated according to Sabine's formula. The values $T_{60}$ which are used are the average values of the measured results. 
 $$\bar{\alpha_{125}}=\frac{0.161\cdot 367m^3}{1.3s\cdot 344m^2}=0.132$$
 $$\bar{\alpha_{250}}=\frac{0.161\cdot 367m^3}{0.55s\cdot 344m^2}=0.312$$
 $$\bar{\alpha_{500}}=\frac{0.161\cdot 367m^3}{0.67s\cdot 344m^2}=0.256$$
