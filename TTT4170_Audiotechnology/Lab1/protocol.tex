@@ -86,21 +86,27 @@ and
 S_{total}=S_{front}+2\cdot S_{side}+S_{back}-2\cdot S_{side\ below\ slope}+S_{ceiling}+S_{floor}+S_{slope}
 \end{equation}
 \subsubsection{Acoustical parameters}
+The absorption factor $\alpha$ is the ratio of sound energy which is absorbed by a surface compared to the full sound energy which hits the surface. It can be calculated with a simplified formula according to Sabine's formula.
+\begin{equation}
+\bar{\alpha}=\frac{\alpha_1\cdot S_1+\alpha_2\cdot S_2}{S_1+S_2}
+\end{equation}
 \begin{equation}
 \alpha=\frac{0.161\cdot V}{T_{60}\cdot S}
 \end{equation}
+The formula can be changed so that the reverbation time can be expressed as
 \begin{equation}
 T_{60}=\frac{k\cdot V}{A}=\frac{0.161\cdot V}{\alpha\cdot S}
 \end{equation}
-
+where 
+\begin{itemize}
+\item $T_{60]$ is the time the sound amplitude decreases to -60dB
+\item $V$ is the room volume and
+\item $S$ the surface area.
+\end{itemize}
 
 The hall radius can be calculated using
 \begin{equation}
 r_H=\sqrt{\frac{V}{100\cdot\pi\cdot T_{60}}}
-\end{equation}
-
-\begin{equation}
-\bar{\alpha}=\frac{\alpha_1\cdot S_1+\alpha_2\cdot S_2}{S_1+S_2}
 \end{equation}
 
 For a more accurate calculation Eyring's formula can be used. In this formula the frequency and air parameters like speed of sound and air humidity are taken into account. 
@@ -118,6 +124,8 @@ where
 \begin{equation}
 \bar{\alpha}=\frac{0.161\cdot V-(S-S_{grey})\cdot\alpha-4\cdot m\cdot V}{S_{grey}}
 \end{equation}
+
+
 \section{Measurements}
 \subsection{Equipment}
 The measurements were done with a notebook and WinLMS-Software. A measurement microphone was put on a microphone stand. As sound source a loudspeaker (which is assumed as omnidirectional) was used.
