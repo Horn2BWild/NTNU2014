@@ -60,35 +60,50 @@ Measurements were done in the lecture room EL2 in Elbygget of NTNU. The dimensio
 \end{center}
 \end{figure}
 \section{Theory}
-\subsection{Absorber materials}
+\subsection{Room reverbation}
+In figure \ref{fig:irtheory} a typical room reverbation is shown. After a strong direct sound early reflections occur, which can be seperated very clearly. After some time the reflections are smoothed and different reverbation peaks cannot been seperated. Then late reflections occur. 
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=8cm,keepaspectratio=true]{ir}
+\caption{Impulse response with early reflections and reverbation}
+\label{fig:irtheory}
+\end{center}
+\end{figure}
 
 \subsection{Formulary}
-\subsubsection{Formulary}
+\subsubsection{Room parameters}
+In this section some formulary for calculations are mentioned. These formulas are helpful for calculating room acoustical parameters.
+Some equations to get room parameters like volume and surface area are
 \begin{equation}
 V_{room,total}=V_{room}-V_{under\ shaped\ area}
 \end{equation}
+with
 \begin{equation}
 V=l\cdot h\cdot w
 \end{equation}
+and
+\begin{equation}
+S_{total}=S_{front}+2\cdot S_{side}+S_{back}-2\cdot S_{side\ below\ slope}+S_{ceiling}+S_{floor}+S_{slope}
+\end{equation}
+\subsubsection{Acoustical parameters}
 \begin{equation}
 \alpha=\frac{0.161\cdot V}{T_{60}\cdot S}
 \end{equation}
 \begin{equation}
 T_{60}=\frac{k\cdot V}{A}=\frac{0.161\cdot V}{\alpha\cdot S}
 \end{equation}
-\begin{equation}
-S_{total}=S_{front}+2\cdot S_{side}+S_{back}-2\cdot S_{side\ below\ slope}+S_{ceiling}+S_{floor}+S_{slope}
-\end{equation}
-\begin{equation}
-\frac{1}{4\pi\cdot r^2}=\frac{4}{A}
-\end{equation}
+
+
+The hall radius can be calculated using
 \begin{equation}
 r_H=\sqrt{\frac{V}{100\cdot\pi\cdot T_{60}}}
 \end{equation}
+
 \begin{equation}
 \bar{\alpha}=\frac{\alpha_1\cdot S_1+\alpha_2\cdot S_2}{S_1+S_2}
 \end{equation}
-\subsubsection{Formulary}
+
+For a more accurate calculation Eyring's formula can be used. In this formula the frequency and air parameters like speed of sound and air humidity are taken into account. 
 \begin{equation}
 A=S\cdot\bar{\alpha}+4\cdot m\cdot V
 \end{equation}
@@ -230,15 +245,7 @@ To get a lower reverbation time\footnote{It was required to lower down the rever
 In a further step the hall radius was calculated. The sound source was assumed as omnidirectional. The calculated distance was at about 1.33m. As the measurements showed, the real hall radius was a little bit farer away due to non-omnidirectionality of the loudspeaker.
 \newpage
 \section{Appendix}
-\subsection{Preparatory exercises}
-	\subsubsection{Measuring an impulse response with a swept-sine method}
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[width=8cm,keepaspectratio=true]{ir}
-\caption{Impulse response with early reflections and reverbation}
-\label{irtheory}
-\end{center}
-\end{figure}
+\subsection{Example calculations}
 
 \subsubsection{Reverbation time in an auditorium}
 \paragraph{geometric calculations}
