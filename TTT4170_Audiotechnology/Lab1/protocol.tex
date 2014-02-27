@@ -215,7 +215,7 @@ The measured results are put into Matlab and plotted as function over distance a
 
 \newpage
 \section{Calculations}
-\subsection{absorbtion coefficients}
+\subsection{absorption coefficients}
 The absorbtion coefficients for each band are calculated according to Sabine's formula. The values $T_{60}$ which are used are the average values of the measured results. 
 $$\bar{\alpha_{125}}=\frac{0.161\cdot 367m^3}{1.3s\cdot 344m^2}=0.132$$
 $$\bar{\alpha_{250}}=\frac{0.161\cdot 367m^3}{0.55s\cdot 344m^2}=0.312$$
@@ -224,7 +224,8 @@ $$\bar{\alpha_{1k}}=\frac{0.161\cdot 367m^3}{0.72s\cdot 344m^2}=0.239$$
 $$\bar{\alpha_{2k}}=\frac{0.161\cdot 367m^3}{0.77s\cdot 344m^2}=0.223$$
 $$\bar{\alpha_{4k}}=\frac{0.161\cdot 367m^3}{0.64s\cdot 344m^2}=0.268$$
 
-\subsection{absorbtion with chair surfaces}
+\subsection{absorption with chair surfaces}
+In this task a absorption factor at the chair surface of 0.7 was assumed. The absorption factor of the remaining surfaces was calculated in such way that the average absorption factor of the frequency bands was not changed. 
 $$\alpha_{1,125}=\frac{344m^2\cdot 0.132-0.7\cdot 66.75m^2}{277.25m^2}=-0.004$$
 The absorbtion factor is negative which means that the chair absorption factor is overestimated. Due to the fact that absorbtion decreases with lower frequencies the absorption factor is lower at low frequencies.  An factor of $\alpha=0.4$ for a frequency of $f=125Hz$ was assumed and the resulting absorbtion factor increases to
  $$\alpha_{1,125}=\frac{344m^2\cdot 0.132-0.4\cdot 66.75m^2}{277.25m^2}=-0.067$$
@@ -236,8 +237,9 @@ All other calculations are done with an assumed absorbtion factor of $\alpha_{ch
  $$\alpha_{1,4k}=\frac{344m^2\cdot 0.268-0.7\cdot 66.75m^2}{277.25m^2}=0.164$$
 
 \subsection{absorption material}
+The room reverbation time should be decreased to 0.5s. The materials given for this task are available for absorbtion factors $\alpha=0.3 ... 0.9$. Surfaces had to be equipped with absorption materials in such way and amount that the wanted reverbation time is reached. The average absorption factor needed is calculated using
 $$\bar{\alpha}=\frac{0.161\cdot 367m^3}{344m^2\cdot 0.5s}=0.344$$
-The materials given for this task are available for absorbtion factors $\alpha=0.3 ... 0.9$. The calculated vvalue of $\bar{\alpha}$ is in this range, so a absorber material with an average of $0.344$ can be used.
+The calculated value of $\bar{\alpha}$ is in this range, so a absorber material with an average of $0.344$ can be used.
 
 \subsection{hall radius}
 The average reverbation time calculated as result of the three measurements was $T_{60,500}=0.67s$. The hall distance can be calculated with 
@@ -253,9 +255,9 @@ To get a lower reverbation time\footnote{It was required to lower down the rever
 In a further step the hall radius was calculated. The sound source was assumed as omnidirectional. The calculated distance was at about 1.33m. As the measurements showed, the real hall radius was a little bit farer away due to non-omnidirectionality of the loudspeaker.
 \newpage
 \section{Appendix}
-\subsection{Example calculations}
-
+\subsection{Example calculations
 \subsubsection{Reverbation time in an auditorium}
+
 \paragraph{geometric calculations}
 $$V=12m\cdot 6m\cdot 15m - \frac{11m\cdot 12m\cdot 3m}{2}$$
 $$V=882m^3$$
