@@ -86,7 +86,7 @@ and
 S_{total}=S_{front}+2\cdot S_{side}+S_{back}-2\cdot S_{side\ below\ slope}+S_{ceiling}+S_{floor}+S_{slope}
 \end{equation}
 \subsubsection{Acoustical parameters}
-The absorption factor $\alpha$ is the ratio of sound energy which is absorbed by a surface compared to the full sound energy which hits the surface. It can be calculated with a simplified formula according to Sabine's formula.
+The absorption factor $\alpha$ is the ratio of sound energy which is absorbed by a surface compared to the full sound energy which hits the surface. It can be calculated with a simplified formula according to Sabine's formula. Sabine's formula is normally used for a 1/3-octave filter for 500Hz or 1kHz. There a diffuse sound field exists for a proper use of the formula.
 \begin{equation}
 \bar{\alpha}=\frac{\alpha_1\cdot S_1+\alpha_2\cdot S_2}{S_1+S_2}
 \end{equation}
@@ -99,7 +99,7 @@ T_{60}=\frac{k\cdot V}{A}=\frac{0.161\cdot V}{\alpha\cdot S}
 \end{equation}
 where 
 \begin{itemize}
-\item $T_{60]$ is the time the sound amplitude decreases to -60dB
+\item $T_{60}$ is the time the sound amplitude decreases to -60dB
 \item $V$ is the room volume and
 \item $S$ the surface area.
 \end{itemize}
@@ -255,10 +255,17 @@ To get a lower reverbation time\footnote{It was required to lower down the rever
 In a further step the hall radius was calculated. The sound source was assumed as omnidirectional. The calculated distance was at about 1.33m. As the measurements showed, the real hall radius was a little bit farer away due to non-omnidirectionality of the loudspeaker.
 \newpage
 \section{Appendix}
-\subsection{Example calculations
+\subsection{Example calculations}
 \subsubsection{Reverbation time in an auditorium}
-
-\paragraph{geometric calculations}
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=8cm,keepaspectratio=true]{testroom}
+\caption{Example room shape}
+\label{fig:testroom}
+\end{center}
+\end{figure}
+\paragraph{geometric calculations\\}
+In an assumed room with a shape figured in \ref{fig:testroom} the room volume and surface area can be calculated using following method.
 $$V=12m\cdot 6m\cdot 15m - \frac{11m\cdot 12m\cdot 3m}{2}$$
 $$V=882m^3$$
 
@@ -266,17 +273,20 @@ $$l_{slope}=\sqrt{(11m)^2+(3m)^2}=11.4m$$
 $$S=12m\cdot 6m+2\cdot 15m\cdot 6m+3m\cdot 12m-2\cdot\frac{3m\cdot 11m}{2}+12m\cdot 15m+12m\cdot 4m+11.4m\cdot 12m$$
 $$S=619.8m^2$$
 
-\paragraph{a) calculation of $\alpha$}
+\paragraph{a) calculation of $\alpha$\\}
+The absorption factor $\alpha$ of this room can be calculated using following formula
 $$\bar{\alpha}=\frac{0.161\cdot 882m^3}{619.8m^2\cdot 1s}$$
 $$\alpha=0.229$$
 
-\paragraph{b) calculation of absorption factor where the chairs are}
+\paragraph{b) calculation of absorption factor where the chairs are\\}
+Chairs usually have a higher absorption factor then rigid walls. The absorption factor of the chair surface can be calculated with
 $$\alpha=\frac{0.229\cdot 619.8m^2-0.1\cdot 483m^2}{136.8m^2}$$
 $$\alpha=0.684$$
-\paragraph{c) hall radius}
+\paragraph{c) hall radius\\}
+The hall radius defines the distance from the sound source where reverbation intensity and direct sound are equally strong. This can be calculated with
 $$r_H=\sqrt{\frac{882}{1s\cdot 100\cdot \pi}}=1.68m$$
-\subsection{More accurate}
-
+\subsubsection{More accurate calculations}
+Using Eyring's formula and taking air humidity (assumed to 50\%) into account the room absorption factor can be calculated more accurate.
 \paragraph{$f=2kHz$}
 $$\bar{\alpha}=\frac{0.161\cdot 882m^3-483m^2\cdot 0.229-4\cdot \frac{0.074}{0.5}\cdot 2^2\cdot 882m^3}{136.8m^2}$$
 $$\bar{\alpha}=$$
