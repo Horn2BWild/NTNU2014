@@ -64,7 +64,7 @@ Measurements were done in the lecture room EL2 in Elbygget of NTNU. The dimensio
 In figure \ref{fig:irtheory} a typical room reverbation is shown. After a strong direct sound early reflections occur, which can be seperated very clearly. After some time the reflections are smoothed and different reverbation peaks cannot been seperated. Then late reflections occur. 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[width=8cm,keepaspectratio=true]{ir}
+\includegraphics[width=12cm,keepaspectratio=true]{ir}
 \caption{Impulse response with early reflections and reverbation}
 \label{fig:irtheory}
 \end{center}
@@ -131,7 +131,7 @@ where
 The measurements were done with a notebook and WinLMS-Software. A measurement microphone was put on a microphone stand. As sound source a loudspeaker (which is assumed as omnidirectional) was used.
 \subsection{Reverbation time}
 \subsubsection{Method}
-For measuring the reverbation time of the room the microphone was placed at three different positions. One was chosen in the back of the room, one in the middle and one in a corner in the front. The exact positions in the lecture room can be found in table \ref{tab:revmeasure}. The measurements were done with a swept sine with starting frequency 50Hz to an end frequency of 20kHz. This is done in every measurement point, then the results are averaged.
+For measuring the reverbation time of the room the microphone was placed at three different positions. One was chosen in the back of the room, one in the middle and one in a corner in the front. The exact positions in the lecture room can be found in table \ref{tab:revmeasure}. Microphone positions are marked as black dot. The measurements were done with a swept sine with starting frequency 50Hz to an end frequency of 20kHz. This is done in every measurement point, then the results are averaged.
 \begin{table}
 \begin{center}
 \begin{tabular}{|c c|}
@@ -287,11 +287,13 @@ $$r_H=\sqrt{\frac{882}{1s\cdot 100\cdot \pi}}=1.68m$$
 \subsubsection{More accurate calculations}
 Using Eyring's formula and taking air humidity (assumed to 50\%) into account the room absorption factor can be calculated more accurate.
 \paragraph{$f=2kHz$}
-$$\bar{\alpha}=\frac{0.161\cdot 882m^3-483m^2\cdot 0.229-4\cdot \frac{0.074}{0.5}\cdot 2^2\cdot 882m^3}{136.8m^2}$$
-$$\bar{\alpha}=$$
+$$\bar{\alpha_{2kHz}}=1-e^{\frac{A-4\cdot m\cdot V}{S}}=0.199$$
+$$\alpha_{chair,2kHz}=\frac{\bar{\alpha_{2kHz}}\cdot S-\alpha\cdot (S-S_{chair})}{S_{chair}}=\frac{0.199\cdot 615m^2-0.1\cdot 483m^2}{132m^2}$$
+$$\alpha_{chair,2kHz}=0.563$$
 \paragraph{$f=4kHz$}
-$$\bar{\alpha}=\frac{0.161\cdot 882m^3-483m^2\cdot 0.229-4\cdot \frac{0.074}{0.5}\cdot 4^2\cdot 882m^3}{136.8m^2}$$
-$$\bar{\alpha}=$$
+$$\bar{\alpha_{4kHz}}=1-e^{\frac{A-4\cdot m\cdot V}{S}}=0.109$$
+$$\alpha_{chair,4kHz}=\frac{\bar{\alpha_{4kHz}}\cdot S-\alpha\cdot (S-S_{chair})}{S_{chair}}=\frac{0.109\cdot 615m^2-0.1\cdot 483m^2}{132m^2}$$
+$$\alpha_{chair,4kHz}=0.507$$
 \subsection{Calculation of room parameters\label{sec:roomparam}}
 \subsubsection{room volume}
 The room volume can be calculated by calculating the room as whole cuboid and subtracting the volume below the slope.
