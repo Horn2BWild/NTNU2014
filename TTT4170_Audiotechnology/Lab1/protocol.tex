@@ -51,12 +51,58 @@ An average calculation factor for every octave band has been calculated, as well
 \setcounter{page}{1}
 \section{Introduction}
 This laboratory exercises treated different measurement and calculation methods of room acoustics. Therefore the dimensions of a room are measured and reverbation times at different octave bands and sound pressure levels as function of distance to the sound source are calculated. Sabine's formula is used for calculations. Further the hall radius in the room and absorption coefficients at different frequency bands are calculated.\\
-Measurements were done in the lecture room EL2 in Elbygget of NTNU. The dimensions of the room were measured with a BOSCH laser meter and rounded to the next meter. The room is 10m width and 10m long, the ceiling is 4m in the front and 3m in the back. The floor is 3.4m horizontal and has a slope starting at 3.4m to the end at 10m. The floor is linoleum, at the slope there are chairs. On the backside there are some absorbers, the left side is gypsum, at the right side of the lecture hall are mostly glass areas (windows). In the front there is a wooden blackboard at the wall, the ceiling is gypsum. EL2 has a volume of $V=367m^3$ and a surface area of $S=344m^2$. The calculation can be found in chapter \ref{sec:roomparam}.
-
+Measurements were done in the lecture room EL2 in Elbygget of NTNU. The dimensions of the room were measured with a BOSCH laser meter and rounded to the next meter. The room is 10m width and 10m long, the ceiling is 4m in the front and 3m in the back. The floor is 3.4m horizontal and has a slope starting at 3.4m to the end at 10m. A shape of the auditorium can be seen in figure \ref{fig:shape}. The floor is linoleum, at the slope there are chairs. On the backside there are some absorbers, the left side is gypsum, at the right side of the lecture hall are mostly glass areas (windows). In the front there is a wooden blackboard at the wall, the ceiling is gypsum. EL2 has a volume of $V=367m^3$ and a surface area of $S=344m^2$. The calculation can be found in chapter \ref{sec:roomparam}.
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=8cm,keepaspectratio=true]{roomshape}
+\caption{Shape of auditorium EL2}
+\label{fig:shape}
+\end{center}
+\end{figure}
 \section{Theory}
 \subsection{Absorber materials}
 
 \subsection{Formulary}
+\subsubsection{Formulary}
+\begin{equation}
+V_{room,total}=V_{room}-V_{under\ shaped\ area}
+\end{equation}
+\begin{equation}
+V=l\cdot h\cdot w
+\end{equation}
+\begin{equation}
+\alpha=\frac{0.161\cdot V}{T_{60}\cdot S}
+\end{equation}
+\begin{equation}
+T_{60}=\frac{k\cdot V}{A}=\frac{0.161\cdot V}{\alpha\cdot S}
+\end{equation}
+\begin{equation}
+S_{total}=S_{front}+2\cdot S_{side}+S_{back}-2\cdot S_{side\ below\ slope}+S_{ceiling}+S_{floor}+S_{slope}
+\end{equation}
+\begin{equation}
+\frac{1}{4\pi\cdot r^2}=\frac{4}{A}
+\end{equation}
+\begin{equation}
+r_H=\sqrt{\frac{V}{100\cdot\pi\cdot T_{60}}}
+\end{equation}
+\begin{equation}
+\bar{\alpha}=\frac{\alpha_1\cdot S_1+\alpha_2\cdot S_2}{S_1+S_2}
+\end{equation}
+\subsubsection{Formulary}
+\begin{equation}
+A=S\cdot\bar{\alpha}+4\cdot m\cdot V
+\end{equation}
+\begin{equation}
+m\approx\frac{0.074}{\Phi}\cdot f^2
+\end{equation}
+where
+\begin{itemize}
+\item $\Phi$ is the relative humidity
+\item $f$ is frequency in kHz
+\end{itemize}
+\begin{equation}
+\bar{\alpha}=\frac{0.161\cdot V-(S-S_{grey})\cdot\alpha-4\cdot m\cdot V}{S_{grey}}
+\end{equation}
 \section{Measurements}
 \subsection{Equipment}
 The measurements were done with a notebook and WinLMS-Software. A measurement microphone was put on a microphone stand. As sound source a loudspeaker (which is assumed as omnidirectional) was used.
@@ -184,6 +230,42 @@ To get a lower reverbation time\footnote{It was required to lower down the rever
 In a further step the hall radius was calculated. The sound source was assumed as omnidirectional. The calculated distance was at about 1.33m. As the measurements showed, the real hall radius was a little bit farer away due to non-omnidirectionality of the loudspeaker.
 \newpage
 \section{Appendix}
+\subsection{Preparatory exercises}
+	\subsubsection{Measuring an impulse response with a swept-sine method}
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=8cm,keepaspectratio=true]{ir}
+\caption{Impulse response with early reflections and reverbation}
+\label{irtheory}
+\end{center}
+\end{figure}
+
+\subsubsection{Reverbation time in an auditorium}
+\paragraph{geometric calculations}
+$$V=12m\cdot 6m\cdot 15m - \frac{11m\cdot 12m\cdot 3m}{2}$$
+$$V=882m^3$$
+
+$$l_{slope}=\sqrt{(11m)^2+(3m)^2}=11.4m$$
+$$S=12m\cdot 6m+2\cdot 15m\cdot 6m+3m\cdot 12m-2\cdot\frac{3m\cdot 11m}{2}+12m\cdot 15m+12m\cdot 4m+11.4m\cdot 12m$$
+$$S=619.8m^2$$
+
+\paragraph{a) calculation of $\alpha$}
+$$\bar{\alpha}=\frac{0.161\cdot 882m^3}{619.8m^2\cdot 1s}$$
+$$\alpha=0.229$$
+
+\paragraph{b) calculation of absorption factor where the chairs are}
+$$\alpha=\frac{0.229\cdot 619.8m^2-0.1\cdot 483m^2}{136.8m^2}$$
+$$\alpha=0.684$$
+\paragraph{c) hall radius}
+$$r_H=\sqrt{\frac{882}{1s\cdot 100\cdot \pi}}=1.68m$$
+\subsection{More accurate}
+
+\paragraph{$f=2kHz$}
+$$\bar{\alpha}=\frac{0.161\cdot 882m^3-483m^2\cdot 0.229-4\cdot \frac{0.074}{0.5}\cdot 2^2\cdot 882m^3}{136.8m^2}$$
+$$\bar{\alpha}=$$
+\paragraph{$f=4kHz$}
+$$\bar{\alpha}=\frac{0.161\cdot 882m^3-483m^2\cdot 0.229-4\cdot \frac{0.074}{0.5}\cdot 4^2\cdot 882m^3}{136.8m^2}$$
+$$\bar{\alpha}=$$
 \subsection{Calculation of room parameters\label{sec:roomparam}}
 \subsubsection{room volume}
 The room volume can be calculated by calculating the room as whole cuboid and subtracting the volume below the slope.
