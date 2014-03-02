@@ -9,6 +9,7 @@
 \usepackage{fancyhdr}
 \usepackage{listings}
 \usepackage{nomencl}
+\usepackage{caption}
 \usepackage[pdftex]{graphicx}
 
 \pagestyle{fancy}
@@ -20,6 +21,8 @@
 \section{Water value}
 The water value is the expected value of stored MWh depending on capacities and inflow\footnote{Doorman Gerard et al, \textit{Kompendium TET4135 Energy Systems Planning and Operation}, p.90}. If the water value in a reservoir is known, the value euals the value the additional water will decrease the marginal costs when it is stored.
 \section{Calculation}
+The calculation for water values for three different inflow (10GWh, 20GWh, 30GWh) are listed in tables \ref{tab:10}, \ref{tab:20} and \ref{tab:30}. 
+\begin{table}
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
@@ -44,9 +47,12 @@ water value & inflow & hydro produced & purchase & final reservoir	& water value
 299.96 & 10 & 10 & 10 & 51.67 & 299.96\\
 \hline
 \end{tabular}
+\caption{water value calculation for inflow 10GWh}
+\label{tab:10}
 \end{center}
+\end{table}
 
-
+\begin{table}
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
@@ -61,8 +67,12 @@ water value & inflow & hydro produced & purchase & final reservoir	& water value
 100 & 20 & 20 & 0 & 70 & 100\\
 \hline
 \end{tabular}
+\caption{water value calculation for inflow 20GWh}
+\label{tab:20}
 \end{center}
+\end{table}
 
+\begin{table}
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
@@ -86,8 +96,10 @@ water value & inflow & hydro produced & purchase & final reservoir	& water value
 60.1 & 30 & 29.95 & 0 & 79.76 & 60.1\\
 \hline
 \end{tabular}
+\caption{water value calculation for inflow 30GWh}
+\label{tab:30}
 \end{center}
-
+\end{table}
 
 \section{das dritte}
 \end{document}
