@@ -72,23 +72,23 @@ unsigned int tempn=(unsigned int)n;
 int onecount=0;
 while(tempn>0)
 {
-  printf("inside while");
+  fprintf(stdout, "-inside while\n");
   if((tempn&1)!=0)
   {
-    printf("inside if");
+    fprintf(stdout, "--inside if\n");
     onecount++;
     if(onecount>1)
 {
-  fprintf(stdout, "not 2^k");
+  fprintf(stdout, "n has to be 2^k");
   return EXIT_FAILURE;
 }
   }
-  printf("outside if");
+  fprintf(stdout, "--outside if\n");
   tempn=tempn>>1;
-  printf("tempn: %d\n",tempn);
+  fprintf(stdout, "tempn: %d\n",tempn);
   getchar();
 }
-printf("outside while");
+fprintf(stdout, "-outside while\n");
     //check for 2^k
 
     //calculate partial vector sizes to send
