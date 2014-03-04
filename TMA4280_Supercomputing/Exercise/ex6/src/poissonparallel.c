@@ -223,6 +223,12 @@ for(proccnt=0; proccnt<size; proccnt++)
   }
 }
 
+fprintf(stdout, "---SENDVECTOR---\n");
+for(i=0; i<vectorposition; i++)
+{
+  fprintf(stdout, "%.1f\t",sendvector[i]);
+}
+
   MPI_Alltoallv (
     &sendvector,	/* address of data to send  */
 		scnt,	/* number of items to send to processes  */
