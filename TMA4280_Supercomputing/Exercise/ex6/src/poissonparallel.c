@@ -127,6 +127,13 @@ int main(int argc, char **argv)
     }
     scnt[0]=m%size;
 
+fprintf(stdout, "proc\tsize\tdispl\n");
+for(i=0; i<size; i++)
+{
+  fprintf(stdout, "%d\t%d\t%d\n", i, scnt[i], displ[i]);
+}
+fprintf(stdout, "-------------------\n");
+
     //calculate partial displacements to send
     int elementdisplacement=0;
     displ[0]=0;
@@ -202,6 +209,19 @@ fprintf(stdout, "-----------------------\n");
 		MPI_COMM_WORLD);
 
  //   transpose (bt,b,m);
+
+   #if DEBUG_TESTMATRIX
+   fprintf(stdout, "\n-----------------------\n");
+for(i=0; i<m; i++)
+{
+  for(j=0; j<m; j++)
+  {
+fprintf(stdout, "%f\t", bt[i][j]);
+  }
+  fprintf(stdout, "\n");
+}
+fprintf(stdout, "-----------------------\n");
+#endif
 
    for (i = 0; i <size; i++){
       trans (&bt[displ[i]][0], scnt[i]);
