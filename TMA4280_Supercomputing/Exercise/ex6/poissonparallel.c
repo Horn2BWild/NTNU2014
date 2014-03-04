@@ -15,6 +15,7 @@
 #include <math.h>
 #include <mpi.h>
 #include <omp.h>
+#include "common.h"
 
 typedef double Real;
 
@@ -28,6 +29,10 @@ void fstinv_(Real *v, int *n, Real *w, int *nn);
 
 int main(int argc, char **argv)
 {
+     int rank=0;                                     //current proc id
+    int size=0;                                     //number of proc
+        int tag=100;                                    //tag used for MPI comm
+      MPI_Status status;
     Real *diag, **b, **bt, *z;
     Real pi, h, umax;
     int i, j, n, m, nn;
@@ -46,6 +51,8 @@ int main(int argc, char **argv)
     m  = n-1;
     nn = 4*n;
 
+    init_app(argc, argv, &rank, &size);
+
     diag = createRealArray (m);
     b    = createReal2DArray (m,m);
     bt   = createReal2DArray (m,m);
@@ -54,10 +61,12 @@ int main(int argc, char **argv)
     h    = 1./(Real)n;
     pi   = 4.*atan(1.);
 
+#pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
         diag[i] = 2.*(1.-cos((i+1)*pi/(Real)n));
     }
+    #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
         for (i=0; i < m; i++)
@@ -65,18 +74,20 @@ int main(int argc, char **argv)
             b[j][i] = h*h;
         }
     }
+    #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
         fst_(b[j], &n, z, &nn);
     }
 
     transpose (bt,b,m);
-
+#pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
         fstinv_(bt[i], &n, z, &nn);
     }
 
+#pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
         for (i=0; i < m; i++)
@@ -84,7 +95,7 @@ int main(int argc, char **argv)
             bt[j][i] = bt[j][i]/(diag[i]+diag[j]);
         }
     }
-
+#pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
         fst_(bt[i], &n, z, &nn);
@@ -92,12 +103,14 @@ int main(int argc, char **argv)
 
     transpose (b,bt,m);
 
+#pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
         fstinv_(b[j], &n, z, &nn);
     }
 
     umax = 0.0;
+    #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
         for (i=0; i < m; i++)
@@ -106,6 +119,7 @@ int main(int argc, char **argv)
         }
     }
     printf (" umax = %e \n",umax);
+        close_app();
     return EXIT_SUCCESS;
 }
 
