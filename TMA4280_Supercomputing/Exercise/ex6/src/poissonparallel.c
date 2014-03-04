@@ -44,6 +44,8 @@ void transpose (Real **bt, Real **b, int m);
 void fst_(Real *v, int *n, Real *w, int *nn);
 void fstinv_(Real *v, int *n, Real *w, int *nn);
 
+void trans (double *a, int n);
+
 
 int main(int argc, char **argv)
 {
@@ -173,7 +175,12 @@ int main(int argc, char **argv)
 		MPI_DOUBLE,	/* type of receive data  */
 		MPI_COMM_WORLD);
 
-    transpose (bt,b,m);
+ //   transpose (bt,b,m);
+
+   for (i = 0; i <size; i++)
+      trans (&bt[displ[i]][0], scnt[i]);
+
+
 #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
@@ -258,4 +265,29 @@ Real **createReal2DArray (int n1, int n2)
     n = n1*n2;
     memset(a[0],0,n*sizeof(Real));
     return (a);
+}
+
+void trans (double *a, int n)
+/* transpose square matrix a, dimension nxn */
+
+{
+  int i, j;
+  int ij, ji, l;
+  double tmp;
+  ij = 0;
+  l = -1;
+  for (i = 0; i < n; i++)
+    {
+      l += n + 1;
+      ji = l;
+      ij += i + 1;
+      for (j = i+1; j < n; j++)
+	{
+	  tmp = a[ij];
+	  a[ij] = a[ji];
+	  a[ji] = tmp;
+	  ij++;
+	  ji += n;
+	}
+    }
 }
