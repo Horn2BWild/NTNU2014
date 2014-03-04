@@ -61,14 +61,34 @@ int main(int argc, char **argv)
     if(argc < 2)
     {
         printf("need a problem size\n");
-        return;
+        return EXIT_FAILURE;
     }
 
 
     n  = atoi(argv[1]);
     m  = n-1;
     nn = 4*n;
-
+unsigned int tempn=(unsigned int)n;
+int onecount=0;
+while(tempn>0)
+{
+  printf("inside while");
+  if((tempn&1)!=0)
+  {
+    printf("inside if");
+    onecount++;
+    if(onecount>1)
+{
+  fprintf(stdout, "not 2^k");
+  return EXIT_FAILURE;
+}
+  }
+  printf("outside if");
+  tempn=tempn>>1;
+  printf("tempn: %d\n",tempn);
+  getchar();
+}
+printf("outside while");
     //check for 2^k
 
     //calculate partial vector sizes to send
