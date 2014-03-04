@@ -81,6 +81,14 @@ int main(int argc, char **argv)
     }
     scnt[0]=m%size;
 
+    int elementdisplacement=0;
+    displ[0]=0;
+    for(i=1; i<size; i++)
+    {
+      elementdisplacement+=scnt[i-1];
+      displ[i]=elementdisplacement;
+    }
+
     init_app(argc, argv, &rank, &size);
 
     diag = createRealArray (m);
