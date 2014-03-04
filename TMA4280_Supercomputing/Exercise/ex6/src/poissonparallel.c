@@ -33,6 +33,8 @@
 #include "common.h"
 
 #define DEBUG_2KCHECK 0
+#define DEBUG_TESTMATRIX 1
+#define DEBUG_ALL 0
 
 
 typedef double Real;
@@ -162,8 +164,32 @@ int main(int argc, char **argv)
         fst_(b[j], &n, z, &nn);
     }
 
+#if DEBUG_TESTMATRIX
+int value=0;
+for(i=0; i<m; i++)
+{
+  for(j=0; j<m; j++)
+  {
+    value++;
+    b[i][j]=value;
+  }
+}
 
-  MPI_Alltoallv (&b[0][0],	/* address of data to send  */
+fprintf(stdout, "\n-----------------------\n");
+for(i=0; i<m; i++)
+{
+  for(j=0; j<m; j++)
+  {
+fprintf(stdout, "%f\t", b[i][j]);
+  }
+  fprintf(stdout, "\n");
+}
+fprintf(stdout, "-----------------------\n");
+#endif
+
+
+  MPI_Alltoallv (
+    &b[0][0],	/* address of data to send  */
 		scnt,	/* number of items to send to processes  */
 		displ, /* displacements for each process */
 		MPI_DOUBLE,	/* type of data  */
@@ -177,9 +203,22 @@ int main(int argc, char **argv)
 
  //   transpose (bt,b,m);
 
-   for (i = 0; i <size; i++)
+   for (i = 0; i <size; i++){
       trans (&bt[displ[i]][0], scnt[i]);
+   }
 
+   #if DEBUG_TESTMATRIX
+   fprintf(stdout, "\n-----------------------\n");
+for(i=0; i<m; i++)
+{
+  for(j=0; j<m; j++)
+  {
+fprintf(stdout, "%f\t", bt[i][j]);
+  }
+  fprintf(stdout, "\n");
+}
+fprintf(stdout, "-----------------------\n");
+#endif
 
 #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
