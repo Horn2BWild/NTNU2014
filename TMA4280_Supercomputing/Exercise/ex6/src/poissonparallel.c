@@ -203,6 +203,24 @@ fprintf(stdout, "-----------------------\n");
 #endif
     fprintf(stdout, "step 8\n");
 
+
+int proccnt=0;
+int rowcnt=0;
+int elementcnt=0;
+int vectorposition=0;
+
+for(proccnt=0; proccnt<size; proccnt++)
+{
+  for(rowcnt=0; rowcnt<m; rowcnt++)
+  {
+    for(elementcnt=displ[proccnt]; elementcnt<displ[proccnt]+scnt[proccnt]; elementcnt++)
+    {
+      sencvector[vectorposition]=b[rowcnt][elementcnt];
+      vectorposition++;
+    }
+  }
+}
+
   MPI_Alltoallv (
     &b[0][0],	/* address of data to send  */
 		scnt,	/* number of items to send to processes  */

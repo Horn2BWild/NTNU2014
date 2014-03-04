@@ -25,7 +25,7 @@
 * mpirun -np <p> ./ex4 <lower k> <upper k>                                    *
 *     -p ... number of proc                                                   *
 * *************************************************************************** */
-
+s
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
