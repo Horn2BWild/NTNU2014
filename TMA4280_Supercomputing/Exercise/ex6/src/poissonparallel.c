@@ -126,13 +126,8 @@ int main(int argc, char **argv)
         scnt[i]=elementcount;
     }
     scnt[0]=m%size;
+    displ[0]=0;
 
-fprintf(stdout, "proc\tsize\tdispl\n");
-for(i=0; i<size; i++)
-{
-  fprintf(stdout, "%d\t%d\t%d\n", i, scnt[i], displ[i]);
-}
-fprintf(stdout, "-------------------\n");
 
     //calculate partial displacements to send
     int elementdisplacement=0;
@@ -143,7 +138,14 @@ fprintf(stdout, "-------------------\n");
         displ[i]=elementdisplacement;
     }
 
-
+if(rank==0){
+fprintf(stdout, "proc\tsize\tdispl\n");
+for(i=0; i<size; i++)
+{
+  fprintf(stdout, "%d\t%d\t%d\n", i, scnt[i], displ[i]);
+}
+fprintf(stdout, "-------------------\n");
+}
     diag = createRealArray (m);
     b    = createReal2DArray (m,m);
     bt   = createReal2DArray (m,m);
@@ -182,16 +184,18 @@ for(i=0; i<m; i++)
   }
 }
 
+if(rank==0){
 fprintf(stdout, "\n-----------------------\n");
 for(i=0; i<m; i++)
 {
   for(j=0; j<m; j++)
   {
-fprintf(stdout, "%f\t", b[i][j]);
+fprintf(stdout, "%.1f\t", b[i][j]);
   }
   fprintf(stdout, "\n");
 }
 fprintf(stdout, "-----------------------\n");
+}
 #endif
 
 
@@ -211,16 +215,18 @@ fprintf(stdout, "-----------------------\n");
  //   transpose (bt,b,m);
 
    #if DEBUG_TESTMATRIX
+   if(rank==0){
    fprintf(stdout, "\n-----------------------\n");
 for(i=0; i<m; i++)
 {
   for(j=0; j<m; j++)
   {
-fprintf(stdout, "%f\t", bt[i][j]);
+fprintf(stdout, "%.1f\t", bt[i][j]);
   }
   fprintf(stdout, "\n");
 }
 fprintf(stdout, "-----------------------\n");
+   }
 #endif
 
    for (i = 0; i <size; i++){
@@ -228,16 +234,18 @@ fprintf(stdout, "-----------------------\n");
    }
 
    #if DEBUG_TESTMATRIX
+   if(rank==0){
    fprintf(stdout, "\n-----------------------\n");
 for(i=0; i<m; i++)
 {
   for(j=0; j<m; j++)
   {
-fprintf(stdout, "%f\t", bt[i][j]);
+fprintf(stdout, "%.1f\t", bt[i][j]);
   }
   fprintf(stdout, "\n");
 }
 fprintf(stdout, "-----------------------\n");
+   }
 #endif
 
 #pragma omp parallel for schedule(guided,1)
