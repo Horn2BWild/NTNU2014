@@ -1,12 +1,19 @@
-/*
-  C-program to solve the two-dimensional Poisson equation on
-  a unit square using one-dimensional eigenvalue decompositions
-  and fast sine transforms
-
-  einar m. ronquist
-  ntnu, october 2000
-  revised, october 2001
-*/
+/**************************************************************************** *
+* Author: Andreas J. Hoermer                                                  *
+* Email: andreas (at) hoermer.at                                              *
+*                                                                             *
+* Filename: poissonparallel.c                                                 *
+* LastChange: 04.03.2014                                                      *
+*                                                                             *
+* --------------------------------------------------------------------------- *
+* PROGRAM DESCRIPTION                                                         *
+* --------------------------------------------------------------------------- *
+* prog desc                                                                   *
+* --------------------------------------------------------------------------- *
+* USAGE                                                                       *
+* --------------------------------------------------------------------------- *
+* ./ex6parallel ...                                                           *
+* *************************************************************************** */
 
 #include <stddef.h>
 #include <stdlib.h>
