@@ -160,6 +160,19 @@ int main(int argc, char **argv)
         fst_(b[j], &n, z, &nn);
     }
 
+
+  MPI_Alltoallv (&b[0][0],	/* address of data to send  */
+		scnt,	/* number of items to send to processes  */
+		displ, /* displacements for each process */
+		MPI_DOUBLE,	/* type of data  */
+		&bt[0][0],	/* address for receiving the data  */
+		/* NOTE: send data and receive data may NOT overlap */
+		scnt,	/* number of items to receive
+				   from any process  */
+    displ,
+		MPI_DOUBLE,	/* type of receive data  */
+		MPI_COMM_WORLD);
+
     transpose (bt,b,m);
 #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
@@ -180,6 +193,8 @@ int main(int argc, char **argv)
     {
         fst_(bt[i], &n, z, &nn);
     }
+
+
 
     transpose (b,bt,m);
 
@@ -213,7 +228,10 @@ void transpose (Real **bt, Real **b, int m)
             bt[j][i] = b[i][j];
         }
     }
+
 }
+
+
 
 Real *createRealArray (int n)
 {
