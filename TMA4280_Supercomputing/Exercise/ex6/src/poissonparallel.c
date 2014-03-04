@@ -117,26 +117,26 @@ int main(int argc, char **argv)
     init_app(argc, argv, &rank, &size);
 
     //calculate partial vector sizes to send
-    scnt=(int*)malloc(size*sizeof(int));
-    displ=(int*)malloc(size*sizeof(int));
+//    scnt=(int*)malloc(size*sizeof(int));
+//    displ=(int*)malloc(size*sizeof(int));
 
-    int elementcount=m/size;
-    for(i=1; i<size; i++)
-    {
-        scnt[i]=elementcount;
-    }
-    scnt[0]=m%size;
-    displ[0]=0;
-
+//    int elementcount=m/size;
+//    for(i=1; i<size; i++)
+//    {
+//        scnt[i]=elementcount;
+//    }
+//    scnt[0]=m%size;
+ //   displ[0]=0;
+splitVector(pow(2,n), size, &scnt, &displ);
 
     //calculate partial displacements to send
-    int elementdisplacement=0;
-    displ[0]=0;
-    for(i=1; i<size; i++)
-    {
-        elementdisplacement+=scnt[i-1];
-        displ[i]=elementdisplacement;
-    }
+ //   int elementdisplacement=0;
+ //   displ[0]=0;
+ //   for(i=1; i<size; i++)
+ //   {
+ //       elementdisplacement+=scnt[i-1];
+  //      displ[i]=elementdisplacement;
+ //   }
 
 if(rank==0){
 fprintf(stdout, "proc\tsize\tdispl\n");
