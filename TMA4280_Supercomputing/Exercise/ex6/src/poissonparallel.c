@@ -127,7 +127,7 @@ int main(int argc, char **argv)
 //    }
 //    scnt[0]=m%size;
  //   displ[0]=0;
-splitVector(pow(2,n), size, &scnt, &displ);
+splitVector(m, size, &scnt, &displ);
     fprintf(stdout, "step 2\n");
 
     //calculate partial displacements to send
