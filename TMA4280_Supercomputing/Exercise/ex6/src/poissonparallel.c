@@ -44,10 +44,10 @@ void fstinv_(Real *v, int *n, Real *w, int *nn);
 
 int main(int argc, char **argv)
 {
-     int rank=0;                                     //current proc id
+    int rank=0;                                     //current proc id
     int size=0;                                     //number of proc
-        int tag=100;                                    //tag used for MPI comm
-      MPI_Status status;
+    int tag=100;                                    //tag used for MPI comm
+    MPI_Status status;
     Real *diag, **b, **bt, *z;
     Real pi, h, umax;
     int i, j, n, m, nn;
@@ -71,23 +71,27 @@ int main(int argc, char **argv)
 
     //check for 2^k
 
+    //calculate partial vector sizes to send
     scnt=(int*)malloc(size*sizeof(int));
     displ=(int*)malloc(size*sizeof(int));
 
     int elementcount=m/size;
     for(i=1; i<size; i++)
     {
-      scnt[i]=elementcount;
+        scnt[i]=elementcount;
     }
     scnt[0]=m%size;
 
+    //calculate partial displacements to send
     int elementdisplacement=0;
     displ[0]=0;
     for(i=1; i<size; i++)
     {
-      elementdisplacement+=scnt[i-1];
-      displ[i]=elementdisplacement;
+        elementdisplacement+=scnt[i-1];
+        displ[i]=elementdisplacement;
     }
+
+
 
     init_app(argc, argv, &rank, &size);
 
@@ -104,7 +108,7 @@ int main(int argc, char **argv)
     {
         diag[i] = 2.*(1.-cos((i+1)*pi/(Real)n));
     }
-    #pragma omp parallel for schedule(guided,1)
+#pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
         for (i=0; i < m; i++)
@@ -112,7 +116,7 @@ int main(int argc, char **argv)
             b[j][i] = h*h;
         }
     }
-    #pragma omp parallel for schedule(guided,1)
+#pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
         fst_(b[j], &n, z, &nn);
@@ -148,7 +152,7 @@ int main(int argc, char **argv)
     }
 
     umax = 0.0;
-    #pragma omp parallel for schedule(guided,1)
+#pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
         for (i=0; i < m; i++)
@@ -157,7 +161,7 @@ int main(int argc, char **argv)
         }
     }
     printf (" umax = %e \n",umax);
-        close_app();
+    close_app();
     return EXIT_SUCCESS;
 }
 
