@@ -72,43 +72,43 @@ int main(int argc, char **argv)
     m  = n-1;
     nn = 4*n;
 
-        //check for 2^k
-unsigned int tempn=(unsigned int)n;
-int onecount=0;
-while(tempn>0)
-{
-  #if DEBUG_2KCHECK
-  fprintf(stdout, "-inside while\n");
-  fflush(stdout);
-  #endif
-  if((tempn&1)!=0)
-  {
-      #if DEBUG_2KCHECK
-    fprintf(stdout, "--inside if\n");
-      fflush(stdout);
-        #endif
-    onecount++;
-    if(onecount>1)
-{
-  fprintf(stdout, "n has to be 2^k\n");
+    //check for 2^k
+    unsigned int tempn=(unsigned int)n;
+    int onecount=0;
+    while(tempn>0)
+    {
+#if DEBUG_2KCHECK
+        fprintf(stdout, "-inside while\n");
+        fflush(stdout);
+#endif
+        if((tempn&1)!=0)
+        {
+#if DEBUG_2KCHECK
+            fprintf(stdout, "--inside if\n");
+            fflush(stdout);
+#endif
+            onecount++;
+            if(onecount>1)
+            {
+                fprintf(stdout, "n has to be 2^k\n");
+                fflush(stdout);
+                return EXIT_FAILURE;
+            }
+        }
+#if DEBUG_2KCHECK
+        fprintf(stdout, "--outside if\n");
+        fflush(stdout);
+#endif
+        tempn=tempn>>1;
+#if DEBUG_2KCHECK
+        fprintf(stdout, "tempn: %d\n",tempn);
+        fflush(stdout);
+#endif
+    }
+#if DEBUG_2KCHECK
+    fprintf(stdout, "-outside while\n");
     fflush(stdout);
-  return EXIT_FAILURE;
-}
-  }
-    #if DEBUG_2KCHECK
-  fprintf(stdout, "--outside if\n");
-    fflush(stdout);
-      #endif
-  tempn=tempn>>1;
-    #if DEBUG_2KCHECK
-  fprintf(stdout, "tempn: %d\n",tempn);
-    fflush(stdout);
-      #endif
-}
-  #if DEBUG_2KCHECK
-fprintf(stdout, "-outside while\n");
-  fflush(stdout);
-    #endif
+#endif
 
     init_app(argc, argv, &rank, &size);
 
