@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 2.6)
 add_subdirectory(../common common)
 
 enable_language(Fortran)
+enable_language(C)
 
 add_definitions(${COMMON_DEFINITIONS})
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_C_FLAGS}")
