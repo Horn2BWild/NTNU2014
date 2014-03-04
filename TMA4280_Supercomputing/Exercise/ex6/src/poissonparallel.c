@@ -32,6 +32,9 @@
 #include <omp.h>
 #include "common.h"
 
+#define DEBUG_2KCHECK 0
+
+
 typedef double Real;
 
 /* function prototypes */
@@ -68,28 +71,46 @@ int main(int argc, char **argv)
     n  = atoi(argv[1]);
     m  = n-1;
     nn = 4*n;
+
+        //check for 2^k
 unsigned int tempn=(unsigned int)n;
 int onecount=0;
 while(tempn>0)
 {
+  #if DEBUG_2KCHECK
   fprintf(stdout, "-inside while\n");
+  fflush(stdout);
+  #endif
   if((tempn&1)!=0)
   {
+      #if DEBUG_2KCHECK
     fprintf(stdout, "--inside if\n");
+      fflush(stdout);
+        #endif
     onecount++;
     if(onecount>1)
 {
-  fprintf(stdout, "n has to be 2^k");
+  fprintf(stdout, "n has to be 2^k\n");
+    fflush(stdout);
   return EXIT_FAILURE;
 }
   }
+    #if DEBUG_2KCHECK
   fprintf(stdout, "--outside if\n");
+    fflush(stdout);
+      #endif
   tempn=tempn>>1;
+    #if DEBUG_2KCHECK
   fprintf(stdout, "tempn: %d\n",tempn);
-  getchar();
+    fflush(stdout);
+      #endif
 }
+  #if DEBUG_2KCHECK
 fprintf(stdout, "-outside while\n");
-    //check for 2^k
+  fflush(stdout);
+    #endif
+
+    init_app(argc, argv, &rank, &size);
 
     //calculate partial vector sizes to send
     scnt=(int*)malloc(size*sizeof(int));
@@ -111,9 +132,6 @@ fprintf(stdout, "-outside while\n");
         displ[i]=elementdisplacement;
     }
 
-
-
-    init_app(argc, argv, &rank, &size);
 
     diag = createRealArray (m);
     b    = createReal2DArray (m,m);
