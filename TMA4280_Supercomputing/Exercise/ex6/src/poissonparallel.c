@@ -51,6 +51,8 @@ int main(int argc, char **argv)
     Real *diag, **b, **bt, *z;
     Real pi, h, umax;
     int i, j, n, m, nn;
+    int *displ;           // displacements
+    int *scnt;            // send/receive count
 
     /* the total number of grid points in each spatial direction is (n+1) */
     /* the total number of degrees-of-freedom in each spatial direction is (n-1) */
@@ -62,9 +64,22 @@ int main(int argc, char **argv)
         return;
     }
 
+
     n  = atoi(argv[1]);
     m  = n-1;
     nn = 4*n;
+
+    //check for 2^k
+
+    scnt=(int*)malloc(size*sizeof(int));
+    displ=(int*)malloc(size*sizeof(int));
+
+    int elementcount=m/size;
+    for(i=1; i<size; i++)
+    {
+      scnt[i]=elementcount;
+    }
+    scnt[0]=m%size;
 
     init_app(argc, argv, &rank, &size);
 
