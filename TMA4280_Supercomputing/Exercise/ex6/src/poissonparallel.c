@@ -214,7 +214,7 @@ int main(int argc, char **argv)
     Real *sendvector=malloc(m*scnt[rank]*sizeof(Real));
     Real *receivevector=malloc(m*scnt[rank]*sizeof(Real));
 
-    fprintf(stdout, "size of vector on process %d: %d\n", rank, m*scnt[rank]);
+ //   fprintf(stdout, "size of vector on process %d: %d\n", rank, m*scnt[rank]);
 
 
 
@@ -222,10 +222,10 @@ int main(int argc, char **argv)
 {
   for(columncnt=displ[rank]; columncnt<scnt[rank]+displ[rank]; columncnt++)
 {
-  fprintf(stdout, "rank %d columncnt %d proccnt %d\n", rank, columncnt, proccnt);
+//  fprintf(stdout, "rank %d columncnt %d proccnt %d\n", rank, columncnt, proccnt);
     for(rowcnt=displ[proccnt]; rowcnt<displ[proccnt]+scnt[proccnt]; rowcnt++)
     {
-      fprintf(stdout, "rank: %d - columncnt: %d rowcnt: %d -- value: %f\n", rank, columncnt, rowcnt,b[columncnt][rowcnt]);
+  //    fprintf(stdout, "rank: %d - columncnt: %d rowcnt: %d -- value: %f\n", rank, columncnt, rowcnt,b[columncnt][rowcnt]);
       fflush(stdout);
 //for(proccnt=0; proccnt<size; proccnt++)
 //{
@@ -237,30 +237,7 @@ int main(int argc, char **argv)
     }
     }
 
-//}
-    /*vectorposition=0;
-    for(proccnt=0; proccnt<size; proccnt++)
-    {
-    for(columncnt=0; columncnt<scnt[rank]; columncnt++)
-    {
-    for(rowcnt=0; rowcnt<scnt[proccnt]; rowcnt++)
-    {
-    fprintf(stdout, "%.1f\t", sendvector[vectorposition]);
-    vectorposition++;
-    }
-    fprintf(stdout, "\n");
-    }
-    }
-    */
 
-
-    /*fprintf(stdout, "---SENDVECTOR process %d---\n", rank);
-    for(i=0; i<vectorposition; i++)
-    {
-      fprintf(stdout, "%d.%d: %.1f\t",rank, i, sendvector[i]);
-    }
-    fprintf(stdout, "\n");
-    */
     int *MPIdispl=malloc(size*sizeof(int));           // displacements
     int *MPIscnt=malloc(size*sizeof(int));            // send/receive count
 
@@ -311,6 +288,10 @@ for(i=0; i<size; i++)
 }
 fprintf(stdout, "\n");
 
+fprintf(stdout, "rank: %d before alltoallv", rank);
+fflush(stdout);
+
+
     MPI_Alltoallv (
         &sendvector,	/* address of data to send  */
         MPIscnt,	/* number of items to send to processes  */
@@ -338,27 +319,7 @@ fprintf(stdout, "\n");
 
 #endif
    fprintf(stdout, "proc %d step 9\n", rank);
-  /*  for (i = 0; i <size; i++)
-    {
-        trans (&bt[displ[i]][0], scnt[i]);
-    }
-*/
-#if DEBUG_TESTMATRIX
- /*   if(rank==0)
-    {
-        fprintf(stdout, "\n-----------------------\n");
-        for(i=0; i<m; i++)
-        {
-            for(j=0; j<m; j++)
-            {
-                fprintf(stdout, "%.1f\t", bt[i][j]);
-            }
-            fprintf(stdout, "\n");
-        }
-        fprintf(stdout, "-----------------------\n");
-    }*/
-#endif
-    fprintf(stdout, "proc %d step 10\n", rank);
+
 #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
