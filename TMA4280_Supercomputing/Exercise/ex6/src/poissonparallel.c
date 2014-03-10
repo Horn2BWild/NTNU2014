@@ -296,11 +296,11 @@ fflush(stdout);
 
 
     MPI_Alltoallv (
-        &sendvector,	/* address of data to send  */
+        sendvector,	/* address of data to send  */
         MPIscnt,	/* number of items to send to processes  */
         MPIdispl, /* displacements for each process */
         MPI_DOUBLE,	/* type of data  */
-        &receivevector,	/* address for receiving the data  */
+        receivevector,	/* address for receiving the data  */
         /* NOTE: send data and receive data may NOT overlap */
      MPIscnt,	/* number of items to receive
           from any process  */
@@ -311,7 +311,7 @@ fflush(stdout);
 //   transpose (bt,b,m);
 
 #if DEBUG_TESTMATRIX
-    vectorposition=m*scnt[rank];
+  //  vectorposition=m*scnt[rank];
     fprintf(stdout, "receive vector size proc %d: %d\n", rank, vectorposition);
     fprintf(stdout, "---RECEIVEVECTOR process %d---\n", rank);
     for(i=0; i<vectorposition; i++)
