@@ -38,10 +38,19 @@ r_{1}=r_{1,0}+f\int_{t_0}^{t}(r_{1,in}-r{1,out})dt = r_{1,0}+f\int_{t_0}^{t}(Q_1
 r_{2}=r_{2,0}+f\int_{t_0}^{t}(r_{2,in}-r{2,out})dt = r_{2,0}+f\int_{t_0}^{t}(Q_2-s_2-q_2)dt
 \end{equation}
 \begin{equation}
-r_{3}=r_{3,0}+f\int_{t_0}^{t}(Q_3+q_1+s_1+q_1-s_3-q_3)dt = r_{2,0}+f\int_{t_0}^{t}(Q_2-s_2-q_2)dt
+r_{3}=r_{3,0}+f\int_{t_0}^{t}(Q_3+q_1+s_1+q_2-s_3-q_3)dt = r_{2,0}+f\int_{t_0}^{t}(Q_2-s_2-q_2)dt
 \end{equation}
 Using the time intervals given the formulas change to
-
+\begin{equation}
+r_{1,t}=r_{1,t-1}+f\cdot l_t(Q_{1,t}-s_{1,t}-q_{1,t})
+\end{equation}
+\begin{equation}
+r_{2,t}=r_{2,t-1}+f\cdot l_t(Q_{2,t}-s_{2,t}-q_{2,t})
+\end{equation}
+\begin{equation}
+r_{3,t}=r_{3,t-1}+f\cdot l_t(Q_{3,t}+q_{1,t}+s_{1,t}+q_{2,t}-s_{3,t}-q_[3,t})
+In the first time period the value of $q_2$ is not known. So the initial value for $q_{2,0} = 0$.
+\end{equation}
 \section{4}
 
 \section{5}
