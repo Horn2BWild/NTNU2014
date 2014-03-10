@@ -227,8 +227,16 @@ fprintf(stdout, "---SENDVECTOR---\n");
 for(i=0; i<vectorposition; i++)
 {
   fprintf(stdout, "%.1f\t",sendvector[i]);
-}
+}fprintf(stdout, "\n");
 
+//getchar();
+/*
+for(i=0; i<size; i++)
+{
+  displ[i]*=m;
+  scnt[i]*=m;
+}
+*/
   MPI_Alltoallv (
     &sendvector,	/* address of data to send  */
 		scnt,	/* number of items to send to processes  */
@@ -243,6 +251,28 @@ for(i=0; i<vectorposition; i++)
 		MPI_COMM_WORLD);
 
  //   transpose (bt,b,m);
+
+//getchar();
+
+fprintf(stdout, "---RECEIVEVECTOR---\n");
+for(i=0; i<vectorposition; i++)
+{
+  fprintf(stdout, "%.1f\t",receivevector[i]);
+}
+
+
+
+for(proccnt=0; proccnt<size; proccnt++)
+{
+  for(rowcnt=0; rowcnt<m; rowcnt++)
+  {
+    for(elementcnt=displ[proccnt]; elementcnt<displ[proccnt]+scnt[proccnt]; elementcnt++)
+    {
+      bt[elementcnt][rowcnt]=receivevector[vectorposition];
+      vectorposition++;
+    }
+  }
+}
 
    #if DEBUG_TESTMATRIX
    if(rank==0){
