@@ -207,6 +207,7 @@ fprintf(stdout, "-----------------------\n");
 int proccnt=0;
 int rowcnt=0;
 int elementcnt=0;
+int columncnt=0;
 int vectorposition=0;
 Real *sendvector=malloc(m*scnt[rank]*sizeof(Real));
 Real *receivevector=malloc(m*scnt[rank]*sizeof(Real));
@@ -215,23 +216,65 @@ fprintf(stdout, "size of vector on process %d: %d\n", rank, m*scnt[rank]);
 
   for(rowcnt=0; rowcnt<m; rowcnt++)
   {
+//for(proccnt=0; proccnt<size; proccnt++)
+//{
     for(elementcnt=displ[rank]; elementcnt<displ[rank]+scnt[rank]; elementcnt++)
     {
+
+fprintf(stdout, "row: %d element %d rank %d: %f\n", rowcnt, elementcnt, rank, b[rowcnt][elementcnt]);
       sendvector[vectorposition]=b[rowcnt][elementcnt];
       vectorposition++;
     }
   }
+//}
+/*vectorposition=0;
+for(proccnt=0; proccnt<size; proccnt++)
+{
+for(columncnt=0; columncnt<scnt[rank]; columncnt++)
+{
+for(rowcnt=0; rowcnt<scnt[proccnt]; rowcnt++)
+{
+fprintf(stdout, "%.1f\t", sendvector[vectorposition]);
+vectorposition++;
+}
+fprintf(stdout, "\n");
+}
+}
+*/
+
 
 fprintf(stdout, "---SENDVECTOR process %d---\n", rank);
-for(i=0; i<vectorposition; i++)
+/*for(i=0; i<vectorposition; i++)
 {
   fprintf(stdout, "%d.%d: %.1f\t",rank, i, sendvector[i]);
+}
+*/
+    int *MPIdispl=malloc(size*sizeof(int));           // displacements
+    int *MPIscnt=malloc(size*sizeof(int));            // send/receive count
+
+for(i=0; i<size; i++)
+{
+if(i==0)
+{
+MPIdispl[0]=0;
+}
+else{
+MPIdispl[i]=scnt[i];
+}
+}
+for(i=0; i<size; i++)
+{
+MPIscnt[i]=scnt[i]*scnt[rank];
+}
+for(i=0; i<size; i++)
+{
+fprintf(stdout, "MPI p%d to %d: scnt: %d displ %d\n", i, rank, MPIscnt[i], MPIdispl[i]);
 }
 
   MPI_Alltoallv (
     &sendvector,	/* address of data to send  */
-		scnt,	/* number of items to send to processes  */
-		displ, /* displacements for each process */
+		MPIscnt,	/* number of items to send to processes  */
+		MPIdispl, /* displacements for each process */
 		MPI_DOUBLE,	/* type of data  */
 		&receivevector,	/* address for receiving the data  */
 		/* NOTE: send data and receive data may NOT overlap */
