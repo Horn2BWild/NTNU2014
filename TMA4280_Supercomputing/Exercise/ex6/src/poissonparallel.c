@@ -34,6 +34,7 @@
 
 #define DEBUG_2KCHECK 0
 #define DEBUG_TESTMATRIX 1
+#define DEBUG_MPISUMMARY 0
 #define DEBUG_ALL 0
 
 
@@ -268,6 +269,7 @@ int main(int argc, char **argv)
 //fprintf(stdout, "MPI p%d to %d: scnt: %d displ %d\n", i, rank, MPIscnt[i], MPIdispl[i]);
     }
 
+#if DEBUG_MPISUMMARY
 fprintf(stdout, "--------------------------------------\n");
 fprintf(stdout, "sendvector:");
 for(i=0; i<vectorposition; i++)
@@ -290,6 +292,7 @@ fprintf(stdout, "\n");
 
 fprintf(stdout, "rank: %d before alltoallv", rank);
 fflush(stdout);
+#endif
 
 
     MPI_Alltoallv (
@@ -319,6 +322,19 @@ fflush(stdout);
 
 #endif
    fprintf(stdout, "proc %d step 9\n", rank);
+
+vectorposition=0;
+for(rowcnt=0; rowcnt<m; rowcnt++)
+{
+  for(columncnt=0; columncnt<scnt[rank];columncnt++)
+  {
+    bt[columncnt][rowcnt]=receivevector[vectorposition];
+    vectorposition++;
+    fprintf(stdout, "%f\t", bt[columncnt][rowcnt]);
+  }
+  fprintf(stdout,"\n");
+}
+
 
 #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
