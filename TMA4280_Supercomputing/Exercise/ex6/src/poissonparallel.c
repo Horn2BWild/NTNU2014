@@ -213,17 +213,14 @@ Real *receivevector=malloc(m*scnt[rank]*sizeof(Real));
 
 fprintf(stdout, "size of vector on process %d: %d\n", rank, m*scnt[rank]);
 
-for(proccnt=0; proccnt<size; proccnt++)
-{
   for(rowcnt=0; rowcnt<m; rowcnt++)
   {
-    for(elementcnt=displ[proccnt]; elementcnt<displ[proccnt]+scnt[proccnt]; elementcnt++)
+    for(elementcnt=displ[rank]; elementcnt<displ[rank]+scnt[rank]; elementcnt++)
     {
       sendvector[vectorposition]=b[rowcnt][elementcnt];
       vectorposition++;
     }
   }
-}
 
 fprintf(stdout, "---SENDVECTOR process %d---\n", rank);
 for(i=0; i<vectorposition; i++)
