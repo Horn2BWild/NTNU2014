@@ -8,9 +8,9 @@
 \usepackage{graphicx}
 
 \begin{document}
-\section{1}
+\section{water value difference}
 Water from reservoirs 1 and 2 can be used for production of 3, and 1 and 2 are higher than 3. So water in the upper reservoirs has a higher water value.
-\section{2}
+\section{cost function}
 \begin{equation}
 min_{q,t}(wv_1\cdot f(\sum_{t=1}^4(l_t\cdot q_{1,t})+\sum_{t=1}^4(l_t\cdot q_{2,t}))+wv_2\cdot \sum_{t=1}^4(l_t\cdot q_{3,t}))
 \end{equation}
@@ -20,7 +20,7 @@ min_{q,t}(wv_1\cdot f(\sum_{t=1}^4(l_t\cdot q_{1,t})+\sum_{t=1}^4(l_t\cdot q_{2,
 \begin{equation}
 f=3.6\cdot 10^{-3}\frac{Ms}{h}
 \end{equation}
-\section{3}
+\section{balance equatinos}
 Generally the values can be calculated using following formulas.
 \begin{equation}
 r_{1,in}=f\int_{t_0}^{t}(Q_1-s_1)dt
@@ -48,11 +48,24 @@ r_{1,t}=r_{1,t-1}+f\cdot l_t(Q_{1,t}-s_{1,t}-q_{1,t})
 r_{2,t}=r_{2,t-1}+f\cdot l_t(Q_{2,t}-s_{2,t}-q_{2,t})
 \end{equation}
 \begin{equation}
-r_{3,t}=r_{3,t-1}+f\cdot l_t(Q_{3,t}+q_{1,t}+s_{1,t}+q_{2,t}-s_{3,t}-q_[3,t})
-In the first time period the value of $q_2$ is not known. So the initial value for $q_{2,0} = 0$.
+r_{3,t}=r_{3,t-1}+f\cdot l_t(Q_{3,t}+q_{1,t}+s_{1,t}+q_{2,t}-s_{3,t}-q_{3,t})
 \end{equation}
-\section{4}
+In the first time period the value of $q_{2}$ is not known. So the initial value for $q_{2,0}=0$.
 
+\section{constraints}
+\begin{equation}
+P_t=\sum_{t=1}^{3}P_{t,i} \forall t\in [1,4] and \forall i\in [1,3]
+\end{equation}
+\begin{itemize}
+\item $\beta_{A,1}=2.058$
+\item $\beta_{A,2}=0.9$
+\end{itemize}
+\begin{equation}
+Q_{min,A,i}\leq q_{A,i,t}\leq Q_{max,A,i}
+\end{equation}
+\begin{equation}
+R_{min,t}\leq r_{i,t}\leq R_{max,t}
+\end{equation}
 \section{5}
 
 \section{6}
