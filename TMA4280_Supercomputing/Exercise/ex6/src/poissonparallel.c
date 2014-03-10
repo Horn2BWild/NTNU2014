@@ -221,7 +221,7 @@ fprintf(stdout, "size of vector on process %d: %d\n", rank, m*scnt[rank]);
     for(elementcnt=displ[rank]; elementcnt<displ[rank]+scnt[rank]; elementcnt++)
     {
 
-fprintf(stdout, "row: %d element %d rank %d: %f\n", rowcnt, elementcnt, rank, b[rowcnt][elementcnt]);
+//fprintf(stdout, "row: %d element %d rank %d: %f\n", rowcnt, elementcnt, rank, b[rowcnt][elementcnt]);
       sendvector[vectorposition]=b[rowcnt][elementcnt];
       vectorposition++;
     }
@@ -244,24 +244,28 @@ fprintf(stdout, "\n");
 
 
 fprintf(stdout, "---SENDVECTOR process %d---\n", rank);
-/*for(i=0; i<vectorposition; i++)
+for(i=0; i<vectorposition; i++)
 {
   fprintf(stdout, "%d.%d: %.1f\t",rank, i, sendvector[i]);
 }
-*/
+fprintf(stdout, "\n");
+
     int *MPIdispl=malloc(size*sizeof(int));           // displacements
     int *MPIscnt=malloc(size*sizeof(int));            // send/receive count
 
 for(i=0; i<size; i++)
 {
-if(i==0)
+MPIdispl[i]=0;
+MPIscnt[i]=0;
+}
+
+for(i=1; i<size; i++)
 {
-MPIdispl[0]=0;
+fprintf(stdout, "scnt[%d]: %d, scnt[%d]: %d\n", rank, scnt[rank], i, scnt[i]);
+MPIdispl[i]=MPIdispl[i-1]+scnt[rank]*scnt[i];
 }
-else{
-MPIdispl[i]=scnt[i];
-}
-}
+
+
 for(i=0; i<size; i++)
 {
 MPIscnt[i]=scnt[i]*scnt[rank];
@@ -287,18 +291,15 @@ fprintf(stdout, "MPI p%d to %d: scnt: %d displ %d\n", i, rank, MPIscnt[i], MPIdi
  //   transpose (bt,b,m);
 
    #if DEBUG_TESTMATRIX
-   if(rank==0){
-   fprintf(stdout, "\n-----------------------\n");
-for(i=0; i<m; i++)
+vectorposition=m*scnt[rank];
+fprintf(stdout, "receive vector size proc %d\n", vectorposition);
+fprintf(stdout, "---RECEIVEVECTOR process %d---\n", rank);
+for(i=0; i<vectorposition; i++)
 {
-  for(j=0; j<m; j++)
-  {
-fprintf(stdout, "%.1f\t", bt[i][j]);
-  }
-  fprintf(stdout, "\n");
+  fprintf(stdout, "%d.%d: %.1f\t",rank, i, receivevector[i]);
+fflush(stdout);
 }
-fprintf(stdout, "-----------------------\n");
-   }
+
 #endif
  //   fprintf(stdout, "step 9\n");
    for (i = 0; i <size; i++){
