@@ -208,8 +208,10 @@ int proccnt=0;
 int rowcnt=0;
 int elementcnt=0;
 int vectorposition=0;
-Real *sendvector=malloc(m*m*sizeof(Real));
-Real *receivevector=malloc(m*m*sizeof(Real));
+Real *sendvector=malloc(m*scnt[rank]*sizeof(Real));
+Real *receivevector=malloc(m*scnt[rank]*sizeof(Real));
+
+fprintf(stdout, "size of vector on process %d: %d\n", rank, m*scnt[rank]);
 
 for(proccnt=0; proccnt<size; proccnt++)
 {
@@ -223,10 +225,10 @@ for(proccnt=0; proccnt<size; proccnt++)
   }
 }
 
-fprintf(stdout, "---SENDVECTOR---\n");
+fprintf(stdout, "---SENDVECTOR process %d---\n", rank);
 for(i=0; i<vectorposition; i++)
 {
-  fprintf(stdout, "%.1f\t",sendvector[i]);
+  fprintf(stdout, "%d.%d: %.1f\t",rank, i, sendvector[i]);
 }
 
   MPI_Alltoallv (
