@@ -113,7 +113,7 @@ int main(int argc, char **argv)
     fprintf(stdout, "-outside while\n");
     fflush(stdout);
 #endif
-    fprintf(stdout, "step 1\n");
+  //  fprintf(stdout, "step 1\n");
     init_app(argc, argv, &rank, &size);
 
     //calculate partial vector sizes to send
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
 //    scnt[0]=m%size;
  //   displ[0]=0;
 splitVector(m, size, &scnt, &displ);
-    fprintf(stdout, "step 2\n");
+//    fprintf(stdout, "step 2\n");
 
     //calculate partial displacements to send
  //   int elementdisplacement=0;
@@ -154,14 +154,14 @@ fprintf(stdout, "-------------------\n");
 
     h    = 1./(Real)n;
     pi   = 4.*atan(1.);
-    fprintf(stdout, "step 3\n");
+ //   fprintf(stdout, "step 3\n");
 #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
         diag[i] = 2.*(1.-cos((i+1)*pi/(Real)n));
     }
 
-    fprintf(stdout, "step 4\n");
+ //   fprintf(stdout, "step 4\n");
 #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
@@ -170,13 +170,13 @@ fprintf(stdout, "-------------------\n");
             b[j][i] = h*h;
         }
     }
-        fprintf(stdout, "step 5\n");
+   //     fprintf(stdout, "step 5\n");
 #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
         fst_(b[j], &n, z, &nn);
     }
-    fprintf(stdout, "step 6\n");
+  //  fprintf(stdout, "step 6\n");
 #if DEBUG_TESTMATRIX
 int value=0;
 for(i=0; i<m; i++)
@@ -187,7 +187,7 @@ for(i=0; i<m; i++)
     b[i][j]=value;
   }
 }
-    fprintf(stdout, "step 7\n");
+  //  fprintf(stdout, "step 7\n");
 if(rank==0){
 fprintf(stdout, "\n-----------------------\n");
 for(i=0; i<m; i++)
@@ -201,7 +201,7 @@ fprintf(stdout, "%.1f\t", b[i][j]);
 fprintf(stdout, "-----------------------\n");
 }
 #endif
-    fprintf(stdout, "step 8\n");
+  //  fprintf(stdout, "step 8\n");
 
 
 int proccnt=0;
@@ -278,9 +278,9 @@ fprintf(stdout, "MPI p%d to %d: scnt: %d displ %d\n", i, rank, MPIscnt[i], MPIdi
 		MPI_DOUBLE,	/* type of data  */
 		&receivevector,	/* address for receiving the data  */
 		/* NOTE: send data and receive data may NOT overlap */
-		scnt,	/* number of items to receive
+		MPIscnt,	/* number of items to receive
 				   from any process  */
-    displ,
+    MPIdispl,
 		MPI_DOUBLE,	/* type of receive data  */
 		MPI_COMM_WORLD);
 
@@ -300,7 +300,7 @@ fprintf(stdout, "%.1f\t", bt[i][j]);
 fprintf(stdout, "-----------------------\n");
    }
 #endif
-    fprintf(stdout, "step 9\n");
+ //   fprintf(stdout, "step 9\n");
    for (i = 0; i <size; i++){
       trans (&bt[displ[i]][0], scnt[i]);
    }
@@ -319,13 +319,13 @@ fprintf(stdout, "%.1f\t", bt[i][j]);
 fprintf(stdout, "-----------------------\n");
    }
 #endif
-    fprintf(stdout, "step 10\n");
+//s    fprintf(stdout, "step 10\n");
 #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
         fstinv_(bt[i], &n, z, &nn);
     }
-    fprintf(stdout, "step 11\n");
+ //   fprintf(stdout, "step 11\n");
 #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
@@ -334,14 +334,14 @@ fprintf(stdout, "-----------------------\n");
             bt[j][i] = bt[j][i]/(diag[i]+diag[j]);
         }
     }
-        fprintf(stdout, "step 12\n");
+   //     fprintf(stdout, "step 12\n");
 #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
         fst_(bt[i], &n, z, &nn);
     }
 
-    fprintf(stdout, "step 13\n");
+ //   fprintf(stdout, "step 13\n");
 
     transpose (b,bt,m);
 
@@ -350,7 +350,7 @@ fprintf(stdout, "-----------------------\n");
     {
         fstinv_(b[j], &n, z, &nn);
     }
-    fprintf(stdout, "step 14\n");
+  //  fprintf(stdout, "step 14\n");
     umax = 0.0;
 #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
@@ -360,7 +360,7 @@ fprintf(stdout, "-----------------------\n");
             if (b[j][i] > umax) umax = b[j][i];
         }
     }
-        fprintf(stdout, "step 15\n");
+ //       fprintf(stdout, "step 15\n");
     printf (" umax = %e \n",umax);
     close_app();
     return EXIT_SUCCESS;
