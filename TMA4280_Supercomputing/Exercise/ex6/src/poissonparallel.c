@@ -261,18 +261,21 @@ MPIscnt[i]=0;
 
 for(i=1; i<size; i++)
 {
-fprintf(stdout, "scnt[%d]: %d, scnt[%d]: %d\n", rank, scnt[rank], i, scnt[i]);
-MPIdispl[i]=MPIdispl[i-1]+scnt[rank]*scnt[i];
+//fprintf(stdout, "scnt[%d]: %d, scnt[%d]: %d\n", rank, scnt[rank], i, scnt[i]);
+MPIdispl[i]=MPIdispl[i-1]+scnt[rank]*scnt[i-1];
 }
 
-
+for(i=0; i<size; i++)
+{
+fprintf(stdout, "rank %d: MPIdispl[%d]: %d\n", rank, i, MPIdispl[i]);
+}
 for(i=0; i<size; i++)
 {
 MPIscnt[i]=scnt[i]*scnt[rank];
 }
 for(i=0; i<size; i++)
 {
-fprintf(stdout, "MPI p%d to %d: scnt: %d displ %d\n", i, rank, MPIscnt[i], MPIdispl[i]);
+//fprintf(stdout, "MPI p%d to %d: scnt: %d displ %d\n", i, rank, MPIscnt[i], MPIdispl[i]);
 }
 
   MPI_Alltoallv (
