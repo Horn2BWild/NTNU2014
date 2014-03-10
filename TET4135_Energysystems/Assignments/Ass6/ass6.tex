@@ -9,7 +9,7 @@
 
 \begin{document}
 \section{1}
-
+Water from reservoirs 1 and 2 can be used for production of 3, and 1 and 2 are higher than 3. So water in the upper reservoirs has a higher water value.
 \section{2}
 \begin{equation}
 min_{q,t}(wv_1\cdot f(\sum_{t=1}^4(l_t\cdot q_{1,t})+\sum_{t=1}^4(l_t\cdot q_{2,t}))+wv_2\cdot \sum_{t=1}^4(l_t\cdot q_{3,t}))
@@ -21,6 +21,26 @@ min_{q,t}(wv_1\cdot f(\sum_{t=1}^4(l_t\cdot q_{1,t})+\sum_{t=1}^4(l_t\cdot q_{2,
 f=3.6\cdot 10^{-3}\frac{Ms}{h}
 \end{equation}
 \section{3}
+Generally the values can be calculated using following formulas.
+\begin{equation}
+r_{1,in}=f\int_{t_0}^{t}(Q_1-s_1)dt
+\end{equation}
+\begin{equation}
+r_{2,in}=f\int_{t_0}^{t}(Q_2-s_2)dt
+\end{equation}
+\begin{equation}
+r_{3,in}=\int_{t_0}^{t}(q_1+s_1+q_2-s_2+Q_3)dt
+\end{equation}
+\begin{equation}
+r_{1}=r_{1,0}+f\int_{t_0}^{t}(r_{1,in}-r{1,out})dt = r_{1,0}+f\int_{t_0}^{t}(Q_1-s_1-q_1)dt
+\end{equation}
+\begin{equation}
+r_{2}=r_{2,0}+f\int_{t_0}^{t}(r_{2,in}-r{2,out})dt = r_{2,0}+f\int_{t_0}^{t}(Q_2-s_2-q_2)dt
+\end{equation}
+\begin{equation}
+r_{3}=r_{3,0}+f\int_{t_0}^{t}(Q_3+q_1+s_1+q_1-s_3-q_3)dt = r_{2,0}+f\int_{t_0}^{t}(Q_2-s_2-q_2)dt
+\end{equation}
+Using the time intervals given the formulas change to
 
 \section{4}
 
