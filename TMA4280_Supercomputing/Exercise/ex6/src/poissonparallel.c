@@ -33,9 +33,10 @@
 #include "common.h"
 
 #define DEBUG_2KCHECK 0
-#define DEBUG_TESTMATRIX 1
+#define DEBUG_TESTMATRIX 0
 #define DEBUG_MPISUMMARY 0
 #define DEBUG_ALL 0
+#define DEBUG_MPIINFO 0
 
 
 typedef double Real;
@@ -48,6 +49,142 @@ void fst_(Real *v, int *n, Real *w, int *nn);
 void fstinv_(Real *v, int *n, Real *w, int *nn);
 
 void trans (double *a, int n);
+
+void transposeMPI(Real **bt, Real**b, int m, int rank, int size, int* scnt, int* displ)
+{
+    int i=0;
+    int proccnt=0;
+    int rowcnt=0;
+    int elementcnt=0;
+    int columncnt=0;
+    int vectorposition=0;
+    Real *sendvector=malloc(m*scnt[rank]*sizeof(Real));
+    Real *receivevector=malloc(m*scnt[rank]*sizeof(Real));
+
+ //   fprintf(stdout, "size of vector on process %d: %d\n", rank, m*scnt[rank]);
+
+
+
+  for(proccnt=0; proccnt<size; proccnt++)
+{
+  for(columncnt=displ[rank]; columncnt<scnt[rank]+displ[rank]; columncnt++)
+{
+//  fprintf(stdout, "rank %d columncnt %d proccnt %d\n", rank, columncnt, proccnt);
+    for(rowcnt=displ[proccnt]; rowcnt<displ[proccnt]+scnt[proccnt]; rowcnt++)
+    {
+  //    fprintf(stdout, "rank: %d - columncnt: %d rowcnt: %d -- value: %f\n", rank, columncnt, rowcnt,b[columncnt][rowcnt]);
+      fflush(stdout);
+//for(proccnt=0; proccnt<size; proccnt++)
+//{
+
+//fprintf(stdout, "row: %d element %d rank %d: %f\n", rowcnt, elementcnt, rank, b[rowcnt][elementcnt]);
+            sendvector[vectorposition]=b[rowcnt][columncnt];
+            vectorposition++;
+        }
+    }
+    }
+
+
+    int *MPIdispl=malloc(size*sizeof(int));           // displacements
+    int *MPIscnt=malloc(size*sizeof(int));            // send/receive count
+
+
+    for(i=0; i<size; i++)
+    {
+        MPIdispl[i]=0;
+        MPIscnt[i]=0;
+    }
+
+    for(i=1; i<size; i++)
+    {
+//fprintf(stdout, "scnt[%d]: %d, scnt[%d]: %d\n", rank, scnt[rank], i, scnt[i]);
+        MPIdispl[i]=MPIdispl[i-1]+scnt[rank]*scnt[i-1];
+    }
+            for(i=0; i<size; i++)
+    {
+              MPIscnt[i]=scnt[i]*scnt[rank];
+    }
+#if DEBUG_MPIINFO
+    for(i=0; i<size; i++)
+    {
+        fprintf(stdout, "rank %d: MPIdispl[%d]: %d\n", rank, i, MPIdispl[i]);
+    }
+        for(i=0; i<size; i++)
+    {
+                fprintf(stdout, "rank %d: MPIscnt[%d]: %d\n", rank, i, MPIscnt[i]);
+    }
+    #endif
+
+
+
+#if DEBUG_MPISUMMARY
+fprintf(stdout, "--------------------------------------\n");
+fprintf(stdout, "sendvector:");
+for(i=0; i<vectorposition; i++)
+{
+  fprintf(stdout, "%f\t", sendvector[i]);
+}
+fprintf(stdout, "\n");
+fprintf(stdout, "MPIscnt:");
+for(i=0; i<size; i++)
+{
+  fprintf(stdout, "%d\t", MPIscnt[i]);
+}
+fprintf(stdout, "\n");
+fprintf(stdout, "MPIdispl:");
+for(i=0; i<size; i++)
+{
+  fprintf(stdout, "%d\t", MPIdispl[i]);
+}
+fprintf(stdout, "\n");
+
+fprintf(stdout, "rank: %d before alltoallv", rank);
+fflush(stdout);
+#endif
+
+
+    MPI_Alltoallv (
+        sendvector,	/* address of data to send  */
+        MPIscnt,	/* number of items to send to processes  */
+        MPIdispl, /* displacements for each process */
+        MPI_DOUBLE,	/* type of data  */
+        receivevector,	/* address for receiving the data  */
+        /* NOTE: send data and receive data may NOT overlap */
+     MPIscnt,	/* number of items to receive
+          from any process  */
+        MPIdispl,
+        MPI_DOUBLE,	/* type of receive data  */
+        MPI_COMM_WORLD);
+
+//   transpose (bt,b,m);
+
+#if DEBUG_TESTMATRIX
+  //  vectorposition=m*scnt[rank];
+    fprintf(stdout, "receive vector size proc %d: %d\n", rank, vectorposition);
+    fprintf(stdout, "---RECEIVEVECTOR process %d---\n", rank);
+    for(i=0; i<vectorposition; i++)
+    {
+        fprintf(stdout, "%d.%d: %.1f\t",rank, i, receivevector[i]);
+        fflush(stdout);
+    }
+
+#endif
+//   fprintf(stdout, "proc %d step 9\n", rank);
+
+vectorposition=0;
+for(rowcnt=0; rowcnt<m; rowcnt++)
+{
+  for(columncnt=0; columncnt<scnt[rank];columncnt++)
+  {
+    bt[columncnt][rowcnt]=receivevector[vectorposition];
+    vectorposition++;
+   // fprintf(stdout, "%f\t", bt[columncnt][rowcnt]);
+  }
+ // fprintf(stdout,"\n");
+}
+
+
+}
 
 
 int main(int argc, char **argv)
@@ -117,28 +254,9 @@ int main(int argc, char **argv)
     //  fprintf(stdout, "step 1\n");
     init_app(argc, argv, &rank, &size);
 
-    //calculate partial vector sizes to send
-//    scnt=(int*)malloc(size*sizeof(int));
-//    displ=(int*)malloc(size*sizeof(int));
 
-//    int elementcount=m/size;
-//    for(i=1; i<size; i++)
-//    {
-//        scnt[i]=elementcount;
-//    }
-//    scnt[0]=m%size;
-//   displ[0]=0;
     splitVector(m, size, &scnt, &displ);
-//    fprintf(stdout, "step 2\n");
 
-    //calculate partial displacements to send
-//   int elementdisplacement=0;
-//   displ[0]=0;
-//   for(i=1; i<size; i++)
-//   {
-//       elementdisplacement+=scnt[i-1];
-    //      displ[i]=elementdisplacement;
-//   }
 
     if(rank==0)
     {
@@ -206,142 +324,14 @@ int main(int argc, char **argv)
 #endif
     //  fprintf(stdout, "step 8\n");
 
+transposeMPI(bt,b,m,rank,size, scnt, displ);
 
-    int proccnt=0;
-    int rowcnt=0;
-    int elementcnt=0;
-    int columncnt=0;
-    int vectorposition=0;
-    Real *sendvector=malloc(m*scnt[rank]*sizeof(Real));
-    Real *receivevector=malloc(m*scnt[rank]*sizeof(Real));
-
- //   fprintf(stdout, "size of vector on process %d: %d\n", rank, m*scnt[rank]);
-
-
-
-  for(proccnt=0; proccnt<size; proccnt++)
-{
-  for(columncnt=displ[rank]; columncnt<scnt[rank]+displ[rank]; columncnt++)
-{
-//  fprintf(stdout, "rank %d columncnt %d proccnt %d\n", rank, columncnt, proccnt);
-    for(rowcnt=displ[proccnt]; rowcnt<displ[proccnt]+scnt[proccnt]; rowcnt++)
-    {
-  //    fprintf(stdout, "rank: %d - columncnt: %d rowcnt: %d -- value: %f\n", rank, columncnt, rowcnt,b[columncnt][rowcnt]);
-      fflush(stdout);
-//for(proccnt=0; proccnt<size; proccnt++)
-//{
-
-//fprintf(stdout, "row: %d element %d rank %d: %f\n", rowcnt, elementcnt, rank, b[rowcnt][elementcnt]);
-            sendvector[vectorposition]=b[rowcnt][columncnt];
-            vectorposition++;
-        }
-    }
-    }
-
-
-    int *MPIdispl=malloc(size*sizeof(int));           // displacements
-    int *MPIscnt=malloc(size*sizeof(int));            // send/receive count
-
-
-    for(i=0; i<size; i++)
-    {
-        MPIdispl[i]=0;
-        MPIscnt[i]=0;
-    }
-
-    for(i=1; i<size; i++)
-    {
-//fprintf(stdout, "scnt[%d]: %d, scnt[%d]: %d\n", rank, scnt[rank], i, scnt[i]);
-        MPIdispl[i]=MPIdispl[i-1]+scnt[rank]*scnt[i-1];
-    }
-
-    for(i=0; i<size; i++)
-    {
-        fprintf(stdout, "rank %d: MPIdispl[%d]: %d\n", rank, i, MPIdispl[i]);
-    }
-    for(i=0; i<size; i++)
-    {
-        MPIscnt[i]=scnt[i]*scnt[rank];
-                fprintf(stdout, "rank %d: MPIscnt[%d]: %d\n", rank, i, MPIscnt[i]);
-    }
-    for(i=0; i<size; i++)
-    {
-//fprintf(stdout, "MPI p%d to %d: scnt: %d displ %d\n", i, rank, MPIscnt[i], MPIdispl[i]);
-    }
-
-#if DEBUG_MPISUMMARY
-fprintf(stdout, "--------------------------------------\n");
-fprintf(stdout, "sendvector:");
-for(i=0; i<vectorposition; i++)
-{
-  fprintf(stdout, "%f\t", sendvector[i]);
-}
-fprintf(stdout, "\n");
-fprintf(stdout, "MPIscnt:");
-for(i=0; i<size; i++)
-{
-  fprintf(stdout, "%d\t", MPIscnt[i]);
-}
-fprintf(stdout, "\n");
-fprintf(stdout, "MPIdispl:");
-for(i=0; i<size; i++)
-{
-  fprintf(stdout, "%d\t", MPIdispl[i]);
-}
-fprintf(stdout, "\n");
-
-fprintf(stdout, "rank: %d before alltoallv", rank);
-fflush(stdout);
-#endif
-
-
-    MPI_Alltoallv (
-        sendvector,	/* address of data to send  */
-        MPIscnt,	/* number of items to send to processes  */
-        MPIdispl, /* displacements for each process */
-        MPI_DOUBLE,	/* type of data  */
-        receivevector,	/* address for receiving the data  */
-        /* NOTE: send data and receive data may NOT overlap */
-     MPIscnt,	/* number of items to receive
-          from any process  */
-        MPIdispl,
-        MPI_DOUBLE,	/* type of receive data  */
-        MPI_COMM_WORLD);
-
-//   transpose (bt,b,m);
-
-#if DEBUG_TESTMATRIX
-  //  vectorposition=m*scnt[rank];
-    fprintf(stdout, "receive vector size proc %d: %d\n", rank, vectorposition);
-    fprintf(stdout, "---RECEIVEVECTOR process %d---\n", rank);
-    for(i=0; i<vectorposition; i++)
-    {
-        fprintf(stdout, "%d.%d: %.1f\t",rank, i, receivevector[i]);
-        fflush(stdout);
-    }
-
-#endif
-   fprintf(stdout, "proc %d step 9\n", rank);
-
-vectorposition=0;
-for(rowcnt=0; rowcnt<m; rowcnt++)
-{
-  for(columncnt=0; columncnt<scnt[rank];columncnt++)
-  {
-    bt[columncnt][rowcnt]=receivevector[vectorposition];
-    vectorposition++;
-    fprintf(stdout, "%f\t", bt[columncnt][rowcnt]);
-  }
-  fprintf(stdout,"\n");
-}
-
-
-#pragma omp parallel for schedule(guided,1)
+             #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
         fstinv_(bt[i], &n, z, &nn);
     }
-   fprintf(stdout, "proc %d step 11\n", rank);
+ //  fprintf(stdout, "proc %d step 11\n", rank);
 #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
@@ -350,23 +340,23 @@ for(rowcnt=0; rowcnt<m; rowcnt++)
             bt[j][i] = bt[j][i]/(diag[i]+diag[j]);
         }
     }
-         fprintf(stdout, "proc %d step 12\n", rank);
+   //      fprintf(stdout, "proc %d step 12\n", rank);
 #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
         fst_(bt[i], &n, z, &nn);
     }
 
-   fprintf(stdout, "proc %d step 13\n", rank);
+ //  fprintf(stdout, "proc %d step 13\n", rank);
 
-    transpose (b,bt,m);
+transposeMPI(b,bt,m,rank,size, scnt, displ);
 
 #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
         fstinv_(b[j], &n, z, &nn);
     }
-      fprintf(stdout, "proc %d step 14\n", rank);
+  //    fprintf(stdout, "proc %d step 14\n", rank);
     umax = 0.0;
 #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
@@ -376,7 +366,7 @@ for(rowcnt=0; rowcnt<m; rowcnt++)
             if (b[j][i] > umax) umax = b[j][i];
         }
     }
-       fprintf(stdout, "proc %d step 15\n", rank);
+       fprintf(stdout, "proc %d done...\n", rank);
     printf (" umax = %e \n",umax);
     close_app();
     return EXIT_SUCCESS;
