@@ -255,6 +255,7 @@ int main(int argc, char **argv)
     int *MPIdispl=malloc(size*sizeof(int));           // displacements
     int *MPIscnt=malloc(size*sizeof(int));            // send/receive count
 
+
     for(i=0; i<size; i++)
     {
         MPIdispl[i]=0;
@@ -274,6 +275,7 @@ int main(int argc, char **argv)
     for(i=0; i<size; i++)
     {
         MPIscnt[i]=scnt[i]*scnt[rank];
+                fprintf(stdout, "rank %d: MPIscnt[%d]: %d\n", rank, i, MPIscnt[i]);
     }
     for(i=0; i<size; i++)
     {
@@ -287,8 +289,8 @@ int main(int argc, char **argv)
         MPI_DOUBLE,	/* type of data  */
         &receivevector,	/* address for receiving the data  */
         /* NOTE: send data and receive data may NOT overlap */
-        MPIscnt,	/* number of items to receive
-				   from any process  */
+     MPIscnt,	/* number of items to receive
+          from any process  */
         MPIdispl,
         MPI_DOUBLE,	/* type of receive data  */
         MPI_COMM_WORLD);
@@ -297,7 +299,7 @@ int main(int argc, char **argv)
 
 #if DEBUG_TESTMATRIX
     vectorposition=m*scnt[rank];
-    fprintf(stdout, "receive vector size proc %d\n", vectorposition);
+    fprintf(stdout, "receive vector size proc %d: %d\n", rank, vectorposition);
     fprintf(stdout, "---RECEIVEVECTOR process %d---\n", rank);
     for(i=0; i<vectorposition; i++)
     {
@@ -306,7 +308,7 @@ int main(int argc, char **argv)
     }
 
 #endif
-//   fprintf(stdout, "step 9\n");
+   fprintf(stdout, "proc %d step 9\n", rank);
     for (i = 0; i <size; i++)
     {
         trans (&bt[displ[i]][0], scnt[i]);
@@ -327,13 +329,13 @@ int main(int argc, char **argv)
         fprintf(stdout, "-----------------------\n");
     }
 #endif
-//s    fprintf(stdout, "step 10\n");
+    fprintf(stdout, "proc %d step 10\n", rank);
 #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
         fstinv_(bt[i], &n, z, &nn);
     }
-//   fprintf(stdout, "step 11\n");
+   fprintf(stdout, "proc %d step 11\n", rank);
 #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
     {
@@ -342,14 +344,14 @@ int main(int argc, char **argv)
             bt[j][i] = bt[j][i]/(diag[i]+diag[j]);
         }
     }
-    //     fprintf(stdout, "step 12\n");
+         fprintf(stdout, "proc %d step 12\n", rank);
 #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
         fst_(bt[i], &n, z, &nn);
     }
 
-//   fprintf(stdout, "step 13\n");
+   fprintf(stdout, "proc %d step 13\n", rank);
 
     transpose (b,bt,m);
 
@@ -358,7 +360,7 @@ int main(int argc, char **argv)
     {
         fstinv_(b[j], &n, z, &nn);
     }
-    //  fprintf(stdout, "step 14\n");
+      fprintf(stdout, "proc %d step 14\n", rank);
     umax = 0.0;
 #pragma omp parallel for schedule(guided,1)
     for (j=0; j < m; j++)
@@ -368,7 +370,7 @@ int main(int argc, char **argv)
             if (b[j][i] > umax) umax = b[j][i];
         }
     }
-//       fprintf(stdout, "step 15\n");
+       fprintf(stdout, "proc %d step 15\n", rank);
     printf (" umax = %e \n",umax);
     close_app();
     return EXIT_SUCCESS;
