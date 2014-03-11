@@ -287,7 +287,7 @@ int main(int argc, char **argv)
     {
         for (i=0; i < m; i++)
         {
-            b[j][i] = h*h *5*M_PI*M_PI*(sin(M_PI*i)*sin(2*M_PI*j));
+            b[j][i] = h*h*5*M_PI*M_PI*(sin(M_PI*(j+1)*h)*sin(2*M_PI*(i+1)*h));
         }
     }
     //     fprintf(stdout, "step 5\n");
@@ -359,13 +359,19 @@ transposeMPI(b,bt,m,rank,size, scnt, displ);
   //    fprintf(stdout, "proc %d step 14\n", rank);
     umax = 0.0;
 #pragma omp parallel for schedule(guided,1)
-    for (j=0; j < m; j++)
-    {
-        for (i=0; i < m; i++)
-        {
-            if (b[j][i] > umax) umax = b[j][i];
+    for (j=0; j < m; j++) {
+        for (i=0; i < m; i++) {
+            double value = fabs(b[j][i] - sin(M_PI * (j+1)*h)*sin(2*M_PI*(i+1)*h));
+            if (value > umax) umax = value;
         }
     }
+    // for (j=0; j < m; j++)
+    // {
+    //     for (i=0; i < m; i++)
+    //     {
+    //         if (b[j][i] > umax) umax = b[j][i];
+    //     }
+    // }
     double globalMax = 0;
     MPI_Reduce(&umax, &globalMax, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     if (rank == 0)
