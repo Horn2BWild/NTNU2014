@@ -287,7 +287,7 @@ int main(int argc, char **argv)
     {
         for (i=0; i < m; i++)
         {
-            b[j][i] = h*h;
+            b[j][i] = h*h *5*M_PI*M_PI*(sin(M_PI*i)*sin(2*M_PI*j));
         }
     }
     //     fprintf(stdout, "step 5\n");
@@ -366,8 +366,13 @@ transposeMPI(b,bt,m,rank,size, scnt, displ);
             if (b[j][i] > umax) umax = b[j][i];
         }
     }
-       fprintf(stdout, "proc %d done...\n", rank);
-    printf (" umax = %e \n",umax);
+    double globalMax = 0;
+    MPI_Reduce(&umax, &globalMax, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+    if (rank == 0)
+    {
+        fprintf(stdout, "proc %d done...\n", rank);
+        printf (" umax = %e \n",globalMax);
+    }
     close_app();
     return EXIT_SUCCESS;
 }
