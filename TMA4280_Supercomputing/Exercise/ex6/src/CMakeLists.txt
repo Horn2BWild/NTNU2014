@@ -1,3 +1,7 @@
+IF(APPLE)
+	SET(CMAKE_C_COMPILER gcc )
+ENDIF(APPLE)
+
 project(poisson-example)
 cmake_minimum_required(VERSION 2.6)
 
