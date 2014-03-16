@@ -203,7 +203,7 @@ fflush(stdout);
         {
             for (rowcnt = displ[proccnt]; rowcnt < displ[proccnt] + scnt[proccnt]; ++rowcnt)
             {
-            
+
                 bt[columncnt][rowcnt]=receivevector[vectorposition];
                 vectorposition++;
                // fprintf(stdout, "%f\t", bt[columncnt][rowcnt]);
@@ -301,14 +301,14 @@ int main(int argc, char **argv)
     h    = 1./(Real)n;
     pi   = 4.*atan(1.);
 //   fprintf(stdout, "step 3\n");
-// #pragma omp parallel for schedule(guided,1)
+ #pragma omp parallel for schedule(guided,1)
     for (i=0; i < m; i++)
     {
         diag[i] = 2.*(1.-cos((i+1) * pi/(Real)n));
     }
 
 //   fprintf(stdout, "step 4\n");
-// #pragma omp parallel for schedule(guided,1)
+ #pragma omp parallel for schedule(guided,1)
     for (j=0; j < scnt[rank]; j++)
     {
         for (i=0; i < m; i++)
@@ -405,10 +405,10 @@ transposeMPI(b,bt,m,rank,size, scnt, displ);
     }
   //    fprintf(stdout, "proc %d step 14\n", rank);
     umax = 0.0;
-// #pragma omp parallel for schedule(guided,1)
+ #pragma omp parallel for schedule(guided,1)
     for (j=0; j < scnt[rank]; j++) {
         for (i=0; i < m; i++) {
-            double value = fabs(b[j][i] - 
+            double value = fabs(b[j][i] -
                 sin(M_PI * (j+1+displ[rank])*h)*
                 sin(2*M_PI*(i+1)*h));
             if (value > umax) umax = value;
