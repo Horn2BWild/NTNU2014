@@ -28,9 +28,14 @@ u = 0 on \delta\Omega
 The given poisson equation is an elliptic partial differential equation. The problem is solving this equation with given boundary conditions. 
 The problem should be discretized with (n+1) points in each spatial direction. The standard 5-point-stencil to discretize the Laplace operator $\bigtriangledown$ has to be used. To obtain a solution in $O(n\cdot log(n))$ the DST should be applied.
 \section{Solution strategies}
-
+\subsection{LU factorization}
+\subsection{cholesky factorization}
+\subsection{diagonalization}
+\subsubsection{diagonalization using DST}
+\paragraph{row based matrix partitioning}
+\paragraph{column based matrix partitioning}
 \section{Implemented solution}
-
+\subsection{matrix transpose}
 \section{Environment}
 \subsection{Supercomputer}
 
