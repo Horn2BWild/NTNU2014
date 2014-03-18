@@ -25,6 +25,7 @@ The implementation shall solve the two-dimensional poisson problem
 \begin{equation}
 u = 0 on \delta\Omega
 \end{equation}
+The given poisson equation is an elliptic partial differential equation. The problem is solving this equation with given boundary conditions. 
 The problem should be discretized with (n+1) points in each spatial direction. The standard 5-point-stencil to discretize the Laplace operator $\bigtriangledown$ has to be used. To obtain a solution in $O(n\cdot log(n))$ the DST should be applied.
 \section{Solution strategies}
 
