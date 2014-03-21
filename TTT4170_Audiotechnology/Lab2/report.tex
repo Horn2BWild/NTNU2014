@@ -117,37 +117,17 @@ $ms$	&	$m$	&	$rad$	&	$^\circ$		\\
 \end{table}
 
 \section{Calculations}
-\subsection{absorption coefficients}
-The absorbtion coefficients for each band are calculated according to Sabine's formula. The values $T_{60}$ which are used are the average values of the measured results.
-$$\bar{\alpha_{125}}=\frac{0.161\cdot 367m^3}{1.3s\cdot 344m^2}=0.132$$
-$$\bar{\alpha_{250}}=\frac{0.161\cdot 367m^3}{0.55s\cdot 344m^2}=0.312$$
-$$\bar{\alpha_{500}}=\frac{0.161\cdot 367m^3}{0.67s\cdot 344m^2}=0.256$$
-$$\bar{\alpha_{1k}}=\frac{0.161\cdot 367m^3}{0.72s\cdot 344m^2}=0.239$$
-$$\bar{\alpha_{2k}}=\frac{0.161\cdot 367m^3}{0.77s\cdot 344m^2}=0.223$$
-$$\bar{\alpha_{4k}}=\frac{0.161\cdot 367m^3}{0.64s\cdot 344m^2}=0.268$$
-
-\subsection{absorption with chair surfaces}
-In this task a absorption factor at the chair surface of 0.7 was assumed. The absorption factor of the remaining surfaces was calculated in such way that the average absorption factor of the frequency bands was not changed.
-$$\alpha_{1,125}=\frac{344m^2\cdot 0.132-0.7\cdot 66.75m^2}{277.25m^2}=-0.004$$
-The absorbtion factor is negative which means that the chair absorption factor is overestimated. Due to the fact that absorbtion decreases with lower frequencies the absorption factor is lower at low frequencies. An factor of $\alpha=0.4$ for a frequency of $f=125Hz$ was assumed and the resulting absorbtion factor increases to
- $$\alpha_{1,125}=\frac{344m^2\cdot 0.132-0.4\cdot 66.75m^2}{277.25m^2}=-0.067$$
-All other calculations are done with an assumed absorbtion factor of $\alpha_{chair}=0.7$.
- $$\alpha_{1,250}=\frac{344m^2\cdot 0.312-0.7\cdot 66.75m^2}{277.25m^2}=0.219$$
- $$\alpha_{1,500}=\frac{344m^2\cdot 0.256-0.7\cdot 66.75m^2}{277.25m^2}=0.149$$
- $$\alpha_{1,1k}=\frac{344m^2\cdot 0.239-0.7\cdot 66.75m^2}{277.25m^2}=0.128$$
- $$\alpha_{1,2k}=\frac{344m^2\cdot 0.223-0.7\cdot 66.75m^2}{277.25m^2}=0.108$$
- $$\alpha_{1,4k}=\frac{344m^2\cdot 0.268-0.7\cdot 66.75m^2}{277.25m^2}=0.164$$
-
-\subsection{absorption material}
-The room reverbation time should be decreased to 0.5s. The materials given for this task are available for absorbtion factors $\alpha=0.3 ... 0.9$. Surfaces had to be equipped with absorption materials in such way and amount that the wanted reverbation time is reached. The average absorption factor needed is calculated using
-$$\bar{\alpha}=\frac{0.161\cdot 367m^3}{344m^2\cdot 0.5s}=0.344$$
-The calculated value of $\bar{\alpha}$ is in this range, so a absorber material with an average of $0.344$ can be used.
-
-\subsection{hall radius}
-The average reverbation time calculated as result of the three measurements was $T_{60,500}=0.67s$. The hall distance can be calculated with
-$$r_H=0.057\cdot\sqrt{\frac{V}{T_{60}}}=0.057\cdot\sqrt{\frac{367m^3}{0.67s}}=1.334m$$
-Compared to the measured result it can be obtained that the calculated value is a little bit smaller than the measured one, which is about 1.5m. This is because for the calculation an omnidirectional sound soure was assumed. Due to the fact that the used loudspeaker is not omnidirectional but directed, the measured value is a little bit farer away from the sound source.
-
+\subsection{calculation of $\phi_{SPL}$}
+$$\phi_{rad_{3dB}}=tan(\frac{0.08m}{2m})=0.04$$
+$$\phi_{deg_{3dB}}=\phi_{rad_{3dB}}\cdot\frac{180^\circ}{\pi}=2.29^\circ$$
+$$\phi_{rad_{6dB}}=tan(\frac{0.23m}{2m})=0.116$$
+$$\phi_{deg_{6dB}}=\phi_{rad_{6dB}}\cdot\frac{180^\circ}{\pi}=6.62^\circ$$
+$$\phi_{rad_{9dB}}=tan(\frac{0.36m}{2m})=0.182$$
+$$\phi_{deg_{9dB}}=\phi_{rad_{9dB}}\cdot\frac{180^\circ}{\pi}=10.43^\circ$$
+$$\phi_{rad_{12dB}}=tan(\frac{0.57m}{2m})=0.293$$
+$$\phi_{deg_{12dB}}=\phi_{rad_{12dB}}\cdot\frac{180^\circ}{\pi}=16.79^\circ$$
+$$\phi_{rad_{20dB}}=tan(\frac{0.08m}{2m})=0.429$$
+$$\phi_{deg_{20dB}}=\phi_{rad_{20dB}}\cdot\frac{180^\circ}{\pi}=24.56^\circ$$
 \newpage
 \section{Conclusion}
 \newpage
