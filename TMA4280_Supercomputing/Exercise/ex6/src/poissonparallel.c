@@ -219,7 +219,7 @@ int main(int argc, char **argv)
     int size=0;                                     //number of proc
     int tag=100;                                    //tag used for MPI comm
     MPI_Status status;
-    Real *diag, **b, **bt, *z;
+    Real *diag, **b, **bt;
     Real pi, h, umax;
     int i, j, n, m, nn;
     int *displ;           // displacements
@@ -296,7 +296,7 @@ int main(int argc, char **argv)
     diag = createRealArray (m);
     b    = createReal2DArray (scnt[rank],m);
     bt   = createReal2DArray (scnt[rank],m);
-    z    = createRealArray (nn);
+    // z    = createRealArray (nn);
 
     h    = 1./(Real)n;
     pi   = 4.*atan(1.);
@@ -308,7 +308,7 @@ int main(int argc, char **argv)
     }
 
 //   fprintf(stdout, "step 4\n");
- #pragma omp parallel for schedule(guided,1)
+ #pragma omp parallel for schedule(guided,1) private(i)
     for (j=0; j < scnt[rank]; j++)
     {
         for (i=0; i < m; i++)
@@ -336,10 +336,16 @@ int main(int argc, char **argv)
 
 
     //     fprintf(stdout, "step 5\n");
-// #pragma omp parallel for schedule(guided,1)
-    for (j=0; j < scnt[rank]; j++)
+#pragma omp parallel
     {
-        fst_(b[j], &n, z, &nn);
+        Real *z;
+        z = createRealArray (nn);
+#pragma omp for schedule(guided,1)
+        for (j=0; j < scnt[rank]; j++)
+        {
+            fst_(b[j], &n, z, &nn);
+        }
+        free(z);
     }
     //  fprintf(stdout, "step 6\n");
 #if DEBUG_TESTMATRIX
@@ -373,13 +379,19 @@ int main(int argc, char **argv)
 transposeMPI(bt,b,m,rank,size, scnt, displ);
     // mergeAndPrintMpiMat(bt, size, rank, m, scnt, displ);
 
-// #pragma omp parallel for schedule(guided,1)
-    for (i=0; i < scnt[rank]; i++)
+#pragma omp parallel
     {
-        fstinv_(bt[i], &n, z, &nn);
+        Real *z;
+        z = createRealArray (nn);
+#pragma omp for schedule(guided,1)
+        for (i=0; i < scnt[rank]; i++)
+        {
+            fstinv_(bt[i], &n, z, &nn);
+        }
+        free(z);
     }
  //  fprintf(stdout, "proc %d step 11\n", rank);
-// #pragma omp parallel for schedule(guided,1)
+#pragma omp parallel for schedule(guided,1) private(i)
     for (j=0; j < scnt[rank]; j++)
     {
         for (i=0; i < m; i++)
@@ -388,24 +400,36 @@ transposeMPI(bt,b,m,rank,size, scnt, displ);
         }
     }
    //      fprintf(stdout, "proc %d step 12\n", rank);
-// #pragma omp parallel for schedule(guided,1)
-    for (i=0; i < scnt[rank]; i++)
+#pragma omp parallel
     {
-        fst_(bt[i], &n, z, &nn);
+        Real *z;
+        z = createRealArray (nn);
+#pragma omp for schedule(guided,1)
+        for (i=0; i < scnt[rank]; i++)
+        {
+            fst_(bt[i], &n, z, &nn);
+        }
+        free(z);
     }
 
  //  fprintf(stdout, "proc %d step 13\n", rank);
 
 transposeMPI(b,bt,m,rank,size, scnt, displ);
 
-// #pragma omp parallel for schedule(guided,1)
-    for (j=0; j < scnt[rank]; j++)
+#pragma omp parallel
     {
-        fstinv_(b[j], &n, z, &nn);
+        Real *z;
+        z = createRealArray (nn);
+#pragma omp for schedule(guided,1)
+        for (j=0; j < scnt[rank]; j++)
+        {
+            fstinv_(b[j], &n, z, &nn);
+        }
+        free(z);
     }
   //    fprintf(stdout, "proc %d step 14\n", rank);
     umax = 0.0;
- #pragma omp parallel for schedule(guided,1)
+ #pragma omp parallel for schedule(guided,1) private(i)
     for (j=0; j < scnt[rank]; j++) {
         for (i=0; i < m; i++) {
             double value = fabs(b[j][i] -
