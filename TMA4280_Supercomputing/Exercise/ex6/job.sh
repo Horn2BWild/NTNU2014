@@ -22,14 +22,17 @@
 #PBS -j oe
 
 # Change directory to dir with the job script
-cd ${PBS_O_WORKDIR}
+# cd ${PBS_O_WORKDIR}
 
 # Load needed modules
-module load intelcomp
-module load openmpi/1.4.3-intel
+# module load intelcomp
+# module load openmpi/1.4.3-intel
 
 # Set thread affinity
 KMP_AFFINITY="granularity=fine,compact"
 
 # Run with 8 MPI processes, each with 3 threads
-OMP_NUM_THREADS=3 mpirun -npernode 4 ex6 myparams
+# OMP_NUM_THREADS=3 mpirun -npernode 4 ex6 myparams
+cd src
+chmod +x runTiming.sh
+./runTiming.sh

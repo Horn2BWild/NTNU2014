@@ -1,37 +1,45 @@
 #!/bin/bash
 
-MAXPROBLEMSIZE=1024
+MAXPROBLEMSIZE_P1=4096
+MAXPROBLEMSIZE_P2=16384
 MAXTHREADS=4
 MAXPROCESSES=4
 
-function buildRelease {
-	if [ ! -d "release" ]; then
-		mkdir release
-	fi
-	cd release
-	cmake -DCMAKE_BUILD_TYPE=Release .. -DTIMING_TEST=ON
-	TIMING_TEST=1 make
-	cd ..
-}
-
 # args: mpiProcesses, ompThreads, problemSize
 function runParallel { 
-	OMP_NUM_THREADS=$2  mpiExec -np $1 release/ex6parallel $3
+	OMP_NUM_THREADS=$2  mpiExec -np $1 timingTest/ex6parallel $3
 }
 
-function runTests {
-	for (( size = 2; size <= $MAXPROBLEMSIZE; size=size*2 )); do
+function runTest1 {
+	for (( size = 4; size <= $MAXPROBLEMSIZE_P1 ; size=size*2 )); do
 		for (( processes = 1; processes <= $MAXPROCESSES; processes++ )); do
-			for (( threads = 1; threads <= $MAXTHREADS; threads++ )); do
+			for (( threads = 1; threads <= $MAXTHREADS; threads++)); do
 				runParallel $processes $threads $size
 			done
 		done
 	done
 }
 
-echo "Timing test output is: numMpiProcess numOpenmpThreads problemSize time"
+function runTest2 {
+	for (( size = 4; size <= $MAXPROBLEMSIZE_P2 ; size=size*2 )); do
+		runParallel $processes $threads $size
+	done
+}
 
-buildRelease
-runTests
+function runTest3 {
+	runParallel 1 $MAXTHREADS $MAXPROBLEMSIZE_P2
+	runParallel $MAXPROCESSES 1 $MAXPROBLEMSIZE_P2
+	runParallel $MAXPROCESSES $MAXTHREADS $MAXPROBLEMSIZE_P2
+}
 
-echo "Done!"
+
+
+echo "# Timing test output is: numMpiProcess numOpenmpThreads problemSize time maxError"
+runTest1
+echo "# Constant number of MPI processes and OpenMP threads. 36 processes, 12 threads"
+# runTest2
+echo  "# Mixed vs single speedup test"
+# runTest3
+
+
+# echo "Done!"

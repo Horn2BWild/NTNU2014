@@ -456,19 +456,18 @@ transposeMPI(b,bt,m,rank,size, scnt, displ);
 
     endTime = WallTime();
 
-    #ifdef TIMING_TEST
-    int numProcesses = size;
-    int numThreads = omp_get_max_threads();
-    double elapsedTime = endTime - startTime;
-    printf("%d %d %d %f\n", numProcesses, numThreads, n, elapsedTime);
-    #else
     if (rank == 0)
     {
+    #ifdef TIMING_TEST
+        int numProcesses = size;
+        int numThreads = omp_get_max_threads();
+        double elapsedTime = endTime - startTime;
+        printf("%d %d %d %f %.20f \n", numProcesses, numThreads, n, elapsedTime, umax);
+    #else
         fprintf(stdout, "proc %d done...\n", rank);
         printf (" umax = %f \n",globalMax);
-    }
     #endif
-
+    }
     close_app();
     return EXIT_SUCCESS;
 }
