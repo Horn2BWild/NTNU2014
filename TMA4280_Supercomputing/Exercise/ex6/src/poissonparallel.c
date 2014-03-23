@@ -235,6 +235,9 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    double startTime = 0;
+    double endTime = 0;
+    startTime = WallTime();
 
     n  = atoi(argv[1]);
     m  = n-1;
@@ -284,6 +287,7 @@ int main(int argc, char **argv)
     splitVector(m, size, &scnt, &displ);
 
 
+    #ifndef TIMING_TEST
     if(rank==0)
     {
         fprintf(stdout, "proc\tsize\tdispl\n");
@@ -293,6 +297,8 @@ int main(int argc, char **argv)
         }
         fprintf(stdout, "-------------------\n");
     }
+    #endif
+
     diag = createRealArray (m);
     b    = createReal2DArray (scnt[rank],m);
     bt   = createReal2DArray (scnt[rank],m);
@@ -447,11 +453,22 @@ transposeMPI(b,bt,m,rank,size, scnt, displ);
     // }
     double globalMax = 0;
     MPI_Reduce(&umax, &globalMax, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+
+    endTime = WallTime();
+
+    #ifdef TIMING_TEST
+    int numProcesses = size;
+    int numThreads = omp_get_max_threads();
+    double elapsedTime = endTime - startTime;
+    printf("%d %d %d %f\n", numProcesses, numThreads, n, elapsedTime);
+    #else
     if (rank == 0)
     {
         fprintf(stdout, "proc %d done...\n", rank);
         printf (" umax = %f \n",globalMax);
     }
+    #endif
+
     close_app();
     return EXIT_SUCCESS;
 }
