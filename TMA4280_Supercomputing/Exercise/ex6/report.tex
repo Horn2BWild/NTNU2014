@@ -35,9 +35,14 @@ A=LU
 \end{equation}
 where A is the original matrix, L the lower triangular matrix and U the upper triangular matrix.\\
 This solution strategy is not very usable as solver in parallel contexts. The sequential nature (pivoting, substitution, ...) makes ithard for parralelization.
-\subsection{cholesky factorization}
 
 \subsection{diagonalization}
+The diagonalization can be done in three steps:
+\begin{enumerate}
+\item $$\underline{\tilde{B}}=\underline{Q^T}\underline{B}\underline{Q}$$
+\item $$\tilde{x_{ij}}=\frac{\tilde{b_{ij}}}{\lambda_i+\lambda_j} for 1\leq i,j \leq N$$
+\item $$\underline{X}=\underline{Q}\underline{\tilde{X}}\underline{Q^T}$$
+\end{enumerate}
 \subsubsection{diagonalization using DST}
 \paragraph{row based matrix partitioning}
 \paragraph{column based matrix partitioning}
