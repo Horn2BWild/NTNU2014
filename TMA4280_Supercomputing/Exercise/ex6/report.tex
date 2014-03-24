@@ -20,10 +20,10 @@
 \section{Problem description}
 The implementation shall solve the two-dimensional poisson problem 
 \begin{equation}
--\bigtriangledown^2=f in \Omega = (0,1)x(0,1)
+-\bigtriangledown^2=f\;in\;\Omega = (0,1)x(0,1)
 \end{equation}
 \begin{equation}
-u = 0 on \delta\Omega
+u = 0\;on\;\delta\Omega
 \end{equation}
 The given poisson equation is an elliptic partial differential equation. The problem is solving this equation with given boundary conditions. 
 The problem should be discretized with (n+1) points in each spatial direction. The standard 5-point-stencil to discretize the Laplace operator $\bigtriangledown$ has to be used. To obtain a solution in $O(n\cdot log(n))$ the DST should be applied.
@@ -40,12 +40,17 @@ This solution strategy is not very usable as solver in parallel contexts. The se
 The diagonalization can be done in three steps:
 \begin{enumerate}
 \item $$\underline{\tilde{B}}=\underline{Q^T}\cdot\underline{B}\cdot\underline{Q}$$
-\item $$\tilde{x_{ij}}=\frac{\tilde{b_{ij}}}{\lambda_i+\lambda_j} for 1\leq i,j \leq N$$
+\item $$\tilde{x_{ij}}=\frac{\tilde{b_{ij}}}{\lambda_i+\lambda_j}\;for\;1\leq i,j \leq N$$
 \item $$\underline{X}=\underline{Q}\cdot\underline{\tilde{X}}\cdot\underline{Q^T}$$
 \end{enumerate}
 This algorithm scales very well with the number of unknowns and also scales very well in memory. It is better parallelizable than LU factorization. In an further step fourier transform (DST) can be applied.
 \subsubsection{diagonalization using DST}
-
+For this diagonalization technique a periodic function with period $2\pi$ is sampled at equidistant points. The function has to be odd and discretized on a equidistant mesh between 0 and $\pi$.The diagonalization can be done in the three following steps:
+\begin{enumerate}
+\item $$ \underline{\tilde{B}^T}=\underline{S^{-1}}\cdot\big((\underline{S}\cdot\underline{B})^T\big)$$
+\item $$ \tilde{x_{ij}}=\frac{\tilde{b_{ij}}}{\lambda_i+\lambda_j}\;for\;1\leq i,j\leq N$$
+\item $$ \underline{X}=\underline{S^{-1}}\cdot\big(\underline{S}\cdot(\underline{\tilde{X^T}})\big)^T$$
+\end{enumerate}
 \paragraph{row based matrix partitioning}
 \paragraph{column based matrix partitioning}
 \section{Implemented solution}
