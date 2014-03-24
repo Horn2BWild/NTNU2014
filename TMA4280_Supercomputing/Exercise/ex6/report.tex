@@ -12,7 +12,7 @@
 \usepackage[pdftex]{graphicx}
 
 \pagestyle{fancy}
-\lhead{\footnotesize \parbox{11cm}{Andreas Johann H\"ormer (753179), Danny Tormoen}}
+\lhead{\footnotesize \parbox{11cm}{Andreas Johann H\"ormer (753179), Daniel Tormoen}}
 \rhead{\footnotesize {Assignment 6}}
 \chead{\footnotesize {TTT4170}}
 
@@ -73,6 +73,31 @@ For our solution we used following packages on kongull:
 \item openmpi1.4.3-intel
 \end{itemize}
 \section{Results}
+\subsection{Proof of Correctness}
+	To verify the correctness of our method we used a series of tests to ensure each part of the algorithm is producing the results we expect. When we completed the transpose function we tested the transpose function for a variety of sizes and number of MPI processes to ensure that the function was producing the correct matrix. 
+
+	Before we started work on the OpenMP parallelization we tried the complete algorithm with our own function that we knew the exact solution to. We then compared the numeric estimate our program produces to the exact solution to see if they converge. The initial values in each grid location are given by equation \ref{eqn:gridInitial}.
+
+	\begin{equation}
+		\label{eqn:gridInitial}
+		f(x,y) = 5\pi^2 \sin(\pi x)* \sin(2\pi y)
+	\end{equation}
+
+	Equation \ref{eqn:gridExact} shows the exact solution for a grid point. We can find the maximum error at each grid point by taking the absolute value of the difference between the estimate for the grid point and the exact solution. We keep track of the maximum error for any grid point as a measurement of the error.
+
+	\begin{equation}
+		\label{eqn:gridExact}
+		u(x,y) = \sin(\pi x) * \sin(2 \pi y)
+	\end{equation}
+
+	Using this method the maximum error should decrease by a factor of 4 every time we increase the number of grid points in a row by a factor of 2. Assume $e$ is the maximum error for a poisson numerical estimation of size $n \times n$. The error $e$ is given by \ref{eqn:error}.
+
+	\begin{equation}
+		\label{eqn:error}
+		e = \Theta(\frac{1}{n^2})
+	\end{equation}
+
+	
 
 \section{Analysis}
 
