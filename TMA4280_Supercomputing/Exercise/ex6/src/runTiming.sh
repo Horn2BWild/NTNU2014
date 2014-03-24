@@ -3,7 +3,7 @@
 MAXPROBLEMSIZE_P1=4096
 MAXPROBLEMSIZE_P2=16384
 MAXTHREADS=12
-MAXPROCESSES=36
+MAXPROCESSES=3
 
 # args: mpiProcesses, ompThreads, problemSize
 function runParallel { 
@@ -22,7 +22,7 @@ function runTest1 {
 
 function runTest2 {
 	for (( size = 4; size <= $MAXPROBLEMSIZE_P2 ; size=size*2 )); do
-		runParallel $processes $threads $size
+		runParallel $MAXPROCESSES $MAXTHREADS $size
 	done
 }
 

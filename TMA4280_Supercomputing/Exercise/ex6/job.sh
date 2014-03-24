@@ -25,7 +25,7 @@
 cd ${PBS_O_WORKDIR}
 
 # Load needed modules
-module load intelcomp
+module load intelcomp/13.0.1
 module load openmpi/1.4.3-intel
 
 # Set thread affinity
