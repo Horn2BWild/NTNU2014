@@ -39,11 +39,13 @@ This solution strategy is not very usable as solver in parallel contexts. The se
 \subsection{diagonalization}
 The diagonalization can be done in three steps:
 \begin{enumerate}
-\item $$\underline{\tilde{B}}=\underline{Q^T}\underline{B}\underline{Q}$$
+\item $$\underline{\tilde{B}}=\underline{Q^T}\cdot\underline{B}\cdot\underline{Q}$$
 \item $$\tilde{x_{ij}}=\frac{\tilde{b_{ij}}}{\lambda_i+\lambda_j} for 1\leq i,j \leq N$$
-\item $$\underline{X}=\underline{Q}\underline{\tilde{X}}\underline{Q^T}$$
+\item $$\underline{X}=\underline{Q}\cdot\underline{\tilde{X}}\cdot\underline{Q^T}$$
 \end{enumerate}
+This algorithm scales very well with the number of unknowns and also scales very well in memory. It is better parallelizable than LU factorization. In an further step fourier transform (DST) can be applied.
 \subsubsection{diagonalization using DST}
+
 \paragraph{row based matrix partitioning}
 \paragraph{column based matrix partitioning}
 \section{Implemented solution}
@@ -62,8 +64,8 @@ This and further information about the used supercomputer can be found at the NT
 
 For our solution we used following packages on kongull:
 \begin{itemize}
-\item intelcomp
-\item openmpi
+\item intelcomp13.0.1
+\item openmpi1.4.3-intel
 \end{itemize}
 \section{Results}
 
