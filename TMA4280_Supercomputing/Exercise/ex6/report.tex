@@ -29,7 +29,14 @@ The given poisson equation is an elliptic partial differential equation. The pro
 The problem should be discretized with (n+1) points in each spatial direction. The standard 5-point-stencil to discretize the Laplace operator $\bigtriangledown$ has to be used. To obtain a solution in $O(n\cdot log(n))$ the DST should be applied.
 \section{Solution strategies}
 \subsection{LU factorization}
+LU (lower upper) factorization decomposes a matrix in an upper and a lower triangular matrix. This can be done using Gaussian elimination. For symmetric matrizes this can also be done using the cholesky decomposition. The matrix decomposition follows following rule
+\begin{equation}
+A=LU
+\end{equation}
+where A is the original matrix, L the lower triangular matrix and U the upper triangular matrix.\\
+This solution strategy is not very usable as solver in parallel contexts. The sequential nature (pivoting, substitution, ...) makes ithard for parralelization.
 \subsection{cholesky factorization}
+
 \subsection{diagonalization}
 \subsubsection{diagonalization using DST}
 \paragraph{row based matrix partitioning}
