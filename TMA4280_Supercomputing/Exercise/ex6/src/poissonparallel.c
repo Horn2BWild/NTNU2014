@@ -225,6 +225,10 @@ int main(int argc, char **argv)
     int *displ;           // displacements
     int *scnt;            // send/receive count
 
+    static Real *z;
+
+#pragma omp threadprivate(z)
+
     /* the total number of grid points in each spatial direction is (n+1) */
     /* the total number of degrees-of-freedom in each spatial direction is (n-1) */
     /* this version requires n to be a power of 2 */
@@ -235,13 +239,14 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    double startTime = 0;
-    double endTime = 0;
-    startTime = WallTime();
-
     n  = atoi(argv[1]);
     m  = n-1;
     nn = 4*n;
+
+#pragma omp parallel
+    {
+        z = createRealArray (nn);
+    }
 
     //check for 2^k
     unsigned int tempn=(unsigned int)n;
@@ -283,6 +288,9 @@ int main(int argc, char **argv)
     //  fprintf(stdout, "step 1\n");
     init_app(argc, argv, &rank, &size);
 
+    double startTime = 0;
+    double endTime = 0;
+    startTime = WallTime();
 
     splitVector(m, size, &scnt, &displ);
 
@@ -385,17 +393,12 @@ int main(int argc, char **argv)
 transposeMPI(bt,b,m,rank,size, scnt, displ);
     // mergeAndPrintMpiMat(bt, size, rank, m, scnt, displ);
 
-#pragma omp parallel
+#pragma omp parallel for schedule(guided,1)
+    for (i=0; i < scnt[rank]; i++)
     {
-        Real *z;
-        z = createRealArray (nn);
-#pragma omp for schedule(guided,1)
-        for (i=0; i < scnt[rank]; i++)
-        {
-            fstinv_(bt[i], &n, z, &nn);
-        }
-        free(z);
+        fstinv_(bt[i], &n, z, &nn);
     }
+
  //  fprintf(stdout, "proc %d step 11\n", rank);
 #pragma omp parallel for schedule(guided,1) private(i)
     for (j=0; j < scnt[rank]; j++)
@@ -406,32 +409,21 @@ transposeMPI(bt,b,m,rank,size, scnt, displ);
         }
     }
    //      fprintf(stdout, "proc %d step 12\n", rank);
-#pragma omp parallel
+
+#pragma omp parallel for schedule(guided,1)
+    for (i=0; i < scnt[rank]; i++)
     {
-        Real *z;
-        z = createRealArray (nn);
-#pragma omp for schedule(guided,1)
-        for (i=0; i < scnt[rank]; i++)
-        {
-            fst_(bt[i], &n, z, &nn);
-        }
-        free(z);
+        fst_(bt[i], &n, z, &nn);
     }
 
  //  fprintf(stdout, "proc %d step 13\n", rank);
 
 transposeMPI(b,bt,m,rank,size, scnt, displ);
 
-#pragma omp parallel
+#pragma omp parallel for schedule(guided,1)
+    for (j=0; j < scnt[rank]; j++)
     {
-        Real *z;
-        z = createRealArray (nn);
-#pragma omp for schedule(guided,1)
-        for (j=0; j < scnt[rank]; j++)
-        {
-            fstinv_(b[j], &n, z, &nn);
-        }
-        free(z);
+        fstinv_(b[j], &n, z, &nn);
     }
   //    fprintf(stdout, "proc %d step 14\n", rank);
     umax = 0.0;
@@ -468,6 +460,12 @@ transposeMPI(b,bt,m,rank,size, scnt, displ);
         printf (" umax = %f \n",globalMax);
     #endif
     }
+
+    #pragma omp parallel
+    {
+        free(z);
+    }
+
     close_app();
     return EXIT_SUCCESS;
 }

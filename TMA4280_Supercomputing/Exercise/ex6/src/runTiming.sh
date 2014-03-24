@@ -7,7 +7,7 @@ MAXPROCESSES=3
 
 # args: mpiProcesses, ompThreads, problemSize
 function runParallel { 
-	OMP_NUM_THREADS=$2  mpiExec -np $1 timingTest/ex6parallel $3
+	OMP_NUM_THREADS=$2  mpiexec -np $1 timingTest/ex6parallel $3
 }
 
 function runTest1 {
