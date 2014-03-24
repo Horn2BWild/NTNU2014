@@ -2,8 +2,8 @@
 
 MAXPROBLEMSIZE_P1=4096
 MAXPROBLEMSIZE_P2=16384
-MAXTHREADS=4
-MAXPROCESSES=4
+MAXTHREADS=12
+MAXPROCESSES=36
 
 # args: mpiProcesses, ompThreads, problemSize
 function runParallel { 
@@ -37,9 +37,9 @@ function runTest3 {
 echo "# Timing test output is: numMpiProcess numOpenmpThreads problemSize time maxError"
 runTest1
 echo "# Constant number of MPI processes and OpenMP threads. 36 processes, 12 threads"
-# runTest2
+runTest2
 echo  "# Mixed vs single speedup test"
-# runTest3
+runTest3
 
 
 # echo "Done!"

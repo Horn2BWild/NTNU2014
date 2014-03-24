@@ -4,10 +4,10 @@
 #PBS -N poisson
 
 # Allocate two nodes with 12 processors from the default resources
-#PBS -lnodes=2:ppn=12:default
+#PBS -lnodes=36:ppn=12:default
 
 # Expect to run up to 5 minutes
-#PBS -lwalltime=00:05:00
+#PBS -lwalltime=00:30:00
 
 # Memory per process
 #PBS -lpmem=2000MB
@@ -22,11 +22,11 @@
 #PBS -j oe
 
 # Change directory to dir with the job script
-# cd ${PBS_O_WORKDIR}
+cd ${PBS_O_WORKDIR}
 
 # Load needed modules
-# module load intelcomp
-# module load openmpi/1.4.3-intel
+module load intelcomp
+module load openmpi/1.4.3-intel
 
 # Set thread affinity
 KMP_AFFINITY="granularity=fine,compact"
