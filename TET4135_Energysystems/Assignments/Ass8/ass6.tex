@@ -47,11 +47,24 @@ where
 \item $I$: annal payment cost
 \item $E$: annual energy production
 \end{itemize}
+\subsubsection{total cost}
+\begin{equation}
+k=d+f
+\end{equation}
+where
+\begin{itemize}
+\item $f$: investment costs per MWh
+\item $d$: operation costs per MWh
+\end{itemize}
 \subsection{total cost}
 \subsubsection{hydro power plant}
 $$\epsilon_{8\%,30}=\frac{0.08}{1-(1+0.08)^{-30}}=0.0888$$
+$$f=\frac{2300\,MNOK\cdot\epsilon_{8\%,30}}{600GWh}=340.505\,NOK/MWh$$
+$$k=25\,NOK/MWh+340.505\,NOK/MWh=365.51\,NOK/MWh$$
 \subsubsection{thermal power plant}
 $$\epsilon_{8\%,20}=\frac{0.08}{1-(1+0.08)^{-20}}=0.1019$$
+$$f=\frac{600\,MNOK\cdot\epsilon_{8\%,20}}{600GWh}=101,85\,NOK/MWh$$
+$$k=180\,NOK/MWh+101.85\,NOK/MWh=281.85\,NOK/MWh$$
 \subsection{impact of halved interest rate}
 \subsubsection{hydro power plant}
 \subsubsection{thermal power plant}
