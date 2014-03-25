@@ -56,6 +56,17 @@ where
 \item $f$: investment costs per MWh
 \item $d$: operation costs per MWh
 \end{itemize}
+\subsubsection{salvage value}
+\begin{equation}
+F_S=\bigg(F\cdot\frac{T_{lifetime}-T_{current}}{T_{lifetime}}\bigg)\cdot\bigg(1+\frac{r}{100}\bigg)^{-T_{current}}
+\end{equation}
+where
+\begin{itemize}
+\item $F:$ initial costs
+\item $T_{lifetime}$: total economic lifetime of plant
+\item $T_{current}$: time at which the salvage factor is wanted
+\item $r$: interest rate (\%)
+\end{itemize}
 \subsection{total cost}
 \subsubsection{hydro power plant}
 $$\epsilon_{8\%,30}=\frac{0.08}{1-(1+0.08)^{-30}}=0.0888$$
@@ -94,9 +105,13 @@ $$k=180\,NOK/MWh+83.86\,NOK/MWh=263.86\,NOK/MWh$$
 $$\epsilon_{4\%,40}=\frac{0.04}{1-(1+0.04)^{-40}}=0.0505$$
 $$f=\frac{600\,MNOK\cdot\epsilon_{4\%,40}}{600GWh}=50.5\,NOK/MWh$$
 $$k=180\,NOK/MWh+50.5\,NOK/MWh=230.5\,NOK/MWh$$
+\subsubsection{comments}
+The change of annual cost at hydro plants when doubling the lifetime changes not significant, but differs very much when changing the interest rate. Because of large operational costs at thermal power plant the changes in interest rate or lifetime are not significant.
 \subsection{salvage value}
-\subsubsection{hydro power plant}
-\subsubsection{thermal power plant}
+\paragraph{interest rate: 8\%\\}
+$$F_{S,8\%}=\bigg(2300\,MNOK\cdot\frac{60-30}{60}\bigg)\cdot\bigg(1+\frac{8}{100}\bigg)^{-30}=114.284\,MNOK$$
+\paragraph{interest rate: 4\%\\}
+$$F_{S,4\%}=\bigg(2300\,MNOK\cdot\frac{60-30}{60}\bigg)\cdot\bigg(1+\frac{4}{100}\bigg)^{-30}=354.566\,MNOK$$
 \section{Assignment 2}
 \subsection{annuity}
 \subsection{greatest interest rate}
