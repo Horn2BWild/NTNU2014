@@ -33,7 +33,7 @@ Lab group:
 \item Milan Stojkovic
 \item Andreas Ulvoen\\[3cm]
 \end{itemize}
-Report delivered: \\[6cm]
+Report delivered: 25.03.2014\\[6cm]
 FACULTY OF INFORMATION TECHNOLOGY, MATHEMATICS AND ELECTRICAL ENGINEERING\\
 NORWEGIAN UNIVERSITY OF SCIENCE AND TECHNOLOGY
 \end{center}
@@ -69,7 +69,8 @@ where
 this can be obtained easily, when the diameter is smaller than the wavelength $\lambda$. 
 \item spectral behaviour
 \end{itemize}
-
+\subsection{intensity stereophony}
+In this case one signal is recorded and played on both sound sources, but with time difference. The position of the virtual sound source moves then in direction of the earlier sound source. Further information can be found in the lecture notes\footnote{P. Svensson, \textit{Lecture Notes on TTT4170}, 2014, chapter hearing}.
 \section{Measurements}
 \subsection{Equipment}
 For this laboratory exercise following equipment was used for the measurements:
@@ -234,6 +235,18 @@ In this case two impulse cases for the two ear signals are given. The incidence 
 $$\Delta t=x_2-x_1=25ms-13ms=12ms$$
 With using formula 1, the diameter can be calculated with
 $$d=2a=\frac{2\cdot\Delta t\cdot c}{\phi+sin(\phi)}=8.04cm$$
+\subsubsection{intensity stereo}
+A single loudspeaker is assumed for this calculation. The listener appears at an angle of $\phi=30^\circ$, the two ears have a distance of 25cm. The time difference between the two signals can be calculated using equation 1:
+$$\Delta t=\frac{0.25\cdot(30^\circ+sin(30^\circ)}{343\frac{m}{s}}=746\mu s$$
+In a further step, two loudspeakers for the two ears can be assumed. The amplitude difference can be described as $S_L=X\cdot S_R$. The sound pressure can then be described as
+\begin{equation}
+p_L=\big(S_L+e^{-jk\Delta r}S_R\big)\frac{e^{-jkr_0}}{r_0}
+\end{equation}
+as well as 
+\begin{equation}
+p_R=\big(e^{-jk\Delta r}S_L+S_R\big)\frac{e^{-jkr_0}}{r_0}
+\end{equation}
+This equations can be found in the lecture notes\footnote{P. Svensson, \textit{Lecture Notes on TTT4170}, 2014, chapter sound reproduction}.
 \end{document}
 
 
