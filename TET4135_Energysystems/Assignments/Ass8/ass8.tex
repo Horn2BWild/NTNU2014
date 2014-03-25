@@ -1,0 +1,132 @@
+\documentclass{article}
+\usepackage{a4wide}
+\usepackage{german}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{dsfont}
+%\usepackage[dvips]{epsfig}
+%\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{nomencl}
+\usepackage{caption}
+\usepackage[pdftex]{graphicx}
+
+\pagestyle{fancy}
+\lhead{\footnotesize \parbox{11cm}{Andreas Johann H\"ormer (753179)}}
+\rhead{\footnotesize {Assignment 8}}
+\chead{\footnotesize {TET4135}}
+
+\begin{document}
+\section{Assignment 1}
+\subsection{formulary}
+\subsubsection{annuity}
+\begin{equation}
+\epsilon_{r,n}=\frac{r}{1-(1+r)^{-n}}
+\end{equation}
+where
+\begin{itemize}
+\item $n$: economic lifetime (years)
+\item $r$: interest rate ($\frac{p}{100}$)
+\end{itemize}
+\subsubsection{annual payment of initial cost (t=0)}
+\begin{equation}
+I=\epsilon_{r,n}\cdot K_0
+\end{equation}
+where
+\begin{itemize}
+\item $\epsilon_{r,n}$: annuity
+\item $K_0$: initial cost
+\end{itemize}
+\subsubsection{investment costs per MWh}
+\begin{equation}
+f=\frac{I}{E}
+\end{equation}
+where
+\begin{itemize}
+\item $I$: annal payment cost
+\item $E$: annual energy production
+\end{itemize}
+\subsubsection{total cost}
+\begin{equation}
+k=d+f
+\end{equation}
+where
+\begin{itemize}
+\item $f$: investment costs per MWh
+\item $d$: operation costs per MWh
+\end{itemize}
+\subsubsection{salvage value}
+\begin{equation}
+F_S=\bigg(F\cdot\frac{T_{lifetime}-T_{current}}{T_{lifetime}}\bigg)\cdot\bigg(1+\frac{r}{100}\bigg)^{-T_{current}}
+\end{equation}
+where
+\begin{itemize}
+\item $F:$ initial costs
+\item $T_{lifetime}$: total economic lifetime of plant
+\item $T_{current}$: time at which the salvage factor is wanted
+\item $r$: interest rate (\%)
+\end{itemize}
+\subsection{total cost}
+\subsubsection{hydro power plant}
+$$\epsilon_{8\%,30}=\frac{0.08}{1-(1+0.08)^{-30}}=0.0888$$
+$$f=\frac{2300\,MNOK\cdot\epsilon_{8\%,30}}{600GWh}=340.505\,NOK/MWh$$
+$$k=25\,NOK/MWh+340.505\,NOK/MWh=365.51\,NOK/MWh$$
+\subsubsection{thermal power plant}
+$$\epsilon_{8\%,20}=\frac{0.08}{1-(1+0.08)^{-20}}=0.1019$$
+$$f=\frac{600\,MNOK\cdot\epsilon_{8\%,20}}{600GWh}=101.85\,NOK/MWh$$
+$$k=180\,NOK/MWh+101.85\,NOK/MWh=281.85\,NOK/MWh$$
+\subsection{impact of halved interest rate}
+interest rate: 4\%
+\subsubsection{hydro power plant}
+$$\epsilon_{4\%,30}=\frac{0.04}{1-(1+0.04)^{-30}}=0.0578$$
+$$f=\frac{2300\,MNOK\cdot\epsilon_{4\%,30}}{600GWh}=221.68\,NOK/MWh$$
+$$k=25\,NOK/MWh+221.68\,NOK/MWh=246.68\,NOK/MWh$$
+\subsubsection{thermal power plant}
+$$\epsilon_{4\%,20}=\frac{0.04}{1-(1+0.04)^{-20}}=0.0736$$
+$$f=\frac{600\,MNOK\cdot\epsilon_{4\%,20}}{600GWh}=73.58\,NOK/MWh$$
+$$k=180\,NOK/MWh+73.58\,NOK/MWh=253.58\,NOK/MWh$$
+\subsection{impact of doubled economic life}
+\subsubsection{hydro power plant}
+\paragraph{interest rate: 8\%\\}
+$$\epsilon_{8\%,60}=\frac{0.08}{1-(1+0.08)^{-60}}=0.0808$$
+$$f=\frac{2300\,MNOK\cdot\epsilon_{8\%,60}}{600GWh}=309.73\,NOK/MWh$$
+$$k=25\,NOK/MWh+309.73\,NOK/MWh=334.73\,NOK/MWh$$
+\paragraph{interest rate: 4\%\\}
+$$\epsilon_{4\%,60}=\frac{0.04}{1-(1+0.04)^{-60}}=0.0442$$
+$$f=\frac{2300\,MNOK\cdot\epsilon_{4\%,60}}{600GWh}=169.43\,NOK/MWh$$
+$$k=25\,NOK/MWh+169.43\,NOK/MWh=194.43\,NOK/MWh$$
+\subsubsection{thermal power plant}
+\paragraph{interest rate: 8\%\\}
+$$\epsilon_{8\%,40}=\frac{0.08}{1-(1+0.08)^{-40}}=0.0839$$
+$$f=\frac{600\,MNOK\cdot\epsilon_{8\%,40}}{600GWh}=83.86\,NOK/MWh$$
+$$k=180\,NOK/MWh+83.86\,NOK/MWh=263.86\,NOK/MWh$$
+\paragraph{interest rate: 4\%\\}
+$$\epsilon_{4\%,40}=\frac{0.04}{1-(1+0.04)^{-40}}=0.0505$$
+$$f=\frac{600\,MNOK\cdot\epsilon_{4\%,40}}{600GWh}=50.5\,NOK/MWh$$
+$$k=180\,NOK/MWh+50.5\,NOK/MWh=230.5\,NOK/MWh$$
+\subsubsection{comments}
+The change of annual cost at hydro plants when doubling the lifetime changes not significant, but differs very much when changing the interest rate. Because of large operational costs at thermal power plant the changes in interest rate or lifetime are not significant.
+\subsection{salvage value}
+\paragraph{interest rate: 8\%\\}
+$$F_{S,8\%}=\bigg(2300\,MNOK\cdot\frac{60-30}{60}\bigg)\cdot\bigg(1+\frac{8}{100}\bigg)^{-30}=114.284\,MNOK$$
+\paragraph{interest rate: 4\%\\}
+$$F_{S,4\%}=\bigg(2300\,MNOK\cdot\frac{60-30}{60}\bigg)\cdot\bigg(1+\frac{4}{100}\bigg)^{-30}=354.566\,MNOK$$
+\newpage
+\section{Assignment 2}
+\subsection{annuity}
+$$\epsilon_{6\%,20}=\frac{0.06}{1-(1+0.06)^{-20}}=0.0872$$
+$$I=\epsilon_{6\%,20}\cdot 5\,MNOK=435923\,NOK/yr$$
+\subsection{greatest interest rate}
+$$r=\frac{67}{5}\cdot\bigg(1-\big(1+\frac{r}{100}\big)^{-20}\bigg)$$
+\begin{enumerate}
+\item $r=5\%$: $r=\frac{67}{5}\cdot\bigg(1-\big(1+\frac{5}{100}\big)^{-20}\bigg)=8.35\%$
+\item $r=8.35\%$: $r=11\%$
+\item $r=11\%$: $r=11.74\%$
+\item $r=11.74\%$: $r=11.96\%$
+\item $r=11.96\%$: $r=12.0108\%$
+\item $r=12.01\%$: $r=12.0135\%$
+\item $r=12.0135\%$: $r=12.014\%$
+\end{enumerate}
+An interest of about 12.014\%\, is the border between profit and loss.
+\end{document}
