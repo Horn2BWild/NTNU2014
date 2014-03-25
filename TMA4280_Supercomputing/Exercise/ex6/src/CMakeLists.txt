@@ -1,5 +1,15 @@
+IF(APPLE)
+	SET(CMAKE_C_COMPILER gcc )
+ENDIF(APPLE)
+
 project(poisson-example)
 cmake_minimum_required(VERSION 2.6)
+
+option(TIMING_TEST "Set to run timing tests" OFF)
+
+if(TIMING_TEST)
+  add_definitions(-DTIMING_TEST)
+endif()
 
 add_subdirectory(../common common)
 

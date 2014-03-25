@@ -56,7 +56,7 @@ main(int argc, char **argv )
   }
   for (j=0; j < m; j++) {
     for (i=0; i < m; i++) {
-      b[j][i] = h*h;
+      b[j][i] = h*h*  5*M_PI*M_PI*(sin(M_PI*(j+1)*h)*sin(2*M_PI*(i+1)*h));
     }
   }
   for (j=0; j < m; j++) {
@@ -88,10 +88,11 @@ main(int argc, char **argv )
   umax = 0.0;
   for (j=0; j < m; j++) {
     for (i=0; i < m; i++) {
-      if (b[j][i] > umax) umax = b[j][i];
+      double value = fabs(b[j][i] - sin(M_PI * (j+1)*h)*sin(2*M_PI*(i+1)*h));
+      if (value > umax) umax = value;
     }
   }
-  printf (" umax = %e \n",umax);
+  printf (" umax = %f \n",umax);
 }
 
 void transpose (Real **bt, Real **b, int m)

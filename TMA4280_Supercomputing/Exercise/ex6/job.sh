@@ -4,10 +4,10 @@
 #PBS -N poisson
 
 # Allocate two nodes with 12 processors from the default resources
-#PBS -lnodes=2:ppn=12:default
+#PBS -lnodes=3:ppn=12:default
 
 # Expect to run up to 5 minutes
-#PBS -lwalltime=00:05:00
+#PBS -lwalltime=00:30:00
 
 # Memory per process
 #PBS -lpmem=2000MB
@@ -25,11 +25,14 @@
 cd ${PBS_O_WORKDIR}
 
 # Load needed modules
-module load intelcomp
+module load intelcomp/13.0.1
 module load openmpi/1.4.3-intel
 
 # Set thread affinity
 KMP_AFFINITY="granularity=fine,compact"
 
 # Run with 8 MPI processes, each with 3 threads
-OMP_NUM_THREADS=3 mpirun -npernode 4 ex6 myparams
+# OMP_NUM_THREADS=3 mpirun -npernode 4 ex6 myparams
+cd src
+chmod +x runTiming.sh
+./runTiming.sh
