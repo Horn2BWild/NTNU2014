@@ -2,6 +2,10 @@ function [] = genGraphs()
 %GENGRAPHCS Summary of this function goes here
 %   Detailed explanation goes here
 
+baseline = dlmread('proc1Poisson.txt');
+bsize = baseline(:,3);
+btime = baseline(:,4);
+
 data = dlmread('data.txt');
 
 processes = data(:,1);
@@ -14,7 +18,7 @@ error = data(:,5);
 figure, loglog(uniqueSizes, avgError, uniqueSizes, 1./(uniqueSizes).^2);
 
 [uniqueSizes, minTime] = minTimes(size, time);
-figure, plot(uniqueSizes, minTime);
+figure, plot(bsize, btime, uniqueSizes, minTime);
 
 [uniqueSizes, optProc, optThrd] = optimalParallel(size, processes, threads, time);
 figure, plot(uniqueSizes, optProc, uniqueSizes, optThrd);

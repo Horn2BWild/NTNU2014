@@ -126,6 +126,8 @@ For our solution we used following packages on kongull:
 		e = \Theta(\frac{1}{n^2})
 	\end{equation}
 
+	We plot our error against this expected error in Figure~\ref{fig:errorGraph}. We generated this graph using the formula from \ref{eqn:error} and by running our program 10 times for each problem size. In each run we found the maximum error in any grid location and found the average max error over the 10 runs. The two lines are parallel so they must only differ by a constant factor. This is the result we predicted so the program must be correct.
+
 	\begin{figure}[htbp]
 	\begin{center}
 	\includegraphics[width=15cm,keepaspectratio=true]{figs/errorGraph}
@@ -134,25 +136,32 @@ For our solution we used following packages on kongull:
 	\end{center}
 	\end{figure}
 
+\subsection{Execution Times}
+
 	\begin{figure}[htbp]
 	\begin{center}
 	\includegraphics[width=15cm,keepaspectratio=true]{figs/executionTime}
-	\caption{Something insightful.}
-	\label{fig:errorGraph}
+	\caption{The minimum execution time of each problem size. See Figure~\ref{fig:threadsProcesses} for a graph of the number of OpenMP threads and MPI processes that were used to achieve the minimum execution times.}
+	\label{fig:executionTime}
 	\end{center}
 	\end{figure}
+
+	Figure~\ref{fig:executionTime} compares the time the fastest parallelized version where $p=36$ with the baseline $p=1$. Using 36 processors has some overhead to synchronize the processors and share data so for small problem sizes the execution time is slower. As the problem size grows, this overhead become very small compared to the processing required to solve the poisson problem, so using 36 processors performs much better. The point where using 36 processors becomes faster than a single processor is very close to $n=36$. This represents the point where the time saved in overhead to coordinate 36 processors is equal to the time saved being able to processes data faster. When $n$ is sufficiently large, both the single processor and 36 processor version experience exponential growth in execution time.  
+	
+
+\section{Analysis}
 
 	\begin{figure}[htbp]
 	\begin{center}
 	\includegraphics[width=15cm,keepaspectratio=true]{figs/threadsProcesses}
-	\caption{Something insightful.}
-	\label{fig:errorGraph}
+	\caption{The number MPI processes and OpenMP threads per process that produced the minimum execution time for each problem size. When the problem size is sufficiently large, using purely MPI produces the fastest results.}
+	\label{fig:threadsProcesses}
 	\end{center}
 	\end{figure}
 
-	
+	In Figure~\ref{fig:threadsProcesses} we can see that for larger problem sizes, using mostly or completely MPI results in faster execution times. The main reason for this is that when we increase the number of MPI processes we are increasing the parallelization of both the fst steps and the transpose step. When we increase the number of OpenMP threads we are only parallelizing the fst step. When there are more MPI processes each process has to send and receive a much smaller piece of data than if there are more OpenMP threads. 
 
-\section{Analysis}
+
 %\begin{figure}[htbp]
 %\begin{center}
 %\includegraphics[width=15cm,keepaspectratio=true]{angles}
