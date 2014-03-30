@@ -63,8 +63,9 @@ LU (lower upper) factorization decomposes a matrix in an upper and a lower trian
 A=LU
 \end{equation}
 where A is the original matrix, L the lower triangular matrix and U the upper triangular matrix.\\
-This solution strategy is not very usable as solver in parallel contexts. The sequential nature (pivoting, substitution, ...) makes ithard for parralelization.
-
+This solution strategy is not very usable as solver in parallel contexts. The sequential nature (pivoting, substitution, ...) makes it hard for parralelization. The LU factorization needs $\mathcal{O}(n^4)$ for runtime and $\mathcal{O}(n^3)$ for memory when the matrix is sparsed, as well as $\mathcal{O}(n^6)$ Operations and $\mathcal{O}(n^4)$ memory when the matrix is full.
+%Runtime O(n^4) sparsed, O(n^6) full
+%Memory O(n^3) sparsed, O(n^4) full
 \subsection{diagonalization}
 The diagonalization can be done in three steps:
 \begin{enumerate}
@@ -72,7 +73,9 @@ The diagonalization can be done in three steps:
 \item $$\tilde{x_{ij}}=\frac{\tilde{b_{ij}}}{\lambda_i+\lambda_j}\;for\;1\leq i,j \leq N$$
 \item $$\underline{X}=\underline{Q}\cdot\underline{\tilde{X}}\cdot\underline{Q^T}$$
 \end{enumerate}
-This algorithm scales very well with the number of unknowns and also scales very well in memory. It is better parallelizable than LU factorization. In an further step fourier transform (DST) can be applied.
+This algorithm scales very well with the number of unknowns and also scales very well in memory. It is better parallelizable than LU factorization. In an further step fourier transform (DST) can be applied. The algorithm has $\mathcal{O}(n^3)$ operations and needs $\mathcal{O}(n^2)$ memory.
+%O(n^3) operations
+%O(n^2) memory
 \subsubsection{diagonalization using DST}
 For this diagonalization technique a periodic function with period $2\pi$ is sampled at equidistant points. The function has to be odd and discretized on a equidistant mesh between 0 and $\pi$.The diagonalization can be done in the three following steps:
 \begin{enumerate}
@@ -137,7 +140,8 @@ For our solution we used following packages on kongull:
 %\end{center}
 %\end{figure}
 \section{Possible optimizations}
-
+%parallel fst
+%not much possibilities
 \newpage
 \section{Conclusion}
 
