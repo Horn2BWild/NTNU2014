@@ -11,6 +11,11 @@
 \usepackage{nomencl}
 \usepackage[pdftex]{graphicx}
 
+\usepackage{listings} 
+\lstset{numbers=left, numberstyle=\tiny, numbersep=5pt} 
+\lstset{language=C} 
+ \lstset{basicstyle=\small}
+
 \pagestyle{fancy}
 \lhead{\footnotesize \parbox{11cm}{Andreas Johann H\"ormer (753179), Daniel Tormoen}}
 \rhead{\footnotesize {Assignment 6}}
@@ -83,10 +88,9 @@ For this diagonalization technique a periodic function with period $2\pi$ is sam
 \item $$ \tilde{x_{ij}}=\frac{\tilde{b_{ij}}}{\lambda_i+\lambda_j}\;for\;1\leq i,j\leq N$$
 \item $$ \underline{X}=\underline{S^{-1}}\cdot\big(\underline{S}\cdot(\underline{\tilde{X^T}})\big)^T$$
 \end{enumerate}
-\paragraph{row based matrix partitioning}
-\paragraph{column based matrix partitioning}
 \section{Implemented solution}
 \subsection{matrix transpose}
+The matrix is transposed using the message passing interface. This is done using MPI\_Alltoallv(). A code sample for doing this can be seen in section \ref{matrixtranspose}.
 \section{Environment}
 \subsection{Supercomputer}
 The used Kongull cluster is a CentOS 5.3 Linux cluster. The cluster has 1 login, 4 I/O and 93 compute nodes. Each node is equipped with 2x 6-core processors, with 6x 512KiB L1 cache and a common 6 MiB L3-cache. Kongull has 96 compute nodes and 1152 cores in total. All of the compute nodes are HP DL165 G6 servers, with
@@ -179,4 +183,32 @@ This optimization can be done in a similiar way like the rectangular matrices. T
 
 \section{Appendix}
 \subsection{Code samples}
+\subsubsection{Matrix transpose\label{matrixtranspose}}
+\begin{lstlisting}[caption=Matrix transposition using MPI]{Matrix transpose}
+    for(rowcnt=0; rowcnt<m; rowcnt++)
+    {
+        for(columncnt=0; columncnt<scnt[rank]; columncnt++)
+        {
+            sendvector[vectorposition]=b[columncnt][rowcnt];
+            vectorposition++;
+        }
+    }
+    MPI_Alltoallv (
+        sendvector,	MPIscnt, MPIdispl, MPI_DOUBLE, receivevector,
+        MPIscnt, MPIdispl, MPI_DOUBLE, MPI_COMM_WORLD);
+  for (proccnt = 0; proccnt < size; ++proccnt)
+    {
+        for(columncnt=0; columncnt<scnt[rank];columncnt++)
+        {
+            for (rowcnt = displ[proccnt]; 
+		rowcnt < displ[proccnt] + scnt[proccnt]; ++rowcnt)
+            {
+
+                bt[columncnt][rowcnt]=receivevector[vectorposition];
+                vectorposition++;
+            }
+        }
+    }
+\end{lstlisting}
+Description: hmmm
 \end{document}
