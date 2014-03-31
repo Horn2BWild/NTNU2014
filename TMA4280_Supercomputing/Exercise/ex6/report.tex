@@ -139,7 +139,39 @@ For our solution we used following packages on kongull:
 %\label{fig:angles}
 %\end{center}
 %\end{figure}
+
+
+
 \section{Possible optimizations}
+\subsection{parallel FST}
+In our algorithm the FST is serial. This could be a possible bottleneck.
+\subsection{rectangular matrix}
+Our algorithm is designed for handling squared matrizes with zero-boundary. For handling rectangular matrices this can be done with following:
+\begin{equation}
+-U_0+2U_1-U_2=h^2f_1
+\end{equation}
+When moving $U_0$ to the other side and writing in a general form this changes to
+\begin{equation}
+-U_{N-2}+2U_{N-1}-U_N=h^2f_{N-1}
+\end{equation}
+For rectangular matrices the sizing in x- and y-direction is different. So the multiplication is done with two different variables, $h_x$ and $h_y$.
+\begin{equation}
+\frac{1}{h_x^2}A_DU+\frac{1}{h_y^2}UA_D=F
+\end{equation}
+The matrix which is added on the right side looks then
+$$
+\begin{bmatrix}
+U_{1,1} & U_{2,1} & 0 & ... & 0 & U_{N_x-1,1} & U_{N_x,1} \\
+U_{1,2} & 0 & ... & ... & ... & 0 & U_{N_x,2} \\
+... & ... & ... & ... &... & ... & ... \\
+U_{1,N_y} & U_{2,N_y} & 0 & ... & 0 & U_{N_x-1,N_y} & U_{N_x,N_y} 
+\end{bmatrix}
+$$
+\subsection{non-homogeneus boundary conditions}
+This optimization can be done in a similiar way like the rectangular matrices. The boundary has to be moved to the right side which looks like the rectangular matrix. The calculation can be done using following formula
+\begin{equation}
+\frac{G_{i,j}}{\frac{1}{\sqrt{h_x^2}}\lambda_i+\frac{1}{\sqrt{h_x^2}}\lambda_j}
+\end{equation}
 %parallel fst
 %not much possibilities
 \newpage
