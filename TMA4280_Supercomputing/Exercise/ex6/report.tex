@@ -210,5 +210,11 @@ This optimization can be done in a similiar way like the rectangular matrices. T
         }
     }
 \end{lstlisting}
-Description: hmmm
+Description:
+\begin{itemize}
+\item line 1-8: generating send vector from matrix
+\item line 9-11: send and receive vector to/from distributed system\\
+For this MPI\_Alltoallv() was used. This function sends ......
+\item line 12-24: generating transposed matrix from received vector
+\end{itemize}
 \end{document}
