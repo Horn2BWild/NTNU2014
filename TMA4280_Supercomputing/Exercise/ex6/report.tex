@@ -48,7 +48,7 @@ NORWEGIAN UNIVERSITY OF SCIENCE AND TECHNOLOGY
 \newpage
 \section*{Summary}
 \thispagestyle{empty}
-
+Matrix dimensions can get very large, so the number of matrix elements can increase quickly. So working with matrices is a perfect way to use distributed computing. In this task the matrix is transposed in the distributed system using MPI. The problem solved is a two dimensional poisson problem. The solution is done for rectangular matrices with homogeneous boundaries. As solution method diagonalization with FST is used.
 \newpage
 \setcounter{page}{1}
 \section{Problem description}
@@ -181,7 +181,7 @@ For our solution we used following packages on kongull:
 
 \section{Possible optimizations}
 \subsection{parallel FST}
-In our algorithm the FST is serial. This could be a possible bottleneck.
+In our algorithm the FST is serial. This could be a possible bottleneck. Parallelizing this FST-algorithm may increase the performance.
 \subsection{rectangular matrix}
 Our algorithm is designed for handling squared matrizes with zero-boundary. For handling rectangular matrices this can be done with following:
 \begin{equation}
@@ -213,6 +213,7 @@ This optimization can be done in a similiar way like the rectangular matrices. T
 %not much possibilities
 \newpage
 \section{Conclusion}
+In this exercise an implementation of a two dimensional poisson solver was done. The method used is diagonalization using FST with a runtime of RUNTIME????. The algorithm is parallelized in a way, that the transpose of the matrix is done distributed using MPI. The implemented algorithm is considered to use squared matrizes with homogeneous borders. A theoretical analysis of a way how to change the algorithm to use rectangular and non-homogeneous matrices was done.
 
 \section{Appendix}
 \subsection{Code samples}
@@ -243,5 +244,11 @@ This optimization can be done in a similiar way like the rectangular matrices. T
         }
     }
 \end{lstlisting}
-Description: hmmm
+Description:
+\begin{itemize}
+\item line 1-8: generating send vector from matrix
+\item line 9-11: send and receive vector to/from distributed system\\
+For this MPI\_Alltoallv() was used. This function sends ......
+\item line 12-24: generating transposed matrix from received vector
+\end{itemize}
 \end{document}
