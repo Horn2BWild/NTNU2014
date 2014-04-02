@@ -148,7 +148,7 @@ For our solution we used following packages on kongull:
 
 \section{Possible optimizations}
 \subsection{parallel FST}
-In our algorithm the FST is serial. This could be a possible bottleneck.
+In our algorithm the FST is serial. This could be a possible bottleneck. Parallelizing this FST-algorithm may increase the performance.
 \subsection{rectangular matrix}
 Our algorithm is designed for handling squared matrizes with zero-boundary. For handling rectangular matrices this can be done with following:
 \begin{equation}
@@ -180,6 +180,7 @@ This optimization can be done in a similiar way like the rectangular matrices. T
 %not much possibilities
 \newpage
 \section{Conclusion}
+In this exercise an implementation of a two dimensional poisson solver was done. The method used is diagonalization using FST with a runtime of RUNTIME????. The algorithm is parallelized in a way, that the transpose of the matrix is done distributed using MPI. The implemented algorithm is considered to use squared matrizes with homogeneous borders. A theoretical analysis of a way how to change the algorithm to use rectangular and non-homogeneous matrices was done.
 
 \section{Appendix}
 \subsection{Code samples}
