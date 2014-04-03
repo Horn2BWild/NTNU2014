@@ -88,7 +88,7 @@ For this diagonalization technique a periodic function with period $2\pi$ is sam
 \item $$ \tilde{x_{ij}}=\frac{\tilde{b_{ij}}}{\lambda_i+\lambda_j}\;for\;1\leq i,j\leq N$$
 \item $$ \underline{X}=\underline{S^{-1}}\cdot\big(\underline{S}\cdot(\underline{\tilde{X^T}})\big)^T$$
 \end{enumerate}
-The diagonalization with discrete sine transform uses $\mathcal{O}(n^2\cdot log(n))$ runtime.
+The diagonalization with discrete sine transform uses $\mathcal{O}(n^2\cdot log(n))$ runtime and needs $\mathcal{O}(n^2)$ memory..
 \section{Implemented solution}
 \subsection{matrix transpose}
 The matrix is transposed using the message passing interface. This is done using MPI\_Alltoallv(). A code sample for doing this can be seen in section \ref{matrixtranspose}.
