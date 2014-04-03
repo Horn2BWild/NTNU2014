@@ -97,7 +97,7 @@ The diagonalization with discrete sine transform uses $\mathcal{O}(n^2\cdot log(
 	The matrix is transposed using the message passing interface. This is done using MPI\_Alltoallv(). A code sample for doing this can be seen in section \ref{matrixtranspose}. Each process knows the number of columns in each other process. We must send each other processes as many rows in the sending matrix as the receiving matrix has columns. To do this we reorder the column major data in each process into a row major form to make sending data easier. This makes it so the data that will be sent to each process is located sequentially and we can complete the transpose with only one call to MPI\_Alltoallv(). Once each process receives this data it must be transformed to column major form once again.
 
 \subsection{Parallel FST}
-	We parallelized FST using OpenMP. In section \ref{sub:fst} we show the code apply the FST function on each column of $b$. The Fortran code needs to be given a preallocated buffer so we also declare a thread-private buffer $z$ that can be reused each time we call FST or inverse FST in an OpenMP parallel for loop without having to worry about two threads reusing the same buffer.
+	We parallelized FST using OpenMP. In section \ref{sub:fst} we show the code apply the FST function on each column of $b$. The Fortran code needs to be given a preallocated buffer so we also declare a thread-private buffer $z$ that can be reused each time we call FST or inverse FST in an OpenMP parallel for loop without having to worry about two threads reusing the same buffer. The inverse FST function is implemented in the same way.
 
 \section{Environment}
 \subsection{Supercomputer}
@@ -256,12 +256,12 @@ Description:
 \begin{itemize}
 \item line 1-8: generating send vector from matrix
 \item line 9-11: send and receive vector to/from distributed system\\
-For this MPI\_Alltoallv() was used. This function sends ......
+For this MPI\_Alltoallv() was used. This function splits the data from each process over each of the processes so that after the call each process has the information needed to complete the transpose, although it is not in column major form.
 \item line 12-24: generating transposed matrix from received vector
 \end{itemize}
 
 \subsubsection{FST Parallelization \label{sub:fst}}
-\begin{lstlisting}[caption=Parallelizing FST function]{FST}
+\begin{lstlisting}[caption=Parallelizing the FST function]{FST}
 int nn = 4*n;
 static Real *z;
 #pragma omp threadprivate(z)
