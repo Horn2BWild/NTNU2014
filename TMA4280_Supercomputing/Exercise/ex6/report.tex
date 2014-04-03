@@ -88,6 +88,7 @@ For this diagonalization technique a periodic function with period $2\pi$ is sam
 \item $$ \tilde{x_{ij}}=\frac{\tilde{b_{ij}}}{\lambda_i+\lambda_j}\;for\;1\leq i,j\leq N$$
 \item $$ \underline{X}=\underline{S^{-1}}\cdot\big(\underline{S}\cdot(\underline{\tilde{X^T}})\big)^T$$
 \end{enumerate}
+The diagonalization with discrete sine transform uses $\mathcal{O}(n^2\cdot log(n))$ runtime.
 \section{Implemented solution}
 \subsection{matrix transpose}
 The matrix is transposed using the message passing interface. This is done using MPI\_Alltoallv(). A code sample for doing this can be seen in section \ref{matrixtranspose}.
@@ -213,7 +214,7 @@ This optimization can be done in a similiar way like the rectangular matrices. T
 %not much possibilities
 \newpage
 \section{Conclusion}
-In this exercise an implementation of a two dimensional poisson solver was done. The method used is diagonalization using FST with a runtime of RUNTIME????. The algorithm is parallelized in a way, that the transpose of the matrix is done distributed using MPI. The implemented algorithm is considered to use squared matrizes with homogeneous borders. A theoretical analysis of a way how to change the algorithm to use rectangular and non-homogeneous matrices was done.
+In this exercise an implementation of a two dimensional poisson solver was done. The method used is diagonalization using FST with a runtime of $\mathcal{O}(n^2\cdot log(n))$. The algorithm is parallelized in a way, that the transpose of the matrix is done distributed using MPI. The implemented algorithm is considered to use squared matrizes with homogeneous borders. A theoretical analysis of a way how to change the algorithm to use rectangular and non-homogeneous matrices was done.
 
 \section{Appendix}
 \subsection{Code samples}
