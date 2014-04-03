@@ -350,16 +350,10 @@ int main(int argc, char **argv)
 
 
     //     fprintf(stdout, "step 5\n");
-#pragma omp parallel
+#pragma omp parallel for schedule(guided,1)
+    for (j=0; j < scnt[rank]; j++)
     {
-        Real *z;
-        z = createRealArray (nn);
-#pragma omp for schedule(guided,1)
-        for (j=0; j < scnt[rank]; j++)
-        {
-            fst_(b[j], &n, z, &nn);
-        }
-        free(z);
+        fst_(b[j], &n, z, &nn);
     }
     //  fprintf(stdout, "step 6\n");
 #if DEBUG_TESTMATRIX

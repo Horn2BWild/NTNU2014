@@ -2,7 +2,7 @@ function [  ] = genSpeedUp( )
 %GENSPEEDUP Summary of this function goes here
 %   Detailed explanation goes here
 
-baseline = dlmread('proc1Poisson.txt');
+baseline = dlmread('varying.txt');
 bsize = baseline(:,3);
 btime = baseline(:,4);
 
