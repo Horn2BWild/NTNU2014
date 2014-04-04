@@ -153,8 +153,6 @@ For our solution we used following packages on kongull:
 \end{itemize}
 \section{Results}
 
-\subsection{Execution Times}
-
 	\begin{figure}[htbp]
 	\begin{center}
 	\includegraphics[width=15cm,keepaspectratio=true]{figs/executionTime}
@@ -163,12 +161,10 @@ For our solution we used following packages on kongull:
 	\end{center}
 	\end{figure}
 
-	
+\subsection{Execution Times}
 
 	Figure~\ref{fig:executionTime} compares the time the fastest parallelized version where $p=36$ with the baseline $p=1$. Using 36 processors has some overhead to synchronize the processors and share data so for small problem sizes the execution time is slower. As the problem size grows, this overhead become very small compared to the processing required to solve the poisson problem, so using 36 processors performs much better. The point where using 36 processors becomes faster than a single processor is very close to $n=36$. This represents the point where the time saved in overhead to coordinate 36 processors is equal to the time saved being able to processes data faster. When $n$ is sufficiently large, both the single processor and 36 processor version experience exponential growth in execution time.  
 
-\subsection{Speedup}
-	
 	\begin{figure}[htbp]
 	\begin{center}
 	\includegraphics[width=15cm,keepaspectratio=true]{figs/speedup}
@@ -177,11 +173,24 @@ For our solution we used following packages on kongull:
 	\end{center}
 	\end{figure}
 
+\subsection{Speedup} \label{sub:speedup}
+
+	Figure~\ref{fig:speedup} shows the speed up for $n=4,64,1024,16384$ and the ideal case for processors $p=3,6,9,...,36$. We generated this graph by averaging the speedup after running our code 5 times on Kongull. For $n=4$ parallelizing the code actually results in a decrease in speed. The problem size is so small that the overhead of coordinating multiple processes is far more than the gains from parallelizing it. Because we are dividing the matrix into columns if we have more than 3 processes some will not actually have any work to do. The other problem sizes shown all get some speedup for parallelization, but there appears to be a size where there is no longer any gains. $n=64$ peaks at 6 processes and at around 15 processors starts to have a speed up less than 1. $n=1024$ peaks at 27 processors. We do not see the peak for $n=16384$, but there is diminishing returns for each processor.
 
 
 	
 
 \section{Analysis}
+
+\subsection{Memory Usage}
+
+	For our analysis we will us $M$ as the number of MPI processes, $T$ as the number of OpenMP threads, and $n$ as the problem size. We generate a matrix as well as allocate storage for the transpose matrix of size $\Theta(n^2)$. These matrices are split across all of the processes so each process contains $\Theta(\frac{n^2}{M})$. The diagonal matrix requires $\Theta(n)$ and is stored on each process. To store the information for the transpose function we generate $2M$ arrays each of size $\Theta(M)$, 2 for each process. These store the size of each process and the data offsets. We also must create a buffer of size $\Theta(n)$ for each OpenMP thread to pass to the FST function for temporary values. Therefore the overall memory usage is:
+
+	\begin{equation}
+		\Theta(n^2) + \Theta(nM) + \Theta(M^2) + \Theta(nT)
+	\end{equation}
+
+	As our results in section~\ref{sub:speedup} show the speed up is much worse when the number of processors used is larger than the problem size. Therefore in any practical example $\Theta(n^2) > \Theta(M^2)$, $\Theta(n^2) > \Theta(nM)$, and $\Theta(n^2) > \Theta(nT)$. In any case where there is a speed up greater than 1 the memory usage of our program is $\Theta(n^2)$.
 
 	\begin{figure}[htbp]
 	\begin{center}
