@@ -17,9 +17,8 @@
  \lstset{basicstyle=\small}
 
 \pagestyle{fancy}
-\lhead{\footnotesize \parbox{11cm}{Andreas Johann H\"ormer (753179), Daniel Tormoen}}
-\rhead{\footnotesize {Assignment 6}}
-\chead{\footnotesize {TMA4280}}
+\lhead{\footnotesize \parbox{11cm}{Andreas Johann H\"ormer (753179), Daniel Tormoen (753148)}}
+\rhead{\footnotesize {TMA 4280 Assignment 6}}
 
 \title{Report Assignment 6}
 \author{Andreas Johann H\"ormer, Daniel Tormoen}
@@ -35,7 +34,7 @@ TMA4280 Supercomputing\\[3cm]
 Lab group:
 \begin{itemize}
 \item Andreas Johann H\"ormer
-\item Danny Tormoen\\[3cm]
+\item Daniel Tormoen\\[3cm]
 \end{itemize}
 Report delivered: 27.02.2014\\[6cm]
 FACULTY OF INFORMATION TECHNOLOGY, MATHEMATICS AND ELECTRICAL ENGINEERING\\
@@ -252,6 +251,9 @@ This optimization can be done in a similar way to the rectangular matrices. The 
 In this exercise an implementation of a two dimensional poisson solver was done. The method used is diagonalization using FST with a runtime of $\mathcal{O}(n^2\cdot log(n))$. The algorithm is parallelized in such a way that the transpose of the matrix is distributed using MPI. The implemented algorithm is considered to use squared matrices with homogeneous borders. A theoretical analysis of a way how to change the algorithm to use rectangular and non-homogeneous matrices was done.
 
 \section{Appendix}
+\subsection{Git Repository}
+	The latest version of the source code can be found in a git repository\footnote{https://github.com/Horn2BWild/NTNU2014/tree/supercomp\_ex6/TMA4280\_Supercomputing/Exercise/ex6}.
+
 \subsection{Code samples}
 \subsubsection{Matrix transpose\label{matrixtranspose}}
 \begin{lstlisting}[caption=Matrix transposition using MPI]{Matrix transpose}
