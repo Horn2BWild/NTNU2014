@@ -202,7 +202,7 @@ For our solution we used following packages on kongull:
 
 \subsection{OpenMP, MPI, or Hybrid}
 
-	In Figure~\ref{fig:threadsProcesses} we can see that for larger problem sizes, using mostly or completely MPI results in faster execution times. The main reason for this is that when we increase the number of MPI processes we are increasing the parallelization of both the FST steps and the transpose step. When we increase the number of OpenMP threads we are only parallelizing the FST step. When there are more MPI processes each process has to send and receive a much smaller piece of data than if there are more OpenMP threads. Different processes can independently send and receive data so when we have more MPI processes more data can be sent and received concurrently. For smaller problem sizes the overhead of synchronizing many processes is too high so having more OpenMP threads is more efficient. A relatively small data has to be transferred so the transpose step is very fast.
+	In Figure~\ref{fig:threadsProcesses} we can see that for larger problem sizes, using mostly or completely MPI results in faster execution times. The main reason for this is that when we increase the number of MPI processes we are increasing the parallelization of both the FST steps and the transpose step. When we increase the number of OpenMP threads we are only parallelizing the FST step. When there are more MPI processes each process has to send and receive a much smaller piece of data than if there are more OpenMP threads. Different processes can independently send and receive data so when we have more MPI processes more data can be sent and received concurrently. For smaller problem sizes the overhead of synchronizing many processes is too high so favoring OpenMP threads is more efficient. A relatively small amount of data has to be transferred so the transpose step is much faster with fewer processes.
 
 
 %\begin{figure}[htbp]
@@ -240,8 +240,8 @@ U_{1,2} & 0 & ... & ... & ... & 0 & U_{N_x,2} \\
 U_{1,N_y} & U_{2,N_y} & 0 & ... & 0 & U_{N_x-1,N_y} & U_{N_x,N_y} 
 \end{bmatrix}
 $$
-\subsection{non-homogeneus boundary conditions}
-This optimization can be done in a similiar way like the rectangular matrices. The boundary has to be moved to the right side which looks like the rectangular matrix. The calculation can be done using following formula
+\subsection{non-homogeneous boundary conditions}
+This optimization can be done in a similar way to the rectangular matrices. The boundary has to be moved to the right side which looks like the rectangular matrix. The calculation can be done using following formula
 \begin{equation}
 \frac{G_{i,j}}{\frac{1}{\sqrt{h_x^2}}\lambda_i+\frac{1}{\sqrt{h_x^2}}\lambda_j}
 \end{equation}
@@ -249,7 +249,7 @@ This optimization can be done in a similiar way like the rectangular matrices. T
 %not much possibilities
 \newpage
 \section{Conclusion}
-In this exercise an implementation of a two dimensional poisson solver was done. The method used is diagonalization using FST with a runtime of $\mathcal{O}(n^2\cdot log(n))$. The algorithm is parallelized in a way, that the transpose of the matrix is done distributed using MPI. The implemented algorithm is considered to use squared matrizes with homogeneous borders. A theoretical analysis of a way how to change the algorithm to use rectangular and non-homogeneous matrices was done.
+In this exercise an implementation of a two dimensional poisson solver was done. The method used is diagonalization using FST with a runtime of $\mathcal{O}(n^2\cdot log(n))$. The algorithm is parallelized in such a way that the transpose of the matrix is distributed using MPI. The implemented algorithm is considered to use squared matrices with homogeneous borders. A theoretical analysis of a way how to change the algorithm to use rectangular and non-homogeneous matrices was done.
 
 \section{Appendix}
 \subsection{Code samples}
