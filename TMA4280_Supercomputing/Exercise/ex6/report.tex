@@ -47,7 +47,7 @@ NORWEGIAN UNIVERSITY OF SCIENCE AND TECHNOLOGY
 \newpage
 \section*{Summary}
 \thispagestyle{empty}
-Matrix dimensions can get very large, so the number of matrix elements can increase quickly. So working with matrices is a perfect way to use distributed computing. In this task the matrix is transposed in the distributed system using MPI. The problem solved is a two dimensional poisson problem. The solution is done for rectangular matrices with homogeneous boundaries. As solution method diagonalization with FST is used.
+Matrix dimensions can get very large, so the number of matrix elements can increase quickly. As a result, there is much interest in parallelizing matrix algorithms using distributed computing. One problem that is a good candidate for parallelization is the Poisson problem. The problem we solve is a two dimensional poisson problem. The solution is implemented for rectangular matrices with homogeneous boundaries. As a solution method diagonalization with FST is used. We also implement a distributed matrix transposition using MPI.
 \newpage
 \setcounter{page}{1}
 \section{Problem description}
@@ -62,32 +62,32 @@ The given poisson equation is an elliptic partial differential equation. The pro
 The problem should be discretized with (n+1) points in each spatial direction. The standard 5-point-stencil to discretize the Laplace operator $\bigtriangledown$ has to be used. To obtain a solution in $O(n\cdot log(n))$ the DST should be applied.
 \section{Solution strategies}
 \subsection{LU factorization}
-LU (lower upper) factorization decomposes a matrix in an upper and a lower triangular matrix. This can be done using Gaussian elimination. For symmetric matrizes this can also be done using the cholesky decomposition. The matrix decomposition follows following rule
+LU (lower upper) factorization decomposes a matrix in an upper and a lower triangular matrix. This can be done using Gaussian elimination. For symmetric matrices this can also be done using the cholesky decomposition. The matrix decomposition follows the following rule
 \begin{equation}
 A=LU
 \end{equation}
-where A is the original matrix, L the lower triangular matrix and U the upper triangular matrix.\\
-This solution strategy is not very usable as solver in parallel contexts. The sequential nature (pivoting, substitution, ...) makes it hard for parralelization. The LU factorization needs $\mathcal{O}(n^4)$ for runtime and $\mathcal{O}(n^3)$ for memory when the matrix is sparsed, as well as $\mathcal{O}(n^6)$ Operations and $\mathcal{O}(n^4)$ memory when the matrix is full.
+where A is the original matrix, L the lower triangular matrix, and U the upper triangular matrix.\\
+This solution strategy is not very useful as solver in parallel contexts. The sequential nature (pivoting, substitution, ...) makes it hard for parallelization. The LU factorization needs $\mathcal{O}(n^4)$ for runtime and $\mathcal{O}(n^3)$ for memory when the matrix is sparse, as well as $\mathcal{O}(n^6)$ Operations and $\mathcal{O}(n^4)$ memory when the matrix is dense.
 %Runtime O(n^4) sparsed, O(n^6) full
 %Memory O(n^3) sparsed, O(n^4) full
-\subsection{diagonalization}
+\subsection{Diagonalization}
 The diagonalization can be done in three steps:
 \begin{enumerate}
 \item $$\underline{\tilde{B}}=\underline{Q^T}\cdot\underline{B}\cdot\underline{Q}$$
 \item $$\tilde{x_{ij}}=\frac{\tilde{b_{ij}}}{\lambda_i+\lambda_j}\;for\;1\leq i,j \leq N$$
 \item $$\underline{X}=\underline{Q}\cdot\underline{\tilde{X}}\cdot\underline{Q^T}$$
 \end{enumerate}
-This algorithm scales very well with the number of unknowns and also scales very well in memory. It is better parallelizable than LU factorization. In an further step fourier transform (DST) can be applied. The algorithm has $\mathcal{O}(n^3)$ operations and needs $\mathcal{O}(n^2)$ memory.
+This algorithm scales very well with the number of unknowns and also scales very well in memory. It is also more suitable for a parallelized version than LU factorization. In a further step Fourier transform (DST) can be applied. The algorithm has $\mathcal{O}(n^3)$ operations and needs $\mathcal{O}(n^2)$ memory.
 %O(n^3) operations
 %O(n^2) memory
-\subsubsection{diagonalization using DST}
-For this diagonalization technique a periodic function with period $2\pi$ is sampled at equidistant points. The function has to be odd and discretized on a equidistant mesh between 0 and $\pi$.The diagonalization can be done in the three following steps:
+\subsubsection{Diagonalization using DST}
+For this diagonalization technique a periodic function with period $2\pi$ is sampled at equidistant points. The function has to be odd and discretized on an equidistant mesh between 0 and $\pi$.The diagonalization can be done in the three following steps:
 \begin{enumerate}
 \item $$ \underline{\tilde{B}^T}=\underline{S^{-1}}\cdot\big((\underline{S}\cdot\underline{B})^T\big)$$
 \item $$ \tilde{x_{ij}}=\frac{\tilde{b_{ij}}}{\lambda_i+\lambda_j}\;for\;1\leq i,j\leq N$$
 \item $$ \underline{X}=\underline{S^{-1}}\cdot\big(\underline{S}\cdot(\underline{\tilde{X^T}})\big)^T$$
 \end{enumerate}
-The diagonalization with discrete sine transform uses $\mathcal{O}(n^2\cdot log(n))$ runtime and needs $\mathcal{O}(n^2)$ memory..
+The diagonalization with discrete sine transform has a runtime of $\mathcal{O}(n^2\cdot log(n))$ and needs $\mathcal{O}(n^2)$ memory.
 
 \section{Implemented solution}
 	To be able to solve the problem our solution had to be able to evenly divide work among all of the processors and be able to pass that data in a simple way between processors. To solve both of these problems we divided the matrix up so that each processes has a roughly even share of columns in the matrix. Assume $P$ is the number of processes and $n$ is the problem size. We gave $P - (n \bmod P)$ processes $\lfloor (n-1)/P \rfloor$ columns and the rest $\lfloor (n-1)/P \rfloor + 1$ columns. This does not split the data completely evenly, but it makes applying the FST operator more efficient since it operates on a whole column and transpose easier because the data each process sends is always consistent. Different processes only have to communicate to implement the matrix transpose function.
@@ -135,7 +135,7 @@ The diagonalization with discrete sine transform uses $\mathcal{O}(n^2\cdot log(
 
 \section{Environment}
 \subsection{Supercomputer}
-The used Kongull cluster is a CentOS 5.3 Linux cluster. The cluster has 1 login, 4 I/O and 93 compute nodes. Each node is equipped with 2x 6-core processors, with 6x 512KiB L1 cache and a common 6 MiB L3-cache. Kongull has 96 compute nodes and 1152 cores in total. All of the compute nodes are HP DL165 G6 servers, with
+The Kongull cluser used for testing is a CentOS 5.3 Linux cluster. The cluster has 1 login, 4 I/O and 93 compute nodes. Each node is equipped with 2x 6-core processors, with 6x 512KiB L1 cache and a common 6 MiB L3-cache. Kongull has 96 compute nodes and 1152 cores in total. All of the compute nodes are HP DL165 G6 servers, with
 \begin{itemize}
 \item 2 AMD Opteron model 2431 6-core (Istanbul) processors
 \item 2.4 GHz core speed
@@ -214,11 +214,11 @@ For our solution we used following packages on kongull:
 
 
 
-\section{Possible optimizations}
-\subsection{parallel FST}
+\section{Possible Optimizations}
+\subsection{Parallel FST}
 In our algorithm the FST is serial. This could be a possible bottleneck. Parallelizing this FST-algorithm may increase the performance.
-\subsection{rectangular matrix}
-Our algorithm is designed for handling squared matrices with zero-boundary. For handling rectangular matrices this can be done with following:
+\subsection{Rectangular Matrices}
+Our algorithm is designed for handling square matrices with a zero-boundary. We can handle rectangular matrices by doing the following:
 \begin{equation}
 -U_0+2U_1-U_2=h^2f_1
 \end{equation}
@@ -226,11 +226,11 @@ When moving $U_0$ to the other side and writing in a general form this changes t
 \begin{equation}
 -U_{N-2}+2U_{N-1}-U_N=h^2f_{N-1}
 \end{equation}
-For rectangular matrices the sizing in x- and y-direction is different. So the multiplication is done with two different variables, $h_x$ and $h_y$.
+For rectangular matrices the sizing in x and y direction is different. So the multiplication is done with two different variables, $h_x$ and $h_y$.
 \begin{equation}
 \frac{1}{h_x^2}A_DU+\frac{1}{h_y^2}UA_D=F
 \end{equation}
-The matrix which is added on the right side looks then
+The matrix on the right side is shown below
 $$
 \begin{bmatrix}
 U_{1,1} & U_{2,1} & 0 & ... & 0 & U_{N_x-1,1} & U_{N_x,1} \\
@@ -239,8 +239,8 @@ U_{1,2} & 0 & ... & ... & ... & 0 & U_{N_x,2} \\
 U_{1,N_y} & U_{2,N_y} & 0 & ... & 0 & U_{N_x-1,N_y} & U_{N_x,N_y} 
 \end{bmatrix}
 $$
-\subsection{non-homogeneous boundary conditions}
-This optimization can be done in a similar way to the rectangular matrices. The boundary has to be moved to the right side which looks like the rectangular matrix. The calculation can be done using following formula
+\subsection{Non-homogeneous Boundary Conditions}
+This optimization can be done in a similar way to the rectangular matrices. The boundary has to be moved to the right side which looks like a rectangular matrix. The calculation can be done using following formula
 \begin{equation}
 \frac{G_{i,j}}{\frac{1}{\sqrt{h_x^2}}\lambda_i+\frac{1}{\sqrt{h_x^2}}\lambda_j}
 \end{equation}
@@ -248,7 +248,7 @@ This optimization can be done in a similar way to the rectangular matrices. The 
 %not much possibilities
 \newpage
 \section{Conclusion}
-In this exercise an implementation of a two dimensional poisson solver was done. The method used is diagonalization using FST with a runtime of $\mathcal{O}(n^2\cdot log(n))$. The algorithm is parallelized in such a way that the transpose of the matrix is distributed using MPI. The implemented algorithm is considered to use squared matrices with homogeneous borders. A theoretical analysis of a way how to change the algorithm to use rectangular and non-homogeneous matrices was done.
+In this exercise we wrote and tested an implementation of a two dimensional poisson solver. The method used is diagonalization using FST with a runtime of $\mathcal{O}(n^2\cdot log(n))$. The algorithm is parallelized in such a way that the transpose of the matrix is distributed using MPI and computation of FST on each column can be parallelized using OpenMP. The implemented algorithm is for use with square matrices with homogeneous borders. A theoretical analysis of a way how to change the algorithm to use rectangular and non-homogeneous matrices was done. We also analyzed the runtime and speed up of the algorithm and found that it scales well when the problem size is sufficiently larger than the number of processors the algorithm is running on. If there are two many processors, the performance starts to decrease.
 
 \section{Appendix}
 \subsection{Git Repository}
