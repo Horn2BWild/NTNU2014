@@ -118,6 +118,15 @@ For our solution we used following packages on kongull:
 \end{itemize}
 \section{Results}
 \subsection{Proof of Correctness}
+
+	\begin{figure}[htbp]
+	\begin{center}
+	\includegraphics[width=15cm,keepaspectratio=true]{figs/errorGraph}
+	\caption{The error decreases as expected.}
+	\label{fig:errorGraph}
+	\end{center}
+	\end{figure}
+
 	To verify the correctness of our method we used a series of tests to ensure each part of the algorithm is producing the results we expect. When we completed the transpose function we tested the transpose function for a variety of sizes and number of MPI processes to ensure that the function was producing the correct matrix. 
 
 	Before we started work on the OpenMP parallelization we tried the complete algorithm with our own function that we knew the exact solution to. We then compared the numeric estimate our program produces to the exact solution to see if they converge. The initial values in each grid location are given by equation \ref{eqn:gridInitial}.
@@ -143,14 +152,6 @@ For our solution we used following packages on kongull:
 
 	We plot our error against this expected error in Figure~\ref{fig:errorGraph}. We generated this graph using the formula from \ref{eqn:error} and by running our program 10 times for each problem size. In each run we found the maximum error in any grid location and found the average max error over the 10 runs. The two lines are parallel so they must only differ by a constant factor. This is the result we predicted so the program must be correct.
 
-	\begin{figure}[htbp]
-	\begin{center}
-	\includegraphics[width=15cm,keepaspectratio=true]{figs/errorGraph}
-	\caption{The error decreases as expected.}
-	\label{fig:errorGraph}
-	\end{center}
-	\end{figure}
-
 \subsection{Execution Times}
 
 	\begin{figure}[htbp]
@@ -174,7 +175,17 @@ For our solution we used following packages on kongull:
 	\end{center}
 	\end{figure}
 
-	In Figure~\ref{fig:threadsProcesses} we can see that for larger problem sizes, using mostly or completely MPI results in faster execution times. The main reason for this is that when we increase the number of MPI processes we are increasing the parallelization of both the fst steps and the transpose step. When we increase the number of OpenMP threads we are only parallelizing the fst step. When there are more MPI processes each process has to send and receive a much smaller piece of data than if there are more OpenMP threads. 
+\subsection{OpenMP, MPI, or Hybrid}
+
+	In Figure~\ref{fig:threadsProcesses} we can see that for larger problem sizes, using mostly or completely MPI results in faster execution times. The main reason for this is that when we increase the number of MPI processes we are increasing the parallelization of both the FST steps and the transpose step. When we increase the number of OpenMP threads we are only parallelizing the FST step. When there are more MPI processes each process has to send and receive a much smaller piece of data than if there are more OpenMP threads. Different processes can independently send and receive data so when we have more MPI processes more data can be sent and received concurrently. For smaller problem sizes the overhead of synchronizing many processes is too high so having more OpenMP threads is more efficient. A relatively small data has to be transferred so the transpose step is very fast.
+
+	\begin{figure}[htbp]
+	\begin{center}
+	\includegraphics[width=15cm,keepaspectratio=true]{figs/speedup}
+	\caption{a caption}
+	\label{fig:speedup}
+	\end{center}
+	\end{figure}
 
 
 %\begin{figure}[htbp]
@@ -191,7 +202,7 @@ For our solution we used following packages on kongull:
 \subsection{parallel FST}
 In our algorithm the FST is serial. This could be a possible bottleneck. Parallelizing this FST-algorithm may increase the performance.
 \subsection{rectangular matrix}
-Our algorithm is designed for handling squared matrizes with zero-boundary. For handling rectangular matrices this can be done with following:
+Our algorithm is designed for handling squared matrices with zero-boundary. For handling rectangular matrices this can be done with following:
 \begin{equation}
 -U_0+2U_1-U_2=h^2f_1
 \end{equation}
