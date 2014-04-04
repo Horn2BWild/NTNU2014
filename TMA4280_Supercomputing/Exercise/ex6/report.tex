@@ -99,24 +99,6 @@ The diagonalization with discrete sine transform uses $\mathcal{O}(n^2\cdot log(
 \subsection{Parallel FST}
 	We parallelized FST using OpenMP. In section \ref{sub:fst} we show the code apply the FST function on each column of $b$. The Fortran code needs to be given a preallocated buffer so we also declare a thread-private buffer $z$ that can be reused each time we call FST or inverse FST in an OpenMP parallel for loop without having to worry about two threads reusing the same buffer. The inverse FST function is implemented in the same way.
 
-\section{Environment}
-\subsection{Supercomputer}
-The used Kongull cluster is a CentOS 5.3 Linux cluster. The cluster has 1 login, 4 I/O and 93 compute nodes. Each node is equipped with 2x 6-core processors, with 6x 512KiB L1 cache and a common 6 MiB L3-cache. Kongull has 96 compute nodes and 1152 cores in total. All of the compute nodes are HP DL165 G6 servers, with
-\begin{itemize}
-\item 2 AMD Opteron model 2431 6-core (Istanbul) processors
-\item 2.4 GHz core speed
-\item 667 MHz (48 GiB nodes) or 800 MHz (24 GiB nodes) bus frequency
-\item 149GiB 15000 RPM SAS system disc
-\end{itemize}
-This and further information about the used supercomputer can be found at the NTNU HPC homepage\footnote{https://www.hpc.ntnu.no/display/hpc/Kongull+Hardware, accessed: 18.03.2014}.
-\subsection{Compiler}
-
-For our solution we used following packages on kongull:
-\begin{itemize}
-\item intelcomp13.0.1
-\item openmpi1.4.3-intel
-\end{itemize}
-\section{Results}
 \subsection{Proof of Correctness}
 
 	\begin{figure}[htbp]
@@ -152,6 +134,25 @@ For our solution we used following packages on kongull:
 
 	We plot our error against this expected error in Figure~\ref{fig:errorGraph}. We generated this graph using the formula from \ref{eqn:error} and by running our program 10 times for each problem size. In each run we found the maximum error in any grid location and found the average max error over the 10 runs. The two lines are parallel so they must only differ by a constant factor. This is the result we predicted so the program must be correct.
 
+\section{Environment}
+\subsection{Supercomputer}
+The used Kongull cluster is a CentOS 5.3 Linux cluster. The cluster has 1 login, 4 I/O and 93 compute nodes. Each node is equipped with 2x 6-core processors, with 6x 512KiB L1 cache and a common 6 MiB L3-cache. Kongull has 96 compute nodes and 1152 cores in total. All of the compute nodes are HP DL165 G6 servers, with
+\begin{itemize}
+\item 2 AMD Opteron model 2431 6-core (Istanbul) processors
+\item 2.4 GHz core speed
+\item 667 MHz (48 GiB nodes) or 800 MHz (24 GiB nodes) bus frequency
+\item 149GiB 15000 RPM SAS system disc
+\end{itemize}
+This and further information about the used supercomputer can be found at the NTNU HPC homepage\footnote{https://www.hpc.ntnu.no/display/hpc/Kongull+Hardware, accessed: 18.03.2014}.
+\subsection{Compiler}
+
+For our solution we used following packages on kongull:
+\begin{itemize}
+\item intelcomp13.0.1
+\item openmpi1.4.3-intel
+\end{itemize}
+\section{Results}
+
 \subsection{Execution Times}
 
 	\begin{figure}[htbp]
@@ -162,7 +163,22 @@ For our solution we used following packages on kongull:
 	\end{center}
 	\end{figure}
 
+	
+
 	Figure~\ref{fig:executionTime} compares the time the fastest parallelized version where $p=36$ with the baseline $p=1$. Using 36 processors has some overhead to synchronize the processors and share data so for small problem sizes the execution time is slower. As the problem size grows, this overhead become very small compared to the processing required to solve the poisson problem, so using 36 processors performs much better. The point where using 36 processors becomes faster than a single processor is very close to $n=36$. This represents the point where the time saved in overhead to coordinate 36 processors is equal to the time saved being able to processes data faster. When $n$ is sufficiently large, both the single processor and 36 processor version experience exponential growth in execution time.  
+
+\subsection{Speedup}
+	
+	\begin{figure}[htbp]
+	\begin{center}
+	\includegraphics[width=15cm,keepaspectratio=true]{figs/speedup}
+	\caption{The speed up for a selection of problem sizes compared to the ideal speed up. There appears to be an ideal number of processors for each problem size where the speed up is the highest. This was run on Kongull using purely MPI.}
+	\label{fig:speedup}
+	\end{center}
+	\end{figure}
+
+
+
 	
 
 \section{Analysis}
@@ -178,14 +194,6 @@ For our solution we used following packages on kongull:
 \subsection{OpenMP, MPI, or Hybrid}
 
 	In Figure~\ref{fig:threadsProcesses} we can see that for larger problem sizes, using mostly or completely MPI results in faster execution times. The main reason for this is that when we increase the number of MPI processes we are increasing the parallelization of both the FST steps and the transpose step. When we increase the number of OpenMP threads we are only parallelizing the FST step. When there are more MPI processes each process has to send and receive a much smaller piece of data than if there are more OpenMP threads. Different processes can independently send and receive data so when we have more MPI processes more data can be sent and received concurrently. For smaller problem sizes the overhead of synchronizing many processes is too high so having more OpenMP threads is more efficient. A relatively small data has to be transferred so the transpose step is very fast.
-
-	\begin{figure}[htbp]
-	\begin{center}
-	\includegraphics[width=15cm,keepaspectratio=true]{figs/speedup}
-	\caption{a caption}
-	\label{fig:speedup}
-	\end{center}
-	\end{figure}
 
 
 %\begin{figure}[htbp]
