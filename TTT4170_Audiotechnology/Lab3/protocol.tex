@@ -1,0 +1,121 @@
+\documentclass{article}
+\usepackage{a4wide}
+\usepackage{norsk}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{dsfont}
+%\usepackage[dvips]{epsfig}
+%\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{nomencl}
+\usepackage[pdftex]{graphicx}
+
+\pagestyle{fancy}
+\lhead{\footnotesize \parbox{11cm}{Andreas Johann H\"ormer (753179)}}
+\rhead{\footnotesize {Laboratory 3}}
+\chead{\footnotesize {TTT4170}}
+
+\title{Loudspeaker Measurement (Lab 3)}
+\author{Andreas Johann H\"ormer}
+\date{14.02.2014}
+
+\begin{document}
+\thispagestyle{empty}
+\maketitle
+\thispagestyle{empty}
+%\\[5cm]
+\begin{center}
+TTT4170 Audio Technology\\[3cm]
+Lab group:
+\begin{itemize}
+\item Andreas Johann H\"ormer
+\item Milan Stojkovic
+\item Andreas Ulvoen\\[3cm]
+\end{itemize}
+Report delivered: \\[6cm]
+FACULTY OF INFORMATION TECHNOLOGY, MATHEMATICS AND ELECTRICAL ENGINEERING\\
+NORWEGIAN UNIVERSITY OF SCIENCE AND TECHNOLOGY
+\end{center}
+\thispagestyle{empty}
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+\section*{Summary}
+\thispagestyle{empty}
+This report regards to the third laboratory exercise of Audio Technology at NTNU. In this laboratory a loudspeaker was measured in an anechoic room. The measurement was done in three different ways.\\
+In the first task a microphone was placed in front of a loudspeaker at a distance of 1.2m. The influence of the length of the impulse time window was analyzed. It can be obtained that the frequency response get more and more smoothened when decreasing the time window size, but especially at low frequencies the results may be wrong. With full time window the frequency response is shown in a way which is expected for loudspeakers.\\
+In the second measurement the loudspeaker was turned with a turntable in $15^\circ$-steps. The influence of directivity at different angles should be measured. It could be obtained, that the loudspeaker becomes more and more directional with increasing frequency, while at low frequencies the loudspeaker is more or less omnidirectional.\\
+At the last measurement the influence of a reflecting surface was measured. Constructive and destructive interferences can be obtained at some frequencies.
+\newpage
+\setcounter{page}{1}
+\section{Introduction}
+Most music reproduction is done using loudspeakers. For optimal listening experience a constant quality of these reproduction devices is mandatory to ensure high listening quality. Therefore measurement of loudspeaker parameters is important to ensure high listening experience.\\
+Some parameters for defining the quality of a loudspeaker are the directivity (given as directivity index DI or directivity factor DF) and the frequency response of the loudspeaker. Using the directivity, an optimal placement of the speakers to the listener can be found. The frequency response tells how the different frequencies are amplified or dampened from the speaker.\\
+In this laboratory exercise the measurement of the frequency response and the directivity of a loudspeaker should be measured. This is done in three different exercises, which each of them covers a specific part of the parameter. In the first exercise the general influence of measurement parameters should be obtained. Therefore a sine sweep was recorded and the influence of the FFT window length should be obtained. In a second measurement the directivity of the loudspeaker was measured with recording sine sweeps in different off-axis angles. In the last measurement the inflluence of reflections on the measurement were obtained with placing a reflective surface between loudspeaker and measurement microphone.
+\section{Theory}
+
+
+\section{Measurements}
+\subsection{Influence of the time window size}
+The time window size defines how many fourier coefficients for the calculation of the frequency response are covered. The longer the used time window is the higher is the accuracy of the resulting frequency response. To obtain this one measurement with a microphone in front of a loudspeaker was done. A frequency sweep was recorded and the response was calculated using WinLMS. After this four different frequency responses with different time windows were created. The used time windows were 
+\begin{itemize}
+\item full time window
+\item 3ms after the initial response
+\item 10ms 
+\item 50ms.
+\end{itemize}
+It can be obtained that the smaller the time window size the more smooth the resulting frequency is. This is quite accurate for high frequencies where more coefficients for calculating the frequency response exist. Especially at very low frequencies it can be seen, that the result differs quite much depending on the length of the time window. For a length of 3ms or 10ms the results can not be used, because it can be seen that they are wrong. The frequency response for 50ms is quite useful and near to the result with full time window.
+\subsection{Influence of incidence angle}
+In an anechoic chamber (almost) no reflections should occur. So this fits perfectly for measuring the directivity of a loudspeaker. For this measurement a loudspeaker was put on a turntable, a measurement microphone in front. The speaker was turned in $15^\circ$ steps, in every step a frequency sweep was measured and the frequency response calculated using WinLMS. The different measurements were then compared together.\\
+Here it can be seen that at low frequencies the sound propagates almost omnidirectional in each direction. When the frequency increases, the loudspeaker gets more and more directional. That can be seen at decreasing amplitudes and more reflections in the frequency response. The more the loudspeaker gets off-axis and the higher the frequency, the more the sound amplitude decreases.
+\subsection{Influence of reflecting surfaces}
+In this measurement the frequency response of the loudspeaker on axis should be compared to a new measurement with reflective surfaces. For this reason a wooden plate was placed on the floor between the loudpeaker and the measurement microphone. The measurement was done with a frequency sweep. Comparing the frequency response with reflections and the one without huge differences can be seen.Thi is because of strong constructive and destructive interferences between the direct sound signal from the speaker to the microphone and those frequency components which are reflected from the reflective surface.  It also can be obtained, that the influence is stronger at low frequencies, where the difference between constructive and destructive interference is almost 15dB, while at higher frequencies more interferences occur, but with less intensity. At very high frequencies the difference is about 1dB.
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=15cm,keepaspectratio=true]{dt}
+\caption{Time difference as function of incidence angle}
+\label{fig:dt}
+\end{center}
+\end{figure}
+
+
+
+\newpage
+\section{Conclusion}
+
+\newpage
+\appendix
+\section{Example calculations}
+The plot for time differences regarding to angles from 0 to 90 degrees can be found in figure \ref{fig:dt}.
+
+\subsubsection{3.1}
+\begin{itemize}
+\item head radius: $7cm$ ($a$)
+\item sound speed: $343\frac{m}{s}$ ($c$)
+\item angle: $30^\circ$ ($\phi$)
+\end{itemize}
+\begin{equation}
+\Delta t=\frac{a\cdot(\phi+sin(\phi))}{c}
+\end{equation}
+$$\Delta t=\frac{0.07m\cdot(30^\circ+sin(30^\circ))}{343\frac{m}{s}}=209\mu s $$
+
+\subsubsection{3.2}
+$$\Delta t=25-13=12ms$$
+\begin{equation}
+a=\frac{\Delta t\cdot c}{\phi+sin(\phi)}
+\end{equation}
+$$ a=\frac{0.012s\cdot 343\frac{m}{s}}{30^\circ+sin(30^\circ)}=4.07cm$$
+\subsubsection{3.3}
+$$a=0.25m$$
+$$\Delta t=\frac{0.25m\cdot(30^\circ+sin(30^\circ))}{343}=746\mu s$$
+\newpage
+\section{References}
+\footnotesize{
+\begin{itemize}
+\item Svensson, Peter, \textit{lecture notes}, chapter 
+\end{itemize}
+}
+
+\section{WinLMS plots}
+\end{document}
