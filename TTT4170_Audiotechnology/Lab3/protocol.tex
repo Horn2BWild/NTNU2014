@@ -95,6 +95,20 @@ with
 \item $\Delta t = t_{first\,reflection}-t_{direct}$
 \end{itemize}
 \section{Measurements}
+\subsection{Equipment}
+For this laboratory exercise following equipment was used:
+\begin{itemize}
+\item 1 measurement microphone: Norsonic 1201/30517
+\item 1 loudspeaker: Genelec 1029A
+\item 1 laser distance meter: Bosch PLR30
+\item 1 loudspeaker turntable
+\item Software:
+\begin{itemize}
+\item WinLMS 2004
+\item Matlab 2012b
+\end{itemize}
+\end{itemize}
+
 \subsection{Influence of the time window size}
 The time window size defines how many fourier coefficients for the calculation of the frequency response are covered. The longer the used time window is the higher is the accuracy of the resulting frequency response. To obtain this one measurement with a microphone in front of a loudspeaker was done. A frequency sweep was recorded and the response was calculated using WinLMS. After this four different frequency responses with different time windows were created. The used time windows were 
 \begin{itemize}
@@ -123,37 +137,18 @@ In this measurement the frequency response of the loudspeaker on axis should be 
 \section{Conclusion}
 
 \newpage
-\appendix
-\section{Example calculations}
-The plot for time differences regarding to angles from 0 to 90 degrees can be found in figure \ref{fig:dt}.
-
-\subsubsection{3.1}
-\begin{itemize}
-\item head radius: $7cm$ ($a$)
-\item sound speed: $343\frac{m}{s}$ ($c$)
-\item angle: $30^\circ$ ($\phi$)
-\end{itemize}
-\begin{equation}
-\Delta t=\frac{a\cdot(\phi+sin(\phi))}{c}
-\end{equation}
-$$\Delta t=\frac{0.07m\cdot(30^\circ+sin(30^\circ))}{343\frac{m}{s}}=209\mu s $$
-
-\subsubsection{3.2}
-$$\Delta t=25-13=12ms$$
-\begin{equation}
-a=\frac{\Delta t\cdot c}{\phi+sin(\phi)}
-\end{equation}
-$$ a=\frac{0.012s\cdot 343\frac{m}{s}}{30^\circ+sin(30^\circ)}=4.07cm$$
-\subsubsection{3.3}
-$$a=0.25m$$
-$$\Delta t=\frac{0.25m\cdot(30^\circ+sin(30^\circ))}{343}=746\mu s$$
-\newpage
-\section{References}
+\section*{References}
 \footnotesize{
 \begin{itemize}
-\item Svensson, Peter, \textit{lecture notes}, chapter 
+\item Svensson, Peter, \textit{lecture notes}
 \end{itemize}
 }
+
+\newpage
+\appendix
+\section{Example calculations}
+
+
 
 \section{WinLMS plots}
 \end{document}
