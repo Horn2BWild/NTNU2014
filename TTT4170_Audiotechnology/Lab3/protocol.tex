@@ -54,8 +54,46 @@ Most music reproduction is done using loudspeakers. For optimal listening experi
 Some parameters for defining the quality of a loudspeaker are the directivity (given as directivity index DI or directivity factor DF) and the frequency response of the loudspeaker. Using the directivity, an optimal placement of the speakers to the listener can be found. The frequency response tells how the different frequencies are amplified or dampened from the speaker.\\
 In this laboratory exercise the measurement of the frequency response and the directivity of a loudspeaker should be measured. This is done in three different exercises, which each of them covers a specific part of the parameter. In the first exercise the general influence of measurement parameters should be obtained. Therefore a sine sweep was recorded and the influence of the FFT window length should be obtained. In a second measurement the directivity of the loudspeaker was measured with recording sine sweeps in different off-axis angles. In the last measurement the inflluence of reflections on the measurement were obtained with placing a reflective surface between loudspeaker and measurement microphone.
 \section{Theory}
-
-
+\subsection{Sensitivity, Efficiency}
+In loudspeakers most energy is not transformed into sound power but into heat. The efficiency is defined as the relation of transmitted sound power and the total electrical power input. It can be written as
+\begin{equation}
+\eta=\frac{W_{sound,out}}{W_{el,in}}
+\end{equation}
+Typical values for loudspeaker efficiency are 1-2\% while horn loudspeakers or high efficient loudspeakers can get up to 10\%.\\
+Instead of the effiency often the loudspeakers sensitivity is listened by manufacturers. The sensitivity is defined as sound pressure level at 1W electrical input at a measurement distance of 1m. A typical voltage level for this measurement is $V_{RMS}=2.83V$. This defines the input power of 1W at a speaker impedance of $8\Omega$, which is a quite common loudspeaker impedance level. 
+\subsection{Maximum output level}
+For an optimal listening experience or public sound reproduction places the maximum reachable output level often should be known. This maximum output level can be calculated using following formula:
+\begin{equation}
+L_{P,max}=L_W+10\cdot log\bigg(\frac{DF}{4\pi\cdot r^2}+\frac{4}{A}\bigg)
+\end{equation}
+where
+\begin{itemize}
+\item $L_{P,max}$: maximum sound power level
+\item $L_W$: sound power level
+\item $A$: room asorption (calculation using Sabine's formula)
+\item $DF$: directivity factor
+\item $r$: distance from sound source
+\end{itemize}
+\subsection{Measurement distance}
+Measurements should be done in the far field, so it must be ensured that the distance of the measurement microphone is within this distance. This is often critical around the crossover frequency, where low-frequency and mid/high-frequency elements are radiating equally strong. The critical distance can be calculated using the Rayleigh-distance, using following formula:
+\begin{equation}
+R_R=\frac{\pi\cdot a^2}{\lambda}
+\end{equation}
+where
+\begin{itemize}
+\item $a$: diameter of the radiating loudspeaker membrane
+\item $\lambda$: radiated wavelength 
+\end{itemize}
+\subsection{Impulse response}
+To determine the quality of a loudspeaker the impulse response and so the amplification of different frequencies has to be measured. Often this is done in an anechoic chamber, but can also be done in ordinary rooms. Then the measured impulse response has to be cut before the first wall reflections occur. Therefore the time distance between direct sound and first reflections has to be long enough.\\
+The lowest frequency which can be measured accurately is defined by
+\begin{equation}
+\frac{1}{\Delta t}
+\end{equation}
+with 
+\begin{itemize}
+\item $\Delta t = t_{first\,reflection}-t_{direct}$
+\end{itemize}
 \section{Measurements}
 \subsection{Influence of the time window size}
 The time window size defines how many fourier coefficients for the calculation of the frequency response are covered. The longer the used time window is the higher is the accuracy of the resulting frequency response. To obtain this one measurement with a microphone in front of a loudspeaker was done. A frequency sweep was recorded and the response was calculated using WinLMS. After this four different frequency responses with different time windows were created. The used time windows were 
