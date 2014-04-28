@@ -117,17 +117,33 @@ The time window size defines how many fourier coefficients for the calculation o
 \item 10ms 
 \item 50ms.
 \end{itemize}
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=15cm,keepaspectratio=true]{Figures/TaskAcombined}
+\caption{Frequency response with (a) full time window, (b) 3ms, (c) 10ms and (d) 50ms window length}
+\label{fig:TaskAcombined}
+\end{center}
+\end{figure}
+The measured frequency responses can be seen in figure \ref{fig:TaskAcombined}.
 It can be obtained that the smaller the time window size the more smooth the resulting frequency is. This is quite accurate for high frequencies where more coefficients for calculating the frequency response exist. Especially at very low frequencies it can be seen, that the result differs quite much depending on the length of the time window. For a length of 3ms or 10ms the results can not be used, because it can be seen that they are wrong. The frequency response for 50ms is quite useful and near to the result with full time window.
 \subsection{Influence of incidence angle}
 In an anechoic chamber (almost) no reflections should occur. So this fits perfectly for measuring the directivity of a loudspeaker. For this measurement a loudspeaker was put on a turntable, a measurement microphone in front. The speaker was turned in $15^\circ$ steps, in every step a frequency sweep was measured and the frequency response calculated using WinLMS. The different measurements were then compared together.\\
-Here it can be seen that at low frequencies the sound propagates almost omnidirectional in each direction. When the frequency increases, the loudspeaker gets more and more directional. That can be seen at decreasing amplitudes and more reflections in the frequency response. The more the loudspeaker gets off-axis and the higher the frequency, the more the sound amplitude decreases.
-\subsection{Influence of reflecting surfaces}
-In this measurement the frequency response of the loudspeaker on axis should be compared to a new measurement with reflective surfaces. For this reason a wooden plate was placed on the floor between the loudpeaker and the measurement microphone. The measurement was done with a frequency sweep. Comparing the frequency response with reflections and the one without huge differences can be seen.Thi is because of strong constructive and destructive interferences between the direct sound signal from the speaker to the microphone and those frequency components which are reflected from the reflective surface.  It also can be obtained, that the influence is stronger at low frequencies, where the difference between constructive and destructive interference is almost 15dB, while at higher frequencies more interferences occur, but with less intensity. At very high frequencies the difference is about 1dB.
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[width=15cm,keepaspectratio=true]{dt}
-\caption{Time difference as function of incidence angle}
-\label{fig:dt}
+\includegraphics[width=15cm,keepaspectratio=true]{Figures/TaskBcomparison}
+\caption{Directivity for $45^\circ$, $90^\circ$ and $180^\circ$ off-axis measurement}
+\label{fig:TaskBcomparison}
+\end{center}
+\end{figure}
+A comparison of different frequency responses for different incident angles can be found in figure \ref{fig:TaskBcomparison}. All measurements in $15^\circ$ steps are listed in Appendix B.1.
+Here it can be seen that at low frequencies the sound propagates almost omnidirectional in each direction. When the frequency increases, the loudspeaker gets more and more directional. That can be seen at decreasing amplitudes and more reflections in the frequency response. The more the loudspeaker gets off-axis and the higher the frequency, the more the sound amplitude decreases.
+\subsection{Influence of reflecting surfaces}
+In this measurement the frequency response of the loudspeaker on axis should be compared to a new measurement with reflective surfaces. For this reason a wooden plate was placed on the floor between the loudpeaker and the measurement microphone. The measurement was done with a frequency sweep. Comparing the frequency response with reflections and the one without (listed in Figure \ref{fig:TaskC}) huge differences can be seen.Thi is because of strong constructive and destructive interferences between the direct sound signal from the speaker to the microphone and those frequency components which are reflected from the reflective surface.  It also can be obtained, that the influence is stronger at low frequencies, where the difference between constructive and destructive interference is almost 15dB, while at higher frequencies more interferences occur, but with less intensity. At very high frequencies the difference is about 1dB.
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=15cm,keepaspectratio=true]{Figures/TaskC}
+\caption{Frequency response (a) without and (b) with reflective surface}
+\label{fig:TaskC}
 \end{center}
 \end{figure}
 
