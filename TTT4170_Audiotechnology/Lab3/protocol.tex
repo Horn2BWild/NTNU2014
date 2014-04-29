@@ -60,7 +60,18 @@ In loudspeakers most energy is not transformed into sound power but into heat. T
 \eta=\frac{W_{sound,out}}{W_{el,in}}
 \end{equation}
 Typical values for loudspeaker efficiency are 1-2\% while horn loudspeakers or high efficient loudspeakers can get up to 10\%.\\
-Instead of the effiency often the loudspeakers sensitivity is listened by manufacturers. The sensitivity is defined as sound pressure level at 1W electrical input at a measurement distance of 1m. A typical voltage level for this measurement is $V_{RMS}=2.83V$. This defines the input power of 1W at a speaker impedance of $8\Omega$, which is a quite common loudspeaker impedance level. 
+Instead of the effiency often the loudspeakers sensitivity is listened by manufacturers. The sensitivity is defined as sound pressure level at 1W electrical input at a measurement distance of 1m. A typical voltage level for this measurement is $V_{RMS}=2.83V$. This defines the input power of 1W at a speaker impedance of $8\Omega$, which is a quite common loudspeaker impedance level. \\
+For calculations of sound pressure following formula can be applied:
+\begin{equation}
+p_{RMS}^2=W_{lsp}\cdot \rho_0\cdot c\cdot\frac{DF}{4\pi\cdot r^2}
+\end{equation}
+where
+\begin{itemize}
+\item $p_{RMS}^2$: sound pressure in listening position
+\item $W_{lsp}$: radiated sound power
+\item $\rho_0$: density of medium, ($\rho_{0,air}=1.2\frac{kg}{m^3}$)
+\item $c$: speed of sound propagation ($c=343.6\frac{m}{s}$ at $20^\circ$)
+\end{itemize}
 \subsection{Maximum output level}
 For an optimal listening experience or public sound reproduction places the maximum reachable output level often should be known. This maximum output level can be calculated using following formula:
 \begin{equation}
@@ -165,17 +176,20 @@ In this laboratory measurements of loudspeaker parameters were done. Therefore a
 \section{Example calculations}
 \subsection{Efficiency}
 A sound pressure level of 74dB at a distance of 1.5m in an anechoic room wa measured. A voltage of $V_{RMS}=1V$ was applied to the loudspeaker ($8\Omega$). The loudspeaker's efficiency shall be calculated.
+$$74^2=W_{lsp}\cdot 1.2\frac{kg}{m^3}\cdot 343.6\frac{m}{s}\cdot\frac{1}{4\pi\cdot 1.5^2}$$
+$$W_{lsp}=$$
 \subsection{Sensitivity}
 A loudspeaker sensitivity of 84dB/1m/1W is given. This is equal to a sound pressure level of 84dB at 1m distance when a voltage of 2.83V was applied. Do these numbers correspond to the efficiency calculated in Appendix A.1?
 \subsection{Maximum output level}
-The given loudspeaker has a maximum input power of 100W. Which sound pressure level could be reached if this loudspeaker is used in a room of 150$m^3$? The room has a reverbation time of 0.7s. The maximum sound pressure level in the diffuse reverbation field shall be calculated. For simplified calculations the loudspeaker is assumed as omnidirectional.
+The given loudspeaker has a maximum input power of 100W. Which sound pressure level could be reached if this loudspeaker is used in a room of 150$m^3$? The room has a reverbation time of 0.7s. The maximum sound pressure level in the diffuse reverbation field shall be calculated. For simplified calculations the loudspeaker is assumed as omnidirectional ($DF=1$).\\
+$$A=\frac{0.161\cdot V}{T_{60}}=\frac{0.161\cdot 150m^3}{0.7s}=34.5$$
 \subsection{Measurement distance}
 A two-way loudspeaker with 40cm height and 25cm with is assumed. The LF element has a diameter of 20cm, the HF-Element 3cm. The center/center distance is 14cm, the crossover frequency at 2.5kHz. The minimum measurement distance that will ensure that we are in the far field at the crossover frequency shall be calculated.
+$$\lambda=\frac{343\frac{m}{s}}{2500Hz}=0.1372m$$
 \subsection{Truncated impulse responses}
 A room with a ceiling height of 2.7m is assumed. The measurement is done at the shortest possible distance, the loudspeaker of previous calculations is used. What is the longest time we can get between the direct sound and the first reflections? How low in frequency can the frequency response be measured?
 \subsection{Edge reflection/diffraction}
 A loudspeaker enclosure causes reflections at the edges. This will lead to uneven frequency responses. The time difference between the direct sound and the first edge reflection at a measurement distance of 1.5m shall be calculated. Which frequencies are amplificated with positive interference?
-
 \section{Further plots}
 \subsection{FFT time windows}
 In this section the FFT time windows for chapter 3.2 are listed (figures \ref{fig:TaskAtimecomplete} - \ref{fig:TaskAtime50ms}).
