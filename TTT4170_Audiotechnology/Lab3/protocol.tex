@@ -33,7 +33,7 @@ Lab group:
 \item Milan Stojkovic
 \item Andreas Ulvoen\\[3cm]
 \end{itemize}
-Report delivered: \\[6cm]
+Report delivered: \today\\[6cm]
 FACULTY OF INFORMATION TECHNOLOGY, MATHEMATICS AND ELECTRICAL ENGINEERING\\
 NORWEGIAN UNIVERSITY OF SCIENCE AND TECHNOLOGY
 \end{center}
@@ -176,20 +176,39 @@ In this laboratory measurements of loudspeaker parameters were done. Therefore a
 \section{Example calculations}
 \subsection{Efficiency}
 A sound pressure level of 74dB at a distance of 1.5m in an anechoic room wa measured. A voltage of $V_{RMS}=1V$ was applied to the loudspeaker ($8\Omega$). The loudspeaker's efficiency shall be calculated.
-$$74^2=W_{lsp}\cdot 1.2\frac{kg}{m^3}\cdot 343.6\frac{m}{s}\cdot\frac{1}{4\pi\cdot 1.5^2}$$
-$$W_{lsp}=$$
+$$W_{el,in}=\frac{(1V)^2}{8\Omega}=0.125W$$
+$$W_{lsp,out}=\frac{0.1^2}{1.2\frac{kg}{m^3}\cdot 343\frac{m}{s}\cdot\frac{1}{4\pi\cdot 1.5^2}}$$
+$$W_{lsp,out}=0.0006869$$
+$$\eta=\frac{W_{lsp,out}}{W_{el,in}}=\frac{0.0006869}{0.125}=0.5495\%$$
 \subsection{Sensitivity}
 A loudspeaker sensitivity of 84dB/1m/1W is given. This is equal to a sound pressure level of 84dB at 1m distance when a voltage of 2.83V was applied. Do these numbers correspond to the efficiency calculated in Appendix A.1?
+$$W_{el,in}=\frac{(2.83V)^2}{8\Omega}=1.0011W=1W$$
+$$W_{lsp,out}=\frac{0.32^2}{1.2\frac{kg}{m^3}\cdot 343\frac{m}{s}\cdot\frac{1}{4\pi\cdot 1^2}}$$
+$$W_{lsp,out}=0.003126$$
+$$\eta=\frac{W_{lsp,out}}{W_{el,in}}=\frac{0.003126}{1}=0.31\%$$
+The numbers does not correspond equally, the efficiency in this example is less than at the first calculation.
 \subsection{Maximum output level}
 The given loudspeaker has a maximum input power of 100W. Which sound pressure level could be reached if this loudspeaker is used in a room of 150$m^3$? The room has a reverbation time of 0.7s. The maximum sound pressure level in the diffuse reverbation field shall be calculated. For simplified calculations the loudspeaker is assumed as omnidirectional ($DF=1$).\\
 $$A=\frac{0.161\cdot V}{T_{60}}=\frac{0.161\cdot 150m^3}{0.7s}=34.5$$
+$$p^2=W_{lsp}\cdot\rho_0\cdot c\bigg(\frac{DF}{4\pi\cdot r^2}+\frac{4}{A}\bigg)$$
+$$p^2=100W\cdot 1.2\frac{kg}{m^3}\cdot 343\frac{m}{s}\cdot\bigg(\frac{1}{4\pi}+\frac{4}{34.5}\bigg)$$
+$$p=89.71dB$$
 \subsection{Measurement distance}
 A two-way loudspeaker with 40cm height and 25cm with is assumed. The LF element has a diameter of 20cm, the HF-Element 3cm. The center/center distance is 14cm, the crossover frequency at 2.5kHz. The minimum measurement distance that will ensure that we are in the far field at the crossover frequency shall be calculated.
 $$\lambda=\frac{343\frac{m}{s}}{2500Hz}=0.1372m$$
+$$R_R=\frac{\pi\cdot 0.15^2}{0.1372}=0.515m$$
 \subsection{Truncated impulse responses}
 A room with a ceiling height of 2.7m is assumed. The measurement is done at the shortest possible distance, the loudspeaker of previous calculations is used. What is the longest time we can get between the direct sound and the first reflections? How low in frequency can the frequency response be measured?
+The shortest possible measurement distance is 0.5m. So the direct sound will reach the microphone after
+$$\frac{0.5m}{343\frac{m}{s}}=1.458ms$$
+The distance the first reflection has to travel is to the ceiling (2.7m) and back to the microphone (2.7m-0.5m). So the total distance is 4.9m. It reaches the microphone after
+$$\frac{4.9m}{343\frac{m}{s}}=14.286ms$$
+The lowest possible frequency is calculated the following way:
+$$\Delta t=14.286ms-1.458ms=12.828ms$$
+$$f=\frac{1}{\Delta t}=\frac{1}{12.828ms}=77.95Hz=78Hz$$
 \subsection{Edge reflection/diffraction}
-A loudspeaker enclosure causes reflections at the edges. This will lead to uneven frequency responses. The time difference between the direct sound and the first edge reflection at a measurement distance of 1.5m shall be calculated. Which frequencies are amplificated with positive interference?
+A loudspeaker enclosure causes reflections at the edges. This will lead to uneven frequency responses. The time difference between the direct sound and the first edge reflection at a measurement distance of 1.5m shall be calculated. Which frequencies are amplificated with positive interference?\\
+Those frequencies, which arrives at the same time at the measurement microphone with positive peaks will amplify. If the distance from the edge to the direct sound equals to an integer multiple of the wavelength the frequency will be amplified.
 \section{Further plots}
 \subsection{FFT time windows}
 In this section the FFT time windows for chapter 3.2 are listed (figures \ref{fig:TaskAtimecomplete} - \ref{fig:TaskAtime50ms}).
